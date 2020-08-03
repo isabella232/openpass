@@ -1,0 +1,11 @@
+{
+    "resources": {
+      "cpus": 2,
+      "mem": 1024
+    },
+    "preprod": {
+      "par": {
+        "instanceCount": 1
+      }
+    }
+  }
