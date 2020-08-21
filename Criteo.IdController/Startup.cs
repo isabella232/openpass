@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace Criteo.IdController
 {
@@ -65,6 +67,14 @@ namespace Criteo.IdController
 
             // Enables response compression when applicable
             app.UseResponseCompression();
+
+            // Serve static JS files
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(_env.ContentRootPath, "dist/js")),
+                RequestPath = "/js"
+            });
 
             app.UseMvc(routes =>
             {
