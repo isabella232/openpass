@@ -41,12 +41,27 @@
     <Content Update="appsettings*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="dist\**" CopyToOutputDirectory="PreserveNewest" LinkBase="dist\" />
   </ItemGroup>
   <Target Name="BuildJSLibrary" AfterTargets="Compile">
     <Message Text="Build JS library" />
     <Exec ConsoleToMSBuild="True" Command="npm ci" WorkingDirectory=".\Javascript" />
     <Exec ConsoleToMSBuild="True" Command="npm run build" WorkingDirectory=".\Javascript" />
+  </Target>
+  <!-- Copy front-end files -->
+  <Target Name="CopyFrontend" AfterTargets="AfterBuild">
+    <ItemGroup>
+      <FrontEndFiles Include=".\dist\**\*.*">
+        <InProject>true</InProject>
+      </FrontEndFiles>
+    </ItemGroup>
+    <Copy SourceFiles="@(FrontEndFiles)" DestinationFiles="@(FrontEndFiles->'$(OutputPath)\dist\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+  <Target Name="PrePublish" BeforeTargets="PublishApp">
+    <ItemGroup>
+      <PublishDir Include="$(OutputPath)\dist">
+        <DestinationFolder>dist</DestinationFolder>
+      </PublishDir>
+    </ItemGroup>
   </Target>
   <Import Project="$(CBS_DIR)\MSBuild\targets\Sdk.targets" Condition="Exists('$(CBS_DIR)\MSBuild\targets\Sdk.targets')" />
 </Project>
