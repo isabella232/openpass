@@ -48,7 +48,7 @@
     <Exec ConsoleToMSBuild="True" Command="npm run build" WorkingDirectory=".\Javascript" />
   </Target>
   <!-- Copy front-end files -->
-  <Target Name="CopyFrontend" AfterTargets="AfterBuild">
+  <Target Name="CopyFrontend" AfterTargets="AfterBuild" Condition="'$(Configuration)' != 'Debug'">
     <ItemGroup>
       <FrontEndFiles Include=".\dist\**\*.*">
         <InProject>true</InProject>
