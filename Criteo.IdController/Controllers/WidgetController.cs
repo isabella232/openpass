@@ -21,5 +21,12 @@ namespace Criteo.IdController.Controllers
         {
             return View();
         }
+
+        // 'Learn more' site, which shows more information about how the id-network works
+        [HttpGet("learn")]
+        public IActionResult LearnMoreSite()
+        {
+            return View();
+        }
     }
 }
