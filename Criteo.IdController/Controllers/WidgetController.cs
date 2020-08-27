@@ -14,5 +14,12 @@ namespace Criteo.IdController.Controllers
         {
             return View();
         }
+
+        // Options banner, which contains the acceptance (or not) to be included into the id-network
+        [HttpGet("options")]
+        public IActionResult OptionsBanner()
+        {
+            return View();
+        }
     }
 }
