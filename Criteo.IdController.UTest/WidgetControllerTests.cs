@@ -17,14 +17,9 @@ namespace Criteo.IdController.UTest
         }
 
         [Test]
-        public void TestWidget()
+        public void Placeholder()
         {
-            var response = _widgetController.Get();
-
-            Assert.IsNotNull(response);
-            Assert.AreEqual("text/html", response.ContentType);
-            Assert.AreEqual((int) HttpStatusCode.OK, response.StatusCode);
-            Assert.IsNotEmpty(response.Content);
+            Assert.Pass();
         }
     }
 }

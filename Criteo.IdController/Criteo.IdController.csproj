@@ -33,6 +33,7 @@
     <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="[default]" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="[default]" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="[default]" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="[default]" /><!-- Required to have the template engine work without raising a dependency error -->
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="[default]" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="[default]" />
     <PackageReference Include="System.Data.SqlClient" Version="[default]" />
@@ -40,6 +41,14 @@
   <ItemGroup>
     <Content Update="appsettings*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Views\Widget\InitialBanner.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Widget\_Layout.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>
   <Target Name="BuildJSLibrary" AfterTargets="Compile">

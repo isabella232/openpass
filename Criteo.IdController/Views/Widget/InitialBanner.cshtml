@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Id-Controller widget";
+}
+
+@section CustomStyles
+{
+
+}
+
+@section Scripts
+    {
+    <script type="text/javascript">
+        function openDialog() {
+            window.open("/api/widget/options", "_blank", "width = 400, height = 520, top = 200, left = 800, location = no");
+        }
+    </script>
+}
+
+@* Body section *@
+<h1>Improve your ad experience</h1>
+<p>Discover more relevant ad content.</p>
+<p>Opt-in to receive your tailored ad experience.</p>
+<button onclick="openDialog()">Learn more</button>
