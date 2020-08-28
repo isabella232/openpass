@@ -13,6 +13,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Criteo.AspNetCore.netcore" />
+    <Reference Include="Criteo.ConfigAsCode.netcore" />
     <Reference Include="Criteo.DevKit.netcore" />
     <Reference Include="Criteo.Logging.netcore" />
     <Reference Include="Criteo.Services.netcore" />
@@ -20,6 +21,7 @@
     <Reference Include="Metrics.Core.netcore" />
     <Reference Include="Sdk.Interfaces.netcore" />
     <Reference Include="Sdk.Interfaces.Hosting.netcore" />
+    <Reference Include="Sdk.Monitoring.netcore" />
     <Reference Include="Sdk.ProductionResources.netcore" />
   </ItemGroup>
   <ItemGroup>

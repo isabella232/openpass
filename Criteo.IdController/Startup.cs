@@ -1,12 +1,13 @@
-using Criteo.AspNetCore.Helpers;
-using Criteo.AspNetCore.Monitoring;
-using Criteo.Services;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using System.IO;
+using Criteo.AspNetCore.Administration;
+using Criteo.AspNetCore.Helpers;
+using Criteo.Services;
+using Criteo.Services.Graphite;
 
 namespace Criteo.IdController
 {
@@ -36,9 +37,29 @@ namespace Criteo.IdController
 
             services.AddCriteoServices(registrar =>
             {
-                // don't remove: metricsRegistry & serviceLocator are needed by the admin server
+                // Registers an IMetricsRegistry instance for further usage, so you can register and use Metrics.
                 var metricsRegistry = registrar.AddMetricsRegistry();
-                registrar.AddServiceLocator(metricsRegistry);
+                // Registers an IConsulServiceLocator implementation. Current service is read from the configuration/command line arguments automatically.
+                var serviceLocator = registrar.AddServiceLocator(metricsRegistry);
+                // Registers ISqlDbConnectionService for SQL DB access
+                var sqlConnections = registrar.AddSqlConnections(serviceLocator);
+
+                // Registers an IConfigAsCodeService that will read its configuration data from the SQL databases, with dependencies
+                var keyValueStore = registrar.AddConsulKeyValueStore(metricsRegistry);
+                var sdkConfigurationService = registrar.AddSdkConfigurationService(keyValueStore, metricsRegistry, serviceLocator);
+                var kafkaConsumer = registrar.AddKafkaConsumer(metricsRegistry, serviceLocator, sdkConfigurationService);
+                var storageManager = registrar.AddStorageManager(metricsRegistry, serviceLocator, keyValueStore);
+                registrar.AddConfigAsCode(metricsRegistry, serviceLocator, storageManager, kafkaConsumer, sqlConnections);
+
+                // Enables tracing & request correlation
+                var kafkaProducer = registrar.AddKafkaProducer(metricsRegistry, serviceLocator, sdkConfigurationService);
+                registrar.AddTracing(metricsRegistry, kafkaProducer);
+
+                // Registers an IGraphiteHelper
+                registrar.AddGraphiteHelper(serviceLocator, new GraphiteSettings
+                {
+                    ApplicationName = "identification-id-controller"
+                });
             });
 
             services.AddMvc(options =>
@@ -52,7 +73,10 @@ namespace Criteo.IdController
 
             // (Optional) You might implement a dedicated HealthCheck for your app, checking your app state (not your dependencies)
             // Otherwise you will rely on the default one: ApplicationStateAwareHealthCheck
-            //services.AddHealthCheck<>();
+            services.AddHealthCheck<ApplicationStateAwareHealthCheck>();
+
+            // Register Admin handlers
+            services.AddSdkAdminHandlers();
 
             // Registers cross-origin resource sharing services
             services.AddCors();
