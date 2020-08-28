@@ -6,8 +6,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Criteo.AspNetCore.Administration;
 using Criteo.AspNetCore.Helpers;
+using Criteo.ConfigAsCode;
 using Criteo.Services;
+using Criteo.Services.Glup;
 using Criteo.Services.Graphite;
+using Criteo.UserAgent;
+using Criteo.UserAgent.Provider;
+using Sdk.Interfaces.Hosting;
+using Sdk.Interfaces.KeyValueStore;
+using Sdk.Monitoring;
+using Sdk.ProductionResources.ConnectionStrings;
 
 namespace Criteo.IdController
 {
@@ -49,17 +57,39 @@ namespace Criteo.IdController
                 var sdkConfigurationService = registrar.AddSdkConfigurationService(keyValueStore, metricsRegistry, serviceLocator);
                 var kafkaConsumer = registrar.AddKafkaConsumer(metricsRegistry, serviceLocator, sdkConfigurationService);
                 var storageManager = registrar.AddStorageManager(metricsRegistry, serviceLocator, keyValueStore);
-                registrar.AddConfigAsCode(metricsRegistry, serviceLocator, storageManager, kafkaConsumer, sqlConnections);
+                var configAsCode = registrar.AddConfigAsCode(metricsRegistry, serviceLocator, storageManager, kafkaConsumer, sqlConnections);
 
                 // Enables tracing & request correlation
                 var kafkaProducer = registrar.AddKafkaProducer(metricsRegistry, serviceLocator, sdkConfigurationService);
                 registrar.AddTracing(metricsRegistry, kafkaProducer);
 
                 // Registers an IGraphiteHelper
-                registrar.AddGraphiteHelper(serviceLocator, new GraphiteSettings
+                var graphiteHelper = registrar.AddGraphiteHelper(serviceLocator, new GraphiteSettings
                 {
                     ApplicationName = "identification-id-controller"
                 });
+
+                // Register glup
+                registrar.AddGlup(metricsRegistry, serviceLocator, graphiteHelper, kafkaProducer, configAsCode);
+            });
+
+            // UserAgent parsing library
+            services.AddSingleton<IAgentSource>(r =>
+            {
+                var serviceLifecycleManager = r.GetService<IServiceLifecycleManager>();
+                var sqlDbConnectionService = r.GetService<ISqlDbConnectionService>();
+                var graphiteHelper = r.GetService<IGraphiteHelper>();
+                var glupService = r.GetService<IGlupService>();
+                var cacService = r.GetService<IConfigAsCodeService>();
+                var storageManager = r.GetService<IStorageManager>();
+
+                return UserAgentProviderProvider.CreateAgentSource(
+                    serviceLifecycleManager,
+                    sqlDbConnectionService,
+                    graphiteHelper,
+                    glupService,
+                    cacService,
+                    storageManager);
             });
 
             services.AddMvc(options =>

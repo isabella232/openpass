@@ -6,8 +6,12 @@
     <DefineConstants>$(DefineConstants);NET_CORE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Criteo.Glup.netcore" />
+    <Reference Include="Criteo.Services.netcore" />
+    <Reference Include="Criteo.UserAgent.netcore" />
     <Reference Include="Criteo.Testing.Isolation.netcore" />
     <Reference Include="Criteo.Testing.Utils.netcore" />
+    <Reference Include="Glup.Schemas.netcore" />
     <Reference Include="Sdk.ProductionResources.netcore" />
   </ItemGroup>
   <ItemGroup>
