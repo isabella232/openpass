@@ -12,7 +12,12 @@
     {
     <script type="text/javascript">
         function openDialog() {
-            window.open("/api/widget/options", "_blank", "width = 400, height = 520, top = 200, left = 800, location = no");
+            window.open("/api/widget/options", "_blank", "width=400,height=520,top=200,left=800,location=no");
+        }
+
+        window.onload = function () {
+            var hostname = Utils.getCurrentHostname(window);
+            Utils.sendEvent(Utils.eventType.BannerRequest, hostname);
         }
     </script>
 }

@@ -14,6 +14,11 @@
         function goBackToPreviousSite() {
             window.history.back();
         }
+
+        window.onload = function () {
+            var hostname = Utils.getCurrentHostname(window);
+            Utils.sendEvent(Utils.eventType.LearnMore, hostname);
+        }
     </script>
 }
 

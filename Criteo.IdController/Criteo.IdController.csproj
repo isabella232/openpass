@@ -12,6 +12,9 @@
     <TypeScriptToolsVersion>3.9</TypeScriptToolsVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Javascript\src\utils.ts" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Criteo.AspNetCore.netcore" />
     <Reference Include="Criteo.ConfigAsCode.netcore" />
     <Reference Include="Criteo.DevKit.netcore" />
@@ -46,6 +49,9 @@
     <PackageReference Include="System.Data.SqlClient" Version="[default]" />
     <!-- TODO: once the criteo build system correctly handles native transitive dependencies, revert this review: I5be5a8919854fffb347573baab6b85c1a1e25b48. See: https://jira.criteois.com/browse/IDPF-64-->
     <PackageReference Include="WurflInFuze" Version="[default]" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Javascript\src\utils.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="appsettings*.json">
