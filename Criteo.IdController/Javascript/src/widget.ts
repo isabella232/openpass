@@ -2,7 +2,7 @@
 // example: const widget = new IdControllerWidget();
 
 class IdControllerWidget {
-    private readonly widgetUrl = 'http://localhost:1234/api/widget'; // TODO: Change URL when deployed
+    private readonly widgetUrl = 'https://id-controller.crto.in/api/widget';
 
     private readonly parent!: HTMLElement;
     private readonly height!: number;
