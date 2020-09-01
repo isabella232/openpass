@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Criteo.IdController
+@addTagHelper *, Criteo.IdController
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -27,10 +29,10 @@
     </style>
     @RenderSection("CustomStyles", required: false)
 
-    <script type="text/javascript" src="@Url.Content("/js/utils.js")"></script>
+    <script inline type="text/javascript" src="/dist/js/utils.js"></script>
     @RenderSection("Scripts", required: false)
 </head>
-    <body>
-        @RenderBody()
-    </body>
+<body>
+    @RenderBody()
+</body>
 </html>
