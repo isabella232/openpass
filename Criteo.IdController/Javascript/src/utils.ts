@@ -15,10 +15,6 @@ class Utils {
 
     static eventType = EventType;
 
-    static getCurrentHostname(window: Window): string {
-        return window.location.hostname;
-    }
-
     static sendEvent(eventType: number, originHost: string): void {
         const targetUrl = this.generateTargetUrl(eventType, originHost);
         // TODO: Get localwebid, uid or ifa from cookies (or tags)

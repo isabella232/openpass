@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,22 +10,25 @@ namespace Criteo.IdController.Controllers
         public WidgetController() { }
 
         [HttpGet]
-        public IActionResult InitialBanner()
+        public IActionResult InitialBanner(string originHost)
         {
+            ViewData["originHost"] = originHost;
             return View();
         }
 
         // Options banner, which contains the acceptance (or not) to be included into the id-network
         [HttpGet("options")]
-        public IActionResult OptionsBanner()
+        public IActionResult OptionsBanner(string originHost)
         {
+            ViewData["originHost"] = originHost;
             return View();
         }
 
         // 'Learn more' site, which shows more information about how the id-network works
         [HttpGet("learn")]
-        public IActionResult LearnMoreSite()
+        public IActionResult LearnMoreSite(string originHost)
         {
+            ViewData["originHost"] = originHost;
             return View();
         }
     }

@@ -7,6 +7,7 @@ class IdControllerWidget {
     private readonly parent!: HTMLElement;
     private readonly height!: number;
     private readonly width!: number;
+    private readonly originHost!: string;
 
     constructor(parentId: string, height: number = 250, width: number = 500) {
         const parent = document.getElementById(parentId);
@@ -18,13 +19,18 @@ class IdControllerWidget {
         this.parent = parent;
         this.height = height;
         this.width = width;
+        this.originHost = this.getCurrentHostname();
 
         this.createAndAppendIframe();
     }
 
-    private createAndAppendIframe() {
+    private getCurrentHostname(): string {
+        return window.location.hostname;
+    }
+
+    private createAndAppendIframe(): void {
         const iframe = document.createElement("iframe");
-        iframe.src = this.widgetUrl;
+        iframe.src = `${this.widgetUrl}?originHost=${this.originHost}`;
         iframe.height = this.height.toString();
         iframe.width = this.width.toString();
         iframe.style.border = "none";

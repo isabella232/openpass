@@ -1,10 +1,11 @@
 ﻿@{
     Layout = "_Layout";
     ViewData["Title"] = "Id-Controller options";
+    ViewData["LearnMoreUrl"] = $"/api/widget/learn?originHost={ViewData["OriginHost"]}";
 }
 
 @section CustomStyles
-{
+    {
     <style>
         .option-wrapper {
             display: block;
@@ -14,13 +15,31 @@
 
 @section Scripts
 {
+    <script type="text/javascript">
+        window.onload = () => {
+            var form = document.getElementById('options');
 
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                var checkedOption = Array.from(form.elements.choice).find((radio) => radio.checked);
+                var eventType = (checkedOption.value === "true")
+                    ? Utils.eventType.ConsentGranted
+                    : Utils.eventType.ConsentNotGranted;
+
+                var hostname = "@ViewData["OriginHost"]";
+                Utils.sendEvent(eventType, hostname);
+                // TODO: Other stuff like retrieving IFA...
+                // TODO: How do we manage the UI after saving choice? Do we display a message / close the window?
+            });
+        }
+    </script>
 }
 
 @* Body section *@
 <h1>Improve your ad experience</h1>
 <p>Would you prefer a more curated ad experience?</p>
-<form class="options">
+<form id="options">
     <div class="option-wrapper">
         <input type="radio" id="choiceYes" name="choice" value="true" checked>
         <label for="choiceYes">See personalized ads</label>
@@ -29,6 +48,6 @@
         <input type="radio" id="choiceNo" name="choice" value="false">
         <label for="choiceNo">See random ads</label>
     </div>
+    <input type="submit" value="Save my choice">
 </form>
-<button>Save my choice</button>
-<a href="/api/widget/learn">Learn how we are improving advertising</a>
+<a href="@ViewData["LearnMoreUrl"]">Learn how we are improving advertising</a>

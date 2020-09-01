@@ -15,8 +15,8 @@
             window.history.back();
         }
 
-        window.onload = function () {
-            var hostname = Utils.getCurrentHostname(window);
+        window.onload = () => {
+            var hostname = "@ViewData["OriginHost"]";
             Utils.sendEvent(Utils.eventType.LearnMore, hostname);
         }
     </script>
