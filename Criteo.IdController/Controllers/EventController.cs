@@ -1,4 +1,5 @@
 using System;
+using Criteo.IdController.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Criteo.UserAgent;
 using Criteo.Services.Glup;
@@ -10,13 +11,17 @@ namespace Criteo.IdController.Controllers
     [Route("api/[controller]")]
     public class EventController : Controller
     {
+        private readonly IConfigurationHelper _configurationHelper;
         private readonly IGlupService _glupService;
         private readonly IAgentSource _agentSource;
+        private readonly Random _randomGenerator;
 
-        public EventController(IGlupService glupService, IAgentSource agentSource)
+        public EventController(IConfigurationHelper configurationHelper, IGlupService glupService, IAgentSource agentSource)
         {
+            _configurationHelper = configurationHelper;
             _glupService = glupService;
             _agentSource = agentSource;
+            _randomGenerator = new Random();
         }
 
         [HttpPost]
@@ -64,6 +69,11 @@ namespace Criteo.IdController.Controllers
             string uid,
             string ifa)
         {
+            // Using sampling ratio for an endpoint generating glups directly
+            var samplingRatio = _configurationHelper.EmitGlupsRatio(originHost);
+            if (_randomGenerator.NextDouble() > samplingRatio)
+                return;
+
             // Create glup event with required fields
             var glup = new IdControllerGlup()
             {

@@ -3,6 +3,7 @@ using System.Net;
 using Moq;
 using NUnit.Framework;
 using Criteo.IdController.Controllers;
+using Criteo.IdController.Helpers;
 using Criteo.Services.Glup;
 using Criteo.UserAgent;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ namespace Criteo.IdController.UTest
     public class EventControllerTests
     {
         private EventController _eventController;
+        private Mock<IConfigurationHelper> _configurationHelperMock;
         private Mock<IGlupService> _glupServiceMock;
         private Mock<IAgentSource> _agentSourceMock;
 
@@ -26,9 +28,12 @@ namespace Criteo.IdController.UTest
         [SetUp]
         public void Setup()
         {
+            _configurationHelperMock = new Mock<IConfigurationHelper>();
             _glupServiceMock = new Mock<IGlupService>();
             _agentSourceMock = new Mock<IAgentSource>();
-            _eventController = new EventController(_glupServiceMock.Object, _agentSourceMock.Object);
+            _eventController = new EventController(_configurationHelperMock.Object, _glupServiceMock.Object, _agentSourceMock.Object);
+
+            _configurationHelperMock.Setup(x => x.EmitGlupsRatio(It.IsAny<string>())).Returns(1.0); // activate glupping by default
         }
 
         [TestCase(EventType.BannerRequest, "originHost.com")]
@@ -51,6 +56,20 @@ namespace Criteo.IdController.UTest
             _glupServiceMock.Verify(
                 x => x.Emit(It.IsAny<IdControllerGlup>()),
                 Times.Never);
+        }
+
+        [TestCase(0.0, false)]
+        [TestCase(1.0, true)]
+        public void GlupEmissionAppliesRatio(double ratio, bool expectGlup)
+        {
+            // use edge cases to test ratio (regardless of the value of the randomly generated value)
+            _configurationHelperMock.Setup(x => x.EmitGlupsRatio(It.IsAny<string>())).Returns(ratio);
+
+            _eventController.SaveEvent(EventType.BannerRequest, "originHost.com", null, null, null);
+
+            _glupServiceMock.Verify(
+                x => x.Emit(It.IsAny<IdControllerGlup>()),
+                expectGlup ? Times.Once() : Times.Never());
         }
 
         [TestCase(null, null, null, null)]

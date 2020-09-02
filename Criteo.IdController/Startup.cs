@@ -7,6 +7,7 @@ using Microsoft.Extensions.FileProviders;
 using Criteo.AspNetCore.Administration;
 using Criteo.AspNetCore.Helpers;
 using Criteo.ConfigAsCode;
+using Criteo.IdController.Helpers;
 using Criteo.Services;
 using Criteo.Services.Glup;
 using Criteo.Services.Graphite;
@@ -90,6 +91,13 @@ namespace Criteo.IdController
                     glupService,
                     cacService,
                     storageManager);
+            });
+
+            // Configuration helper
+            services.AddSingleton<IConfigurationHelper>(r =>
+            {
+                var cacService = r.GetService<IConfigAsCodeService>();
+                return new ConfigurationHelper(cacService);
             });
 
             services.AddMvc(options =>

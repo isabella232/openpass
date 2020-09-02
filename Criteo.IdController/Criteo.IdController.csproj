@@ -17,6 +17,7 @@
   <ItemGroup>
     <Reference Include="Criteo.AspNetCore.netcore" />
     <Reference Include="Criteo.ConfigAsCode.netcore" />
+    <Reference Include="Criteo.Configuration.Repository.netcore" />
     <Reference Include="Criteo.DevKit.netcore" />
     <Reference Include="Criteo.Glup.netcore" />
     <Reference Include="Criteo.Logging.netcore" />
