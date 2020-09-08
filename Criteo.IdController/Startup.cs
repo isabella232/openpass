@@ -130,13 +130,7 @@ namespace Criteo.IdController
             // Enables response compression when applicable
             app.UseResponseCompression();
 
-            // Serve static JS files
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(
-                    Path.Combine(_env.ContentRootPath, "dist/js")),
-                RequestPath = "/js"
-            });
+            app.UseStaticFiles();
 
             app.UseMvc(routes =>
             {

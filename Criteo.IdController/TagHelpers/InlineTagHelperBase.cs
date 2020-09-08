@@ -26,7 +26,7 @@ namespace Criteo.IdController.TagHelpers
 
         private async Task<T> GetContentAsync<T>(ICacheEntry entry, string path, Func<IFileInfo, Task<T>> getContent)
         {
-            var fileProvider = _hostingEnvironment.ContentRootFileProvider;
+            var fileProvider = _hostingEnvironment.WebRootFileProvider;
             var changeToken = fileProvider.Watch(path);
 
             entry.SetPriority(CacheItemPriority.NeverRemove);

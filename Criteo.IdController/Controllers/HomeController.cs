@@ -21,7 +21,7 @@ namespace Criteo.IdController.Controllers
         public IActionResult Index()
         {
             // "dist" is the directory containing the built UI application, that should be published alongside with it from your UI project.
-            return new PhysicalFileResult(Path.Combine(_hostingEnvironment.ContentRootPath, "dist/index.html"), new MediaTypeHeaderValue("text/html"));
+            return new PhysicalFileResult(Path.Combine(_hostingEnvironment.WebRootPath, "index.html"), new MediaTypeHeaderValue("text/html"));
         }
     }
 }

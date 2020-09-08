@@ -1,4 +1,4 @@
 bin/
 obj/
 node_modules
-Criteo.IdController/dist/js
+Criteo.IdController/wwwroot/js
