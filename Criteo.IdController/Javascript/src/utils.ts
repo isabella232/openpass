@@ -43,4 +43,27 @@ class Utils {
 
         return targetUrl;
     }
+
+    public static addPostMessageEvtListener(currentWindow: Window) {
+        const evtListener = (event: MessageEvent) => {
+            const data = event.data;
+
+            // Discard messages coming from other iframes
+            if (!data || !data.isIdControllerMessage) {
+                return;
+            }
+
+            // Prevent the message to propagate to other listeners
+            event.stopImmediatePropagation();
+
+            if (data.ifa) {
+                currentWindow.parent.postMessage({
+                    isIdControllerMessage: true,
+                    ifa: data.ifa,
+                }, "*");
+            }
+        }
+
+        currentWindow.addEventListener("message", evtListener, true);
+    }
 }

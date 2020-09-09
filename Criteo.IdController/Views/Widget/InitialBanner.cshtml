@@ -15,6 +15,7 @@
         window.onload = () => {
             var hostname = "@ViewData["OriginHost"]";
             Utils.sendEvent(Utils.eventType.BannerRequest, hostname);
+            Utils.addPostMessageEvtListener(window);
         }
     </script>
 }
