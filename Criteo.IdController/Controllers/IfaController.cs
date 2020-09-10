@@ -1,7 +1,5 @@
 using System;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace Criteo.IdController.Controllers
 {
@@ -12,10 +10,14 @@ namespace Criteo.IdController.Controllers
 
         public IfaController() { }
 
-        [HttpGet("generate")]
-        public IActionResult GenerateIfa()
+        [HttpGet("get")]
+        public IActionResult GetOrCreateIfa()
         {
-            var ifa = Guid.NewGuid().ToString();
+
+            if (!Request.Cookies.TryGetValue(IfaCookieName, out var ifa))
+            {
+                ifa = Guid.NewGuid().ToString();
+            }
 
             // TODO: add options (domain, expires, SameSite, Secure)
             Response.Cookies.Append(IfaCookieName, ifa);

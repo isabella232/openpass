@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using Criteo.Testing.Isolation;
+using Microsoft.AspNetCore.Mvc.Testing;
 using NUnit.Framework;
 
 namespace Criteo.IdController.ITest
@@ -19,7 +20,10 @@ namespace Criteo.IdController.ITest
                 InProcessTestHelper = new InProcessTestHelper(typeof(ITestSetUpFixture));
                 Client = InProcessTestHelper
                     .CreateInProcessAspNetCoreFactory<Program>(Program.ConfigureApp)
-                    .CreateClient();
+                    .CreateClient(new WebApplicationFactoryClientOptions()
+                    {
+                        HandleCookies = false
+                    });
             }
             catch (Exception e)
             {
