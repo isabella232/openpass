@@ -11,7 +11,13 @@ enum EventType {
 }
 
 class Utils {
-    private static readonly eventUrl = "https://id-controller.crto.in/api/event"; // Use http://localhost:1234/api/event for development
+    private static readonly eventUrl = "https://id-controller.crto.in/api/event";
+    // Use this url for development
+    //private static readonly eventUrl = "http://localhost:1234/api/event";
+
+    private static readonly getIfaUrl = "https://id-controller.crto.in/api/ifa/get";
+    // Use this url for development
+    //private static readonly getIfaUrl = "http://localhost:1234/api/ifa/get";
 
     static eventType = EventType;
 
@@ -65,5 +71,20 @@ class Utils {
         }
 
         currentWindow.addEventListener("message", evtListener, true);
+    }
+
+    public static async fetchIfa() {
+        try {
+            const fetchResponse = await fetch(this.getIfaUrl);
+            if (fetchResponse.ok) {
+                const response = await fetchResponse.json();
+                return response ? response.ifa : undefined;
+            }
+            throw new Error(fetchResponse.statusText);
+
+        } catch (error) {
+            console.error(`[IdController] Error when fetching Ifa through ${this.getIfaUrl} : ${error}`);
+            return undefined;
+        }
     }
 }
