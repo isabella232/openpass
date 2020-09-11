@@ -1,4 +1,4 @@
-﻿import IdController from './IdController';
+﻿import IdController from '../IdController';
 
 declare global {
     interface Window {

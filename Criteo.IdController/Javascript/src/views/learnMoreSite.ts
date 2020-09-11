@@ -1,4 +1,4 @@
-﻿import {sendEvent, EventType} from "./utils";
+﻿import { sendEvent, EventType } from "../utils";
 
 function goBackToPreviousSite() {
     window.history.back();

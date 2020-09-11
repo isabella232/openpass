@@ -1,4 +1,4 @@
-﻿import { sendEvent, fetchIfa, EventType } from "./utils";
+﻿import { sendEvent, fetchIfa, EventType } from "../utils";
 
 interface FormElements extends HTMLFormControlsCollection {
     choice: Array<HTMLInputElement>,

@@ -13,10 +13,10 @@ function generateRollupConfig(tsInput, jsOutput) {
     }
 }
 
-const widgetConfig = generateRollupConfig('./src/widget.ts', '../wwwroot/js/widget.js');
-const initialBannerConfig = generateRollupConfig('./src/initialBanner.ts', '../wwwroot/js/initialBanner.js');
-const optionsBannerConfig = generateRollupConfig('./src/optionsBanner.ts', '../wwwroot/js/optionsBanner.js');
-const learnMoreSiteConfig = generateRollupConfig('./src/learnMoreSite.ts', '../wwwroot/js/learnMoreSite.js');
+const widgetConfig = generateRollupConfig('./src/views/widget.ts', '../wwwroot/js/widget.js');
+const initialBannerConfig = generateRollupConfig('./src/views/initialBanner.ts', '../wwwroot/js/initialBanner.js');
+const optionsBannerConfig = generateRollupConfig('./src/views/optionsBanner.ts', '../wwwroot/js/optionsBanner.js');
+const learnMoreSiteConfig = generateRollupConfig('./src/views/learnMoreSite.ts', '../wwwroot/js/learnMoreSite.js');
 
 export default [
     widgetConfig,

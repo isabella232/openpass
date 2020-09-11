@@ -1,4 +1,4 @@
-﻿import {sendEvent, addPostMessageEvtListener, EventType} from "./utils";
+﻿import {sendEvent, addPostMessageEvtListener, EventType} from "../utils";
 
 declare global
 {
