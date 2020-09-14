@@ -14,7 +14,7 @@ export enum EventType {
     EmailShared = 6
 }
 
-export function sendEvent(eventType: number, originHost: string): void {
+export function sendEvent(eventType: number, originHost: string = ""): void {
     const targetUrl = generateTargetUrl(eventType, originHost);
     // TODO: Get localwebid, uid or ifa from cookies (or tags)
 
