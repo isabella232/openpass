@@ -4,20 +4,16 @@
 }
 
 @section Scripts
-{
+    {
     <script type="text/javascript">
-        function goBackToPreviousSite() {
-            window.history.back();
-        }
-
-        window.onload = () => {
-            var hostname = "@ViewData["OriginHost"]";
-            Utils.sendEvent(Utils.eventType.LearnMore, hostname);
-        }
+        window.idController = {
+            originHost: "@ViewData["OriginHost"]"
+        };
     </script>
+    <script inline type="text/javascript" src="/js/learnMoreSite.js"></script>
 }
 
 @* Body section *@
 <h1>Learn how the Id-Network is improving advertising</h1>
 <p>The Id-Network is indeed improving advertising! Stay tuned!</p>
-<button onclick="goBackToPreviousSite()">Back to choices</button>
+<button id="goBackToPreviousSite">Back to choices</button>

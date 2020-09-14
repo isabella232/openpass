@@ -5,38 +5,14 @@
 }
 
 @section Scripts
-{
+    {
     <script type="text/javascript">
-        window.onload = () => {
-            var form = document.getElementById('options');
-
-            form.addEventListener('submit',
-                async (event) => {
-                    event.preventDefault();
-
-                    var checkedOption = Array.from(form.elements.choice).find((radio) => radio.checked);
-                    var eventType = (checkedOption.value === "true")
-                        ? Utils.eventType.ConsentGranted
-                        : Utils.eventType.ConsentNotGranted;
-
-                    var hostname = "@ViewData["OriginHost"]";
-                    Utils.sendEvent(eventType, hostname);
-                    // TODO: Other stuff like retrieving IFA...
-                    // TODO: How do we manage the UI after saving choice? Do we display a message / close the window?
-
-
-                    if (eventType == Utils.eventType.ConsentGranted) {
-                        var ifa = await Utils.fetchIfa();
-                        window.opener.postMessage({
-                                isIdControllerMessage: true,
-                                ifa: ifa,
-                            },
-                        "*");
-                    }
-                }
-            );
-        }
+        window.idController = {
+            originHost: "@ViewData["OriginHost"]"
+        };
     </script>
+    <script inline type="text/javascript" src="/js/optionsBanner.js"></script>
+
 }
 
 @* Body section *@

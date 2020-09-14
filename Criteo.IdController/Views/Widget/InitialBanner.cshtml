@@ -5,23 +5,18 @@
 }
 
 @section Scripts
-    {
+{
     <script type="text/javascript">
-        function openDialog() {
-            var targetUrl = "@ViewData["OptionsUrl"]";
-            window.open(targetUrl, "_blank", "width=400,height=520,top=200,left=800,location=no");
-        }
-
-        window.onload = () => {
-            var hostname = "@ViewData["OriginHost"]";
-            Utils.sendEvent(Utils.eventType.BannerRequest, hostname);
-            Utils.addPostMessageEvtListener(window);
-        }
+        window.idController = {
+            optionsUrl: "@ViewData["OptionsUrl"]",
+            originHost: "@ViewData["OriginHost"]"
+        };
     </script>
+    <script inline type="text/javascript" src="/js/initialBanner.js"></script>
 }
 
 @* Body section *@
 <h1>Improve your ad experience</h1>
 <p>Discover more relevant ad content.</p>
 <p>Opt-in to receive your tailored ad experience.</p>
-<button onclick="openDialog()">Learn more</button>
+<button id="openOptionsBanner">Learn more</button>

@@ -2,6 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <Import Project="$(CBS_DIR)\MSBuild\targets\Sdk.props" Condition="Exists('$(CBS_DIR)\MSBuild\targets\Sdk.props')" />
   <PropertyGroup>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ServerGarbageCollection>true</ServerGarbageCollection>
@@ -48,12 +49,10 @@
     <!-- TODO: once the criteo build system correctly handles native transitive dependencies, revert this review: I5be5a8919854fffb347573baab6b85c1a1e25b48. See: https://jira.criteois.com/browse/IDPF-64-->
     <PackageReference Include="WurflInFuze" Version="[default]" />
   </ItemGroup>
-  <ItemGroup>
-    <None Remove="Javascript\src\utils.ts" />
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="Javascript\src\utils.ts" />
-  </ItemGroup>
+  <Target Name="BuildTS" BeforeTargets="BeforeBuild">
+    <Exec WorkingDirectory="Javascript/" ConsoleToMSBuild="True" Command="npm install" />
+    <Exec WorkingDirectory="Javascript/" ConsoleToMSBuild="True" Command="npm run build" />
+  </Target>
   <ItemGroup>
     <Content Update="appsettings*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -1,6 +1,14 @@
 ﻿// Handy functions used by static sites
 
-enum EventType {
+const eventUrl = "https://id-controller.crto.in/api/event";
+// Use this url for development
+//const eventUrl = "http://localhost:1234/api/event";
+
+const getIfaUrl = "https://id-controller.crto.in/api/ifa/get";
+// Use this url for development
+//const getIfaUrl = "http://localhost:1234/api/ifa/get";
+
+export enum EventType {
     Unknown = 0,
     BannerRequest = 1,
     ConsentGranted = 2,
@@ -10,81 +18,71 @@ enum EventType {
     EmailShared = 6
 }
 
-class Utils {
-    private static readonly eventUrl = "https://id-controller.crto.in/api/event";
-    // Use this url for development
-    //private static readonly eventUrl = "http://localhost:1234/api/event";
+export function sendEvent(eventType: number, originHost: string): void {
+    const targetUrl = generateTargetUrl(eventType, originHost);
+    // TODO: Get localwebid, uid or ifa from cookies (or tags)
 
-    private static readonly getIfaUrl = "https://id-controller.crto.in/api/ifa/get";
-    // Use this url for development
-    //private static readonly getIfaUrl = "http://localhost:1234/api/ifa/get";
+    fetch(targetUrl, {
+        method: "POST",
+        credentials: "include",
+    })
+    .catch((error) => console.error(`[IdController] Error when sending event: ${error}`));
+}
 
-    static eventType = EventType;
+export function generateTargetUrl(
+    eventType: number,
+    originHost: string,
+    localwebid?: string,
+    uid?: string,
+    ifa?: string) : string {
+    let targetUrl = `${eventUrl}?eventType=${eventType}&originHost=${originHost}`;
 
-    static sendEvent(eventType: number, originHost: string): void {
-        const targetUrl = this.generateTargetUrl(eventType, originHost);
-        // TODO: Get localwebid, uid or ifa from cookies (or tags)
+    if (localwebid)
+        targetUrl += `&localwebid=${localwebid}`;
+    if (uid)
+        targetUrl += `&uid=${uid}`;
+    if (ifa)
+        targetUrl += `&ifa=${ifa}`;
 
-        fetch(targetUrl, {
-            method: "POST",
-            credentials: "include",
-        })
-        .catch((error) => console.error(`[IdController] Error when sending event: ${error}`));
-    }
+    return targetUrl;
+}
 
-    private static generateTargetUrl(
-        eventType: number,
-        originHost: string,
-        localwebid?: string,
-        uid?: string,
-        ifa?: string) : string {
-        let targetUrl = `${this.eventUrl}?eventType=${eventType}&originHost=${originHost}`;
+export function addPostMessageEvtListener(currentWindow: Window) {
+    const evtListener = (event: MessageEvent) => {
+        const data = event.data;
 
-        if (localwebid)
-            targetUrl += `&localwebid=${localwebid}`;
-        if (uid)
-            targetUrl += `&uid=${uid}`;
-        if (ifa)
-            targetUrl += `&ifa=${ifa}`;
-
-        return targetUrl;
-    }
-
-    public static addPostMessageEvtListener(currentWindow: Window) {
-        const evtListener = (event: MessageEvent) => {
-            const data = event.data;
-
-            // Discard messages coming from other iframes
-            if (!data || !data.isIdControllerMessage) {
-                return;
-            }
-
-            // Prevent the message to propagate to other listeners
-            event.stopImmediatePropagation();
-
-            if (data.ifa) {
-                currentWindow.parent.postMessage({
-                    isIdControllerMessage: true,
-                    ifa: data.ifa,
-                }, "*");
-            }
+        // Discard messages coming from other iframes
+        if (!data || !data.isIdControllerMessage) {
+            return;
         }
 
-        currentWindow.addEventListener("message", evtListener, true);
+        // Prevent the message to propagate to other listeners
+        event.stopImmediatePropagation();
+
+        if (data.ifa) {
+            currentWindow.parent.postMessage({
+                isIdControllerMessage: true,
+                ifa: data.ifa,
+            }, "*");
+        }
     }
 
-    public static async fetchIfa() {
-        try {
-            const fetchResponse = await fetch(this.getIfaUrl);
-            if (fetchResponse.ok) {
-                const response = await fetchResponse.json();
-                return response ? response.ifa : undefined;
-            }
-            throw new Error(fetchResponse.statusText);
+    currentWindow.addEventListener("message", evtListener, true);
+}
 
-        } catch (error) {
-            console.error(`[IdController] Error when fetching Ifa through ${this.getIfaUrl} : ${error}`);
-            return undefined;
+export async function fetchIfa() {
+    try {
+        const fetchResponse = await fetch(getIfaUrl);
+        if (fetchResponse.ok) {
+            const response = await fetchResponse.json();
+            return response ? response.ifa : undefined;
         }
+        throw new Error(fetchResponse.statusText);
+
+    } catch (error) {
+        console.error(`[IdController] Error when fetching Ifa through ${getIfaUrl} : ${error}`);
+        return undefined;
     }
 }
+
+

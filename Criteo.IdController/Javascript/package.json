@@ -4,12 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Identity - Persistence (id-persistence@criteo.com)",
   "license": "ISC",
   "devDependencies": {
+    "rollup": "^2.26.11",
+    "rollup-plugin-multi-entry": "^2.1.0",
+    "rollup-plugin-typescript2": "^0.27.2",
+    "rollup-plugin-uglify": "^6.0.4",
     "typescript": "^3.9.7"
-  }
+  },
+  "dependencies": {}
 }
