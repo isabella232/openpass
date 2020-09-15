@@ -2,10 +2,8 @@
 // example: const widget = new IdControllerWidget('name-of-div');
 
 export default class IdController {
-    private readonly widgetUrl = 'https://id-controller.crto.in/api/widget';
-
-    //Use this URL for local testing
-    //private readonly widgetUrl = 'http://localhost:1234/api/widget';
+    private readonly widgetUrl = '__MACRO-CONTROLLER-URI__/api/widget';
+    // __MACRO-CONTROLLER-URI__ will be replaced by correct URI depending on build config
 
     private readonly parent!: HTMLElement;
     private readonly height!: number;

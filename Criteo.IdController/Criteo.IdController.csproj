@@ -51,7 +51,8 @@
   </ItemGroup>
   <Target Name="BuildTS" BeforeTargets="BeforeBuild">
     <Exec WorkingDirectory="Javascript/" ConsoleToMSBuild="True" Command="npm install" />
-    <Exec WorkingDirectory="Javascript/" ConsoleToMSBuild="True" Command="npm run build" />
+    <Exec WorkingDirectory="Javascript/" ConsoleToMSBuild="True" Command="npm run build-dev" Condition="'$(Configuration)' == 'Debug'"/>
+    <Exec WorkingDirectory="Javascript/" ConsoleToMSBuild="True" Command="npm run build" Condition="'$(Configuration)' != 'Debug'"/>
   </Target>
   <ItemGroup>
     <Content Update="appsettings*.json">

@@ -1,12 +1,8 @@
 ﻿// Handy functions used by static sites
 
-const eventUrl = "https://id-controller.crto.in/api/event";
-// Use this url for development
-//const eventUrl = "http://localhost:1234/api/event";
-
-const getIfaUrl = "https://id-controller.crto.in/api/ifa/get";
-// Use this url for development
-//const getIfaUrl = "http://localhost:1234/api/ifa/get";
+const eventUrl = '__MACRO-CONTROLLER-URI__/api/event';
+const getIfaUrl = '__MACRO-CONTROLLER-URI__/api/ifa/get';
+// __MACRO-CONTROLLER-URI__ will be replaced by the correct URI depending on build config
 
 export enum EventType {
     Unknown = 0,
