@@ -100,6 +100,9 @@ namespace Criteo.IdController
                 return new ConfigurationHelper(cacService);
             });
 
+            // User Management helper
+            services.AddSingleton<IUserManagementHelper, UserManagementHelper>();
+
             services.AddMvc(options =>
             {
                 // filters added here are applied for *all* controllers & actions that passed the middlewares chain.
