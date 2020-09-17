@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? EventType.ConsentGranted
                 : EventType.ConsentNotGranted;
 
-            const hostname = window.idController?.originHost;
+            const hostname = window.idController.originHost;
             sendEvent(eventType, hostname);
 
             if (eventType == EventType.ConsentGranted) {

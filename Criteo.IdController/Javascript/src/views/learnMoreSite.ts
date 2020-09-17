@@ -6,5 +6,5 @@ function goBackToPreviousSite() {
 
 document.addEventListener("DOMContentLoaded" ,() => {
     document.getElementById("goBackToPreviousSite")?.addEventListener("click", goBackToPreviousSite);
-    sendEvent(EventType.LearnMore,  window.idController?.originHost);
+    sendEvent(EventType.LearnMore,  window.idController.originHost);
 })
