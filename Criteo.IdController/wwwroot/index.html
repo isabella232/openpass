@@ -6,9 +6,12 @@
     <script src="js/widget.js"></script>
 </head>
 <body>
-    <div id="widget"></div>
+<h1>What's up bro? Quoi de neuf?</h1>
+<p>This is a testing site bla bla bla bla</p>
+<div id="widget"></div>
 <script>
-    new IdController("widget");
+    new IdController("modal");
+    new IdController("custom", { parentId: "widget" });
 </script>
 </body>
 </html>
