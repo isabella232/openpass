@@ -112,10 +112,6 @@ namespace Criteo.IdController
                 //options.Filters.AddCriteoMonitoringFilters();
             });
 
-            // (Optional) You might implement a dedicated HealthCheck for your app, checking your app state (not your dependencies)
-            // Otherwise you will rely on the default one: ApplicationStateAwareHealthCheck
-            services.AddHealthCheck<ApplicationStateAwareHealthCheck>();
-
             // Register Admin handlers
             services.AddSdkAdminHandlers();
 
