@@ -1,12 +1,11 @@
 using System;
-using System.Net;
 using Moq;
 using NUnit.Framework;
 using Criteo.IdController.Controllers;
 using Criteo.IdController.Helpers;
 using Criteo.Services.Glup;
 using Criteo.UserAgent;
-using Microsoft.AspNetCore.Mvc;
+using Metrics;
 using static Criteo.Glup.IdController.Types;
 using IdControllerGlup = Criteo.Glup.IdController;
 
@@ -19,6 +18,7 @@ namespace Criteo.IdController.UTest
         private Mock<IConfigurationHelper> _configurationHelperMock;
         private Mock<IGlupService> _glupServiceMock;
         private Mock<IAgentSource> _agentSourceMock;
+        private Mock<IMetricsRegistry> _metricRegistryMock;
 
         private const string _testingLwid = "00000000-0000-0000-0000-000000000001";
         private const string _testingUid = "00000000-0000-0000-0000-000000000002";
@@ -31,7 +31,8 @@ namespace Criteo.IdController.UTest
             _configurationHelperMock = new Mock<IConfigurationHelper>();
             _glupServiceMock = new Mock<IGlupService>();
             _agentSourceMock = new Mock<IAgentSource>();
-            _eventController = new EventController(_configurationHelperMock.Object, _glupServiceMock.Object, _agentSourceMock.Object);
+            _metricRegistryMock = new Mock<IMetricsRegistry>();
+            _eventController = new EventController(_configurationHelperMock.Object, _glupServiceMock.Object, _agentSourceMock.Object, _metricRegistryMock.Object);
 
             _configurationHelperMock.Setup(x => x.EmitGlupsRatio(It.IsAny<string>())).Returns(1.0); // activate glupping by default
         }

@@ -1,4 +1,5 @@
 using System.IO;
+using Metrics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -11,10 +12,12 @@ namespace Criteo.IdController.Controllers
     public class HomeController : Controller
     {
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IMetricsRegistry _metricsRegistry;
 
-        public HomeController(IHostingEnvironment hostingEnvironment)
+        public HomeController(IHostingEnvironment hostingEnvironment, IMetricsRegistry metricRegistry)
         {
             _hostingEnvironment = hostingEnvironment;
+            _metricsRegistry = metricRegistry;
         }
 
         [HttpGet]

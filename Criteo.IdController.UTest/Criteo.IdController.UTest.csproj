@@ -12,6 +12,7 @@
     <Reference Include="Criteo.Testing.Isolation.netcore" />
     <Reference Include="Criteo.Testing.Utils.netcore" />
     <Reference Include="Glup.Schemas.netcore" />
+    <Reference Include="Metrics.Core.netcore" />
     <Reference Include="Sdk.ProductionResources.netcore" />
   </ItemGroup>
   <ItemGroup>

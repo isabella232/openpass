@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Criteo.ConfigAsCode;
 using Criteo.Configuration.Repository.IdController;
-using Sdk.ProductionResources.Consul;
 
 namespace Criteo.IdController.Helpers
 {

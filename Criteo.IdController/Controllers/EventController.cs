@@ -3,6 +3,7 @@ using Criteo.IdController.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Criteo.UserAgent;
 using Criteo.Services.Glup;
+using Metrics;
 using static Criteo.Glup.IdController.Types;
 using IdControllerGlup = Criteo.Glup.IdController;
 
@@ -14,13 +15,15 @@ namespace Criteo.IdController.Controllers
         private readonly IConfigurationHelper _configurationHelper;
         private readonly IGlupService _glupService;
         private readonly IAgentSource _agentSource;
+        private readonly IMetricsRegistry _metricsRegistry;
         private readonly Random _randomGenerator;
 
-        public EventController(IConfigurationHelper configurationHelper, IGlupService glupService, IAgentSource agentSource)
+        public EventController(IConfigurationHelper configurationHelper, IGlupService glupService, IAgentSource agentSource, IMetricsRegistry metricRegistry)
         {
             _configurationHelper = configurationHelper;
             _glupService = glupService;
             _agentSource = agentSource;
+            _metricsRegistry = metricRegistry;
             _randomGenerator = new Random();
         }
 

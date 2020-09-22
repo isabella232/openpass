@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using Criteo.IdController.Helpers;
+using Metrics;
 
 namespace Criteo.IdController.Controllers
 {
@@ -8,11 +9,13 @@ namespace Criteo.IdController.Controllers
     public class IfaController : Controller
     {
         private readonly IUserManagementHelper _userManagementHelper;
+        private readonly IMetricsRegistry _metricsRegistry;
         private readonly string IfaCookieName = "ifa";
 
-        public IfaController(IUserManagementHelper userManagementHelper)
+        public IfaController(IUserManagementHelper userManagementHelper, IMetricsRegistry metricRegistry)
         {
             _userManagementHelper = userManagementHelper;
+            _metricsRegistry = metricRegistry;
         }
 
         [HttpGet("get")]

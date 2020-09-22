@@ -1,5 +1,4 @@
-using System.Net;
-using Microsoft.AspNetCore.Hosting;
+using Metrics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Criteo.IdController.Controllers
@@ -7,7 +6,12 @@ namespace Criteo.IdController.Controllers
     [Route("api/[controller]")]
     public class WidgetController : Controller
     {
-        public WidgetController() { }
+        private readonly IMetricsRegistry _metricsRegistry;
+
+        public WidgetController(IMetricsRegistry metricRegistry)
+        {
+            _metricsRegistry = metricRegistry;
+        }
 
         [HttpGet]
         public IActionResult InitialBanner(string originHost)
