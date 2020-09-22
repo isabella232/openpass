@@ -55,18 +55,16 @@ export function addPostMessageEvtListener(currentWindow: Window) {
         // Prevent the message to propagate to other listeners
         event.stopImmediatePropagation();
 
-        if (data.ifa) {
-            currentWindow.parent.postMessage({
-                isIdControllerMessage: true,
-                ifa: data.ifa,
-            }, "*");
-        }
+        currentWindow.parent.postMessage({
+            isIdControllerMessage: true,
+            ifa: data.ifa,
+        }, "*");
     }
 
     currentWindow.addEventListener("message", evtListener, true);
 }
 
-export async function fetchIfa() {
+export async function fetchIfa(): Promise<string | undefined> {
     try {
         const fetchResponse = await fetch(getIfaUrl);
         if (fetchResponse.ok) {

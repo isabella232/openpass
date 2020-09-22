@@ -20,14 +20,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const hostname = window.idController.originHost;
             sendEvent(eventType, hostname);
 
-            if (eventType == EventType.ConsentGranted) {
-                const ifa = await fetchIfa();
-                window.opener.postMessage({
-                        isIdControllerMessage: true,
-                        ifa: ifa,
-                    },
-                    "*");
-            }
+            let ifa : string | undefined = undefined;
+            if (eventType == EventType.ConsentGranted)
+                ifa = await fetchIfa();
+
+            window.opener.postMessage({
+                isIdControllerMessage: true,
+                ifa: ifa
+            }, "*");
+
+            window.close();
         }
     );
 })

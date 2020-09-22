@@ -111,13 +111,14 @@ export default class IdController {
             this.addClickListenerToCloseModal();
     }
 
-    private removeIframe(): void {
+    private removeWidget(): void {
+        // Remove created parent div and iframe (leave the client provided div intact)
         this.parent.remove();
     }
 
     private addClickListenerToCloseModal(): void {
         const closeModalWrapper = (event: Event) => {
-            this.removeIframe();
+            this.removeWidget();
             document.removeEventListener('click', closeModalWrapper); // remove itself
         };
 
@@ -161,8 +162,9 @@ export default class IdController {
                     document);
             }
 
-            // TODO: Close dialog as well
-            this.removeIframe();
+            // Remove modal
+            if (this.position === "modal")
+                this.removeWidget();
         }
 
         window.addEventListener("message", evtListener, true);
