@@ -11,6 +11,7 @@ namespace Criteo.IdController.Controllers
     /// </summary>
     public class HomeController : Controller
     {
+        private static readonly string metricPrefix = "home.";
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IMetricsRegistry _metricsRegistry;
 
@@ -23,6 +24,7 @@ namespace Criteo.IdController.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            _metricsRegistry.GetOrRegister($"{metricPrefix}.home", () => new Counter(Granularity.CoarseGrain)).Increment();
             // "dist" is the directory containing the built UI application, that should be published alongside with it from your UI project.
             return new PhysicalFileResult(Path.Combine(_hostingEnvironment.WebRootPath, "index.html"), new MediaTypeHeaderValue("text/html"));
         }

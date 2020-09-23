@@ -8,6 +8,7 @@ namespace Criteo.IdController.Controllers
     [Route("api/[controller]")]
     public class IfaController : Controller
     {
+        private static readonly string metricPrefix = "ifa.";
         private readonly IUserManagementHelper _userManagementHelper;
         private readonly IMetricsRegistry _metricsRegistry;
         private readonly string IfaCookieName = "ifa";
@@ -21,6 +22,8 @@ namespace Criteo.IdController.Controllers
         [HttpGet("get")]
         public IActionResult GetOrCreateIfa(string pii)
         {
+
+            _metricsRegistry.GetOrRegister($"{metricPrefix}.get_create", () => new Counter(Granularity.CoarseGrain)).Increment();
             var piiPresent = !string.IsNullOrEmpty(pii);
             string ifa;
 
@@ -28,11 +31,13 @@ namespace Criteo.IdController.Controllers
             // PII not present -> reuse the one in cookies if available or create a new one
             if (piiPresent)
             {
+                _metricsRegistry.GetOrRegister($"{metricPrefix}.get_create.pii_present", () => new Counter(Granularity.CoarseGrain)).Increment();
                 _userManagementHelper.TryGetOrCreateIfaMappingFromPii(pii, out var retrievedIfa);
                 ifa = retrievedIfa.ToString();
             }
             else
             {
+                _metricsRegistry.GetOrRegister($"{metricPrefix}.get_create.pii_not_present", () => new Counter(Granularity.CoarseGrain)).Increment();
                 if (Request.Cookies.TryGetValue(IfaCookieName, out var ifaCookie))
                     ifa = ifaCookie;
                 else
@@ -51,6 +56,7 @@ namespace Criteo.IdController.Controllers
         [HttpGet("delete")]
         public IActionResult DeleteIfa()
         {
+            _metricsRegistry.GetOrRegister($"{metricPrefix}.delete", () => new Counter(Granularity.CoarseGrain)).Increment();
             Response.Cookies.Delete(IfaCookieName);
 
             return Ok();

@@ -12,6 +12,7 @@ namespace Criteo.IdController.Controllers
     [Route("api/[controller]")]
     public class EventController : Controller
     {
+        private static readonly string metricPrefix = "event.";
         private readonly IConfigurationHelper _configurationHelper;
         private readonly IGlupService _glupService;
         private readonly IAgentSource _agentSource;
@@ -35,10 +36,16 @@ namespace Criteo.IdController.Controllers
             string uid,
             string ifa)
         {
+
+            _metricsRegistry.GetOrRegister($"{metricPrefix}.save_event", () => new Counter(Granularity.CoarseGrain)).Increment();
+
             // the controller tries to parse the EventType from the integer received
             // EventType.Unknown is either unsuccessful or indeed a evenType = 0, invalid in both cases
             if (eventType == EventType.Unknown || string.IsNullOrEmpty(originHost))
+            {
+                _metricsRegistry.GetOrRegister($"{metricPrefix}.save_event.bad_request", () => new Counter(Granularity.CoarseGrain)).Increment();
                 return BadRequest();
+            }
 
             var userAgentString = HttpContext?.Request?.Headers?["User-Agent"];
             var uidForUAlib = ifa ?? uid ?? localwebid;
@@ -75,7 +82,12 @@ namespace Criteo.IdController.Controllers
             // Using sampling ratio for an endpoint generating glups directly
             var samplingRatio = _configurationHelper.EmitGlupsRatio(originHost);
             if (_randomGenerator.NextDouble() > samplingRatio)
+            {
+                _metricsRegistry.GetOrRegister($"{metricPrefix}.save_event.emit_glup.over_sampling_ratio", () => new Counter(Granularity.CoarseGrain)).Increment();
                 return;
+            }
+
+            _metricsRegistry.GetOrRegister($"{metricPrefix}.save_event.emit_glup", () => new Counter(Granularity.CoarseGrain)).Increment();
 
             // Create glup event with required fields
             var glup = new IdControllerGlup()

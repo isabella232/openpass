@@ -32,6 +32,8 @@ namespace Criteo.IdController.UTest
             _glupServiceMock = new Mock<IGlupService>();
             _agentSourceMock = new Mock<IAgentSource>();
             _metricRegistryMock = new Mock<IMetricsRegistry>();
+            _metricRegistryMock.Setup(mr => mr.GetOrRegister(It.IsAny<string>(), It.IsAny<Func<Counter>>())).Returns(new Counter(Granularity.CoarseGrain));
+
             _eventController = new EventController(_configurationHelperMock.Object, _glupServiceMock.Object, _agentSourceMock.Object, _metricRegistryMock.Object);
 
             _configurationHelperMock.Setup(x => x.EmitGlupsRatio(It.IsAny<string>())).Returns(1.0); // activate glupping by default

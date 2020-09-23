@@ -6,6 +6,7 @@ namespace Criteo.IdController.Controllers
     [Route("api/[controller]")]
     public class WidgetController : Controller
     {
+        private static readonly string metricPrefix = "widget.";
         private readonly IMetricsRegistry _metricsRegistry;
 
         public WidgetController(IMetricsRegistry metricRegistry)
@@ -16,6 +17,7 @@ namespace Criteo.IdController.Controllers
         [HttpGet]
         public IActionResult InitialBanner(string originHost)
         {
+            _metricsRegistry.GetOrRegister($"{metricPrefix}.initial_banner", () => new Counter(Granularity.CoarseGrain)).Increment();
             ViewData["originHost"] = originHost;
             return View();
         }
@@ -24,6 +26,7 @@ namespace Criteo.IdController.Controllers
         [HttpGet("options")]
         public IActionResult OptionsBanner(string originHost)
         {
+            _metricsRegistry.GetOrRegister($"{metricPrefix}.options_banner", () => new Counter(Granularity.CoarseGrain)).Increment();
             ViewData["originHost"] = originHost;
             return View();
         }
@@ -32,6 +35,7 @@ namespace Criteo.IdController.Controllers
         [HttpGet("learn")]
         public IActionResult LearnMoreSite(string originHost)
         {
+            _metricsRegistry.GetOrRegister($"{metricPrefix}.learn_more", () => new Counter(Granularity.CoarseGrain)).Increment();
             ViewData["originHost"] = originHost;
             return View();
         }
