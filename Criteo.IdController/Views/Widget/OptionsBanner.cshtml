@@ -16,17 +16,20 @@
 }
 
 @* Body section *@
-<h1>Improve your ad experience</h1>
-<p>Would you prefer a more curated ad experience?</p>
-<form id="options">
-    <div class="option-wrapper">
-        <input type="radio" id="choiceYes" name="choice" value="true" checked>
-        <label for="choiceYes">See personalized ads</label>
-    </div>
-    <div class="option-wrapper">
-        <input type="radio" id="choiceNo" name="choice" value="false">
-        <label for="choiceNo">See random ads</label>
-    </div>
-    <input type="submit" value="Save my choice">
-</form>
-<a href="@ViewData["LearnMoreUrl"]">Learn how we are improving advertising</a>
+<main>
+    <img src="/img/my-advertising-experience.svg" alt="My advertising experience" class="logo" />
+    <h1>Improve your ad experience</h1>
+    <p>Would you prefer a more curated ad experience?</p>
+    <form id="options" class="pure-form">
+        <div class="option-wrapper">
+            <input type="radio" id="choiceYes" name="choice" value="true" checked>
+            <label for="choiceYes">See personalized ads</label>
+        </div>
+        <div class="option-wrapper">
+            <input type="radio" id="choiceNo" name="choice" value="false">
+            <label for="choiceNo">See random ads</label>
+        </div>
+        <button type="submit" class="pure-button pure-button-primary">Save my choice</button>
+    </form>
+    <a href="@ViewData["LearnMoreUrl"]">Learn how we are improving advertising</a>
+</main>

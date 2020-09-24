@@ -92,8 +92,8 @@ export default class IdController {
             iframe.style.position = "fixed";
             iframe.style.display = "block";
             iframe.style.zIndex = "2147483647";
-            iframe.height = "200px"; // TODO: Make this customizable
-            iframe.width = "400px"; // TODO: Make this customizable
+            iframe.height = "355px"; // TODO: Make this customizable
+            iframe.width = "375px"; // TODO: Make this customizable
         } else {
             iframe.height = this.height;
             iframe.width = this.width;

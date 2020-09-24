@@ -51,8 +51,8 @@
   </ItemGroup>
   <Target Name="BuildTS" BeforeTargets="BeforeBuild">
     <Exec WorkingDirectory="Javascript/" ConsoleToMSBuild="True" Command="npm install" />
-    <Exec WorkingDirectory="Javascript/" ConsoleToMSBuild="True" Command="npm run build-dev" Condition="'$(Configuration)' == 'Debug'"/>
-    <Exec WorkingDirectory="Javascript/" ConsoleToMSBuild="True" Command="npm run build" Condition="'$(Configuration)' != 'Debug'"/>
+    <Exec WorkingDirectory="Javascript/" ConsoleToMSBuild="True" Command="npm run build-dev" Condition="'$(Configuration)' == 'Debug'" />
+    <Exec WorkingDirectory="Javascript/" ConsoleToMSBuild="True" Command="npm run build" Condition="'$(Configuration)' != 'Debug'" />
   </Target>
   <ItemGroup>
     <Content Update="appsettings*.json">
@@ -72,6 +72,9 @@
     <Content Update="Views\Widget\_Layout.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\img\" />
   </ItemGroup>
   <Import Project="$(CBS_DIR)\MSBuild\targets\Sdk.targets" Condition="Exists('$(CBS_DIR)\MSBuild\targets\Sdk.targets')" />
 </Project>

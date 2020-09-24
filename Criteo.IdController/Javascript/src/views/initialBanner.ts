@@ -1,7 +1,14 @@
 ﻿import {sendEvent, addPostMessageEvtListener, EventType} from "../utils";
 
-function openDialog() {
-    window.open(window.idController.optionsUrl || "", "_blank", "width=400,height=520,top=200,left=800,location=no");
+const openDialog = () => {
+    // Options banner required sizes
+    const width = 400;
+    const height = 450;
+    // Computed coordinates to place the dialog
+    const left = (screen.width - width) / 2; // middle
+    const top = (screen.height - height) / 3; // slightly below the middle (avoid bar)
+
+    window.open(window.idController.optionsUrl || "", "_blank", `width=${width},height=${height},top=${top},left=${left},location=no`);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
