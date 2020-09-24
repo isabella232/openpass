@@ -1,6 +1,7 @@
 ﻿@{
     Layout = "_Layout";
     ViewData["Title"] = "Id-Network introduction";
+    ViewData["BodyClass"] = "learn-more";
 }
 
 @section Scripts
@@ -14,6 +15,24 @@
 }
 
 @* Body section *@
-<h1>Learn how the Id-Network is improving advertising</h1>
-<p>The Id-Network is indeed improving advertising! Stay tuned!</p>
-<button id="goBackToPreviousSite">Back to choices</button>
+    <main class="learn-more">
+        <img src="/img/my-advertising-experience.svg" alt="My advertising experience" class="logo" />
+        <h1>Improve your ad experience</h1>
+        <h2>Control and transparency matter</h2>
+        <p>Providing trusted and impactful advertising experiences is important to My Advertising Experience and our partners. We believe you should have:</p>
+        <h3>Transparency</h3>
+        <p>Have a clear view of the types of data and information shared with businesses for advertising purposes.</p>
+        <h3>Choices</h3>
+        <p>Select businesses you want to receive personalized ads from.</p>
+        <h3>Control</h3>
+        <p>Start and stop sharing data with the advertisers and publishers you choose.</p>
+        <br />
+        <p>This is why we are partnering with advertisers and publishers to test the best way to provide you with the control and transparency you deserve. We greatly appreciate your participation and feedback as we conduct this test. To learn more about the test and strategy subscribe to our newsletter below.</p>
+        <form id="newsletter" class="pure-form">
+            <fieldset>
+                <input type="email" placeholder="Email address" />
+                <button type="submit" class="pure-button pure-button-primary">Subscribe</button>
+            </fieldset>
+        </form>
+        <button id="goBackToPreviousSite" class="pure-button button-success">Back to choices</button>
+    </main>
