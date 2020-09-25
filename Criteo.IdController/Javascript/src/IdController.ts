@@ -76,6 +76,7 @@ export default class IdController {
             this.parent.style.position = "absolute";
             this.parent.style.top = "0";
             this.parent.style.width = "100vw";
+            this.parent.style.zIndex = "2147483646";
         } else {
             this.parent.style.height = "100%";
             this.parent.style.width = "100%";
