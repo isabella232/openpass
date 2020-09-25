@@ -14,6 +14,10 @@ body.learn-more {
     overflow-y: auto;
 }
 
+main {
+    padding: 1em 0;
+}
+
 h1 {
     font-size: 1.2em;
 }
