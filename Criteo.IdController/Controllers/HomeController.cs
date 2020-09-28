@@ -9,6 +9,7 @@ namespace Criteo.IdController.Controllers
     /// <summary>
     /// This provides a default home page, in case the app is serving UI content (SPA application)
     /// </summary>
+    [Route("/")]
     public class HomeController : Controller
     {
         private static readonly string metricPrefix = "home.";

@@ -134,9 +134,6 @@ namespace Criteo.IdController
             app.UseMvc(routes =>
             {
                 // generic (non controller-specific) routes are defined here
-
-                // This defaults to a controller and action if the requested route doesn't exist (instead of a 404)
-                routes.MapSpaFallbackRoute("spa-fallback", new { controller = "Home", action = "Index" });
             });
         }
     }
