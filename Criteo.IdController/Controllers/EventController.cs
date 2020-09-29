@@ -28,6 +28,7 @@ namespace Criteo.IdController.Controllers
             _randomGenerator = new Random();
         }
 
+        [HttpGet]
         [HttpPost]
         public IActionResult SaveEvent(
             EventType eventType,
