@@ -53,7 +53,7 @@ namespace Criteo.IdController.Controllers
 
             EmitGlup(eventType, originHost, parsedUserAgent, localwebid, uid, ifa);
 
-            return Ok(); // 200 OK - empty response
+            return Ok(new { result = true }); // 200 OK - send content to avoid 500 Internal Error from the load-balancer
         }
 
         #region Helpers
