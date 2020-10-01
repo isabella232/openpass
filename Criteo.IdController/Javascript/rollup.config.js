@@ -12,7 +12,7 @@ function generateRollupConfig(tsInput, jsOutput, isDevEnv) {
         plugins: [
             typescript(/*{ plugin options }*/),
             replace({
-                '__MACRO-CONTROLLER-URI__': isDevEnv ? 'http://localhost:1234' : 'https://id-controller.crto.in'
+                '__MACRO-CONTROLLER-URI__': isDevEnv ? 'http://localhost:1234' : 'https://my-advertising-experience.crto.in'
             })
         ]
     };
