@@ -84,13 +84,18 @@ namespace Criteo.IdController
                 var cacService = r.GetService<IConfigAsCodeService>();
                 var storageManager = r.GetService<IStorageManager>();
 
-                return UserAgentProviderProvider.CreateAgentSource(
+                var agentSource = UserAgentProviderProvider.CreateAgentSource(
                     serviceLifecycleManager,
                     sqlDbConnectionService,
                     graphiteHelper,
                     glupService,
                     cacService,
                     storageManager);
+
+                // Force preload to have the offline db and avoid having runtime errors
+                agentSource.Preload();
+
+                return agentSource;
             });
 
             // Configuration helper
