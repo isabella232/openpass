@@ -173,9 +173,12 @@ export default class IdController {
 
     public static getIfa(): Promise<string | undefined> {
         return new Promise<string | undefined>((resolve: Function, reject: Function) => {
-            const cookieName = IdController.ifaFirstPartyCookieName;
-            const cookie = document.cookie.match(`(^|;)\s*${cookieName}\s*=\s*([^;]+)`);
-            resolve(cookie ? cookie.pop() : undefined);
+            for (const cookie of document.cookie.split(";")) {
+                const [name, value] = cookie.trim().split("=");
+                if (name === IdController.ifaFirstPartyCookieName)
+                    return resolve(value);
+            }
+            return resolve(undefined);
         });
     }
 }
