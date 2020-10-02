@@ -152,16 +152,23 @@ export default class IdController {
             // Prevent the message to propagate to other listeners
             event.stopImmediatePropagation();
 
+            let expires: string;
+            let ifa: string;
             if (data.ifa) {
                 const date = new Date();
                 date.setTime(date.getTime() + (this.expiryHours * 60 * 60 * 1000));
-                const expires = "expires=" + date.toUTCString();
-                IdController.setCookieString(IdController.ifaFirstPartyCookieName,
-                    data.ifa,
-                    expires,
-                    this.originHost,
-                    document);
+                expires = "expires=" + date.toUTCString();
+                ifa = data.ifa;
+            } else {
+                expires = "expires=Thu, 01 Jan 1970 00: 00: 00 UTC";
+                ifa = "";
             }
+
+            IdController.setCookieString(IdController.ifaFirstPartyCookieName,
+                ifa,
+                expires,
+                this.originHost,
+                document);
 
             // Remove modal
             if (this.position === "modal")
