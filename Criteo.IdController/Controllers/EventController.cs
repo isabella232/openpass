@@ -1,8 +1,10 @@
 using System;
+using System.Threading.Tasks;
 using Criteo.IdController.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Criteo.UserAgent;
 using Criteo.Services.Glup;
+using Criteo.UserIdentification;
 using Metrics;
 using static Criteo.Glup.IdController.Types;
 using IdControllerGlup = Criteo.Glup.IdController;
@@ -17,23 +19,26 @@ namespace Criteo.IdController.Controllers
         private readonly IGlupService _glupService;
         private readonly IAgentSource _agentSource;
         private readonly IMetricsRegistry _metricsRegistry;
+        private readonly IInternalMappingHelper _internalMappingHelper;
         private readonly Random _randomGenerator;
 
-        public EventController(
+        internal EventController(
             IConfigurationHelper configurationHelper,
             IGlupService glupService,
             IAgentSource agentSource,
-            IMetricsRegistry metricRegistry)
+            IMetricsRegistry metricRegistry,
+            IInternalMappingHelper internalMappingHelper)
         {
             _configurationHelper = configurationHelper;
             _glupService = glupService;
             _agentSource = agentSource;
             _metricsRegistry = metricRegistry;
+            _internalMappingHelper = internalMappingHelper;
             _randomGenerator = new Random();
         }
 
         [HttpPost]
-        public IActionResult SaveEvent(
+        public async Task<IActionResult> SaveEvent(
             EventType eventType,
             string originHost,
             string localwebid,
@@ -51,8 +56,14 @@ namespace Criteo.IdController.Controllers
                 return BadRequest();
             }
 
+            var internalLocalWebId = Guid.TryParse(localwebid, out var _) // LocalWebId parses when accessing the id, causing a runtime exception if invalid Guid
+                ? await _internalMappingHelper.GetInternalLocalWebId(LocalWebId.Parse(localwebid, originHost))
+                : null;
+            var internalUid = await _internalMappingHelper.GetInternalCriteoId(CriteoId.Parse(uid));
+            var internalUserCentricAdId = await _internalMappingHelper.GetInternalUserCentricAdId(UserCentricAdId.Parse(ifa));
+
             var userAgentString = HttpContext?.Request?.Headers?["User-Agent"];
-            var uidForUAlib = ifa ?? uid ?? localwebid;
+            var uidForUAlib = internalUserCentricAdId?.Value ?? internalUid?.Value ?? internalLocalWebId?.CriteoId?.Value;
             var parsedUserAgent = GetUserAgent(userAgentString, uidForUAlib);
 
             EmitGlup(eventType, originHost, parsedUserAgent, localwebid, uid, ifa);
@@ -61,17 +72,10 @@ namespace Criteo.IdController.Controllers
         }
 
         #region Helpers
-        private IAgent GetUserAgent(string userAgentString, string uid)
+        private IAgent GetUserAgent(string userAgentString, Guid? uid)
         {
             var agentKey = new AgentKey { UserAgentHeader = userAgentString };
-
-            Guid? uidForUAlib = null;
-
-            if (!string.IsNullOrEmpty(uid) && Guid.TryParse(uid, out var parsedGuid))
-                uidForUAlib = parsedGuid;
-
-            var result = _agentSource.Get(agentKey, uidForUAlib);
-
+            var result = _agentSource.Get(agentKey, uid);
             return result.Agent;
         }
 
