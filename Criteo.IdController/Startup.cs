@@ -115,7 +115,7 @@ namespace Criteo.IdController
                 var cacService = r.GetService<IConfigAsCodeService>();
                 var graphiteHelper = r.GetService<IGraphiteHelper>();
 
-                var identityMapper = new IdentityMapper(storageManager, glupService, cacService, graphiteHelper, UserIdentificationContext.Unknown);
+                var identityMapper = new IdentityMapper(storageManager, glupService, cacService, graphiteHelper, UserIdentificationContext.UserCentricAdId);
 
                 return new InternalMappingHelper(cacService, identityMapper);
             });
