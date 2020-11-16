@@ -6,9 +6,15 @@
     <DefineConstants>$(DefineConstants);NET_CORE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Criteo.ConfigAsCode.netcore" />
+    <Reference Include="Criteo.Configuration.Repository.netcore" />
+    <Reference Include="Criteo.Configuration.Description.netcore" />
     <Reference Include="Criteo.Glup.netcore" />
+    <Reference Include="Criteo.Identification.Schemas.netcore" />
     <Reference Include="Criteo.Services.netcore" />
     <Reference Include="Criteo.UserAgent.netcore" />
+    <Reference Include="Criteo.UserIdentification.netcore" />
+    <Reference Include="Criteo.UserIdentification.Services.netcore" />
     <Reference Include="Criteo.Testing.Isolation.netcore" />
     <Reference Include="Criteo.Testing.Utils.netcore" />
     <Reference Include="Glup.Schemas.netcore" />

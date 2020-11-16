@@ -19,7 +19,11 @@ namespace Criteo.IdController.Controllers
         private readonly IMetricsRegistry _metricsRegistry;
         private readonly Random _randomGenerator;
 
-        public EventController(IConfigurationHelper configurationHelper, IGlupService glupService, IAgentSource agentSource, IMetricsRegistry metricRegistry)
+        public EventController(
+            IConfigurationHelper configurationHelper,
+            IGlupService glupService,
+            IAgentSource agentSource,
+            IMetricsRegistry metricRegistry)
         {
             _configurationHelper = configurationHelper;
             _glupService = glupService;

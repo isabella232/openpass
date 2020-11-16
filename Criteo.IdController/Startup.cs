@@ -13,6 +13,8 @@ using Criteo.Services.Glup;
 using Criteo.Services.Graphite;
 using Criteo.UserAgent;
 using Criteo.UserAgent.Provider;
+using Criteo.UserIdentification.Services;
+using Criteo.UserIdentification.Services.IdentityMapping;
 using Sdk.Interfaces.Hosting;
 using Sdk.Interfaces.KeyValueStore;
 using Sdk.Monitoring;
@@ -103,6 +105,19 @@ namespace Criteo.IdController
             {
                 var cacService = r.GetService<IConfigAsCodeService>();
                 return new ConfigurationHelper(cacService);
+            });
+
+            // Internal Mapping helper (revocable id)
+            services.AddSingleton<IInternalMappingHelper>(r =>
+            {
+                var storageManager = r.GetService<IStorageManager>();
+                var glupService = r.GetService<IGlupService>();
+                var cacService = r.GetService<IConfigAsCodeService>();
+                var graphiteHelper = r.GetService<IGraphiteHelper>();
+
+                var identityMapper = new IdentityMapper(storageManager, glupService, cacService, graphiteHelper, UserIdentificationContext.Unknown);
+
+                return new InternalMappingHelper(cacService, identityMapper);
             });
 
             // User Management helper

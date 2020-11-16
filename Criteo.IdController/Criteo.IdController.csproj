@@ -18,10 +18,13 @@
     <Reference Include="Criteo.Configuration.Repository.netcore" />
     <Reference Include="Criteo.DevKit.netcore" />
     <Reference Include="Criteo.Glup.netcore" />
+    <Reference Include="Criteo.Identification.Schemas.netcore" />
     <Reference Include="Criteo.Logging.netcore" />
     <Reference Include="Criteo.Services.netcore" />
     <Reference Include="Criteo.UserAgent.netcore" />
     <Reference Include="Criteo.UserAgent.Provider.netcore" />
+    <Reference Include="Criteo.UserIdentification.netcore" />
+    <Reference Include="Criteo.UserIdentification.Services.netcore" />
     <Reference Include="Criteo.Web.netcore" />
     <Reference Include="Glup.Schemas.netcore" />
     <Reference Include="Metrics.Core.netcore" />
@@ -77,4 +80,4 @@
     <Folder Include="wwwroot\img\" />
   </ItemGroup>
   <Import Project="$(CBS_DIR)\MSBuild\targets\Sdk.targets" Condition="Exists('$(CBS_DIR)\MSBuild\targets\Sdk.targets')" />
-</Project>
+</Project>
