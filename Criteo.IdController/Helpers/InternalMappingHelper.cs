@@ -15,7 +15,6 @@ namespace Criteo.IdController.Helpers
 
     internal class InternalMappingHelper : IInternalMappingHelper
     {
-        private readonly IConfigAsCodeService _cacService;
         private readonly IIdentityMapper _identityMapper;
 
         private readonly RevocableIdEnabledInIdController.ParameterImpl _revocableIdEnabledParameter;
@@ -23,7 +22,6 @@ namespace Criteo.IdController.Helpers
 
         internal InternalMappingHelper(IConfigAsCodeService cacService, IIdentityMapper identityMapper)
         {
-            _cacService = cacService;
             _identityMapper = identityMapper;
 
             _revocableIdEnabledParameter = RevocableIdEnabledInIdController.CreateParameter(cacService);

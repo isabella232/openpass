@@ -34,6 +34,7 @@ namespace Criteo.IdController.UTest
         public void Setup()
         {
             _configurationHelperMock = new Mock<IConfigurationHelper>();
+            _configurationHelperMock.Setup(x => x.EmitGlupsRatio(It.IsAny<string>())).Returns(1.0); // activate glupping by default
             _glupServiceMock = new Mock<IGlupService>();
             _agentSourceMock = new Mock<IAgentSource>();
             _metricRegistryMock = new Mock<IMetricsRegistry>();
@@ -44,8 +45,6 @@ namespace Criteo.IdController.UTest
             _internalMappingHelperMock.Setup(x => x.GetInternalUserCentricAdId(It.IsAny<UserCentricAdId?>())).ReturnsAsync((UserCentricAdId? ucaid) => ucaid);
 
             _eventController = new EventController(_configurationHelperMock.Object, _glupServiceMock.Object, _agentSourceMock.Object, _metricRegistryMock.Object, _internalMappingHelperMock.Object);
-
-            _configurationHelperMock.Setup(x => x.EmitGlupsRatio(It.IsAny<string>())).Returns(1.0); // activate glupping by default
         }
 
         [TestCase(EventType.BannerRequest, "originHost.com")]
@@ -101,6 +100,38 @@ namespace Criteo.IdController.UTest
             var parsedExpectedUid = !string.IsNullOrEmpty(expectedUid) ? Guid.Parse(expectedUid) : (Guid?) null;
             _agentSourceMock.Verify(
                 x => x.Get(It.IsAny<AgentKey>(), It.Is<Guid?>(g => g.Equals(parsedExpectedUid))),
+                Times.Once);
+        }
+
+        [Theory]
+        public async Task GlupSupportsRevocableId(bool revocable)
+        {
+            var host = "originHost.com";
+            var expectedLwid = _testingLwid;
+            var expectedUid = _testingUid;
+            var expectedIfa = _testingIfa;
+
+            if (revocable)
+            {
+                var revLwid = LocalWebId.CreateNew(host);
+                var revCriteoId = CriteoId.New();
+                var revIfa = UserCentricAdId.New();
+
+                // Override fakes
+                _internalMappingHelperMock.Setup(x => x.GetInternalLocalWebId(It.IsAny<LocalWebId?>())).ReturnsAsync((LocalWebId? lwid) => revLwid);
+                _internalMappingHelperMock.Setup(x => x.GetInternalCriteoId(It.IsAny<CriteoId?>())).ReturnsAsync((CriteoId? criteoId) => revCriteoId);
+                _internalMappingHelperMock.Setup(x => x.GetInternalUserCentricAdId(It.IsAny<UserCentricAdId?>())).ReturnsAsync((UserCentricAdId? ucaid) => revIfa);
+
+                // Update expected uids
+                expectedLwid = revLwid.CriteoId.ToString();
+                expectedUid = revCriteoId.Value.ToString();
+                expectedIfa = revIfa.Value.ToString();
+            }
+
+            await _eventController.SaveEvent(EventType.BannerRequest, host, _testingLwid, _testingUid, _testingIfa);
+
+            _glupServiceMock.Verify(
+                x => x.Emit(It.Is<IdControllerGlup>(g => (g.LocalWebId == expectedLwid) && (g.Uid == expectedUid) && (g.Ifa == expectedIfa))),
                 Times.Once);
         }
     }

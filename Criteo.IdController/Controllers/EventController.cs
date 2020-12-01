@@ -56,7 +56,7 @@ namespace Criteo.IdController.Controllers
                 return BadRequest();
             }
 
-            var internalLocalWebId = Guid.TryParse(localwebid, out var _) // LocalWebId parses when accessing the id, causing a runtime exception if invalid Guid
+            var internalLocalWebId = Guid.TryParse(localwebid, out _) // LocalWebId parses when accessing the id, causing a runtime exception if invalid Guid
                 ? await _internalMappingHelper.GetInternalLocalWebId(LocalWebId.Parse(localwebid, originHost))
                 : null;
             var internalUid = await _internalMappingHelper.GetInternalCriteoId(CriteoId.Parse(uid));
@@ -66,7 +66,7 @@ namespace Criteo.IdController.Controllers
             var uidForUAlib = internalUserCentricAdId?.Value ?? internalUid?.Value ?? internalLocalWebId?.CriteoId?.Value;
             var parsedUserAgent = GetUserAgent(userAgentString, uidForUAlib);
 
-            EmitGlup(eventType, originHost, parsedUserAgent, localwebid, uid, ifa);
+            EmitGlup(eventType, originHost, parsedUserAgent, internalLocalWebId, internalUid, internalUserCentricAdId);
 
             return Ok(new { result = true }); // 200 OK - send content to avoid 500 Internal Error from the load-balancer
         }
@@ -83,9 +83,9 @@ namespace Criteo.IdController.Controllers
             EventType eventType,
             string originHost,
             IAgent userAgent,
-            string localwebid,
-            string uid,
-            string ifa)
+            LocalWebId? localwebid,
+            CriteoId? uid,
+            UserCentricAdId? ifa)
         {
             // Using sampling ratio for an endpoint generating glups directly
             var samplingRatio = _configurationHelper.EmitGlupsRatio(originHost);
@@ -123,12 +123,12 @@ namespace Criteo.IdController.Controllers
                 glup.UaOsMinor = userAgent.OperatingSystemMinorVersion;
 
             // Optional
-            if (localwebid != null)
-                glup.LocalWebId = localwebid;
-            if (uid != null)
-                glup.Uid = uid;
-            if (ifa != null)
-                glup.Ifa = ifa;
+            if (localwebid.HasValue && localwebid.Value.CriteoId.HasValue)
+                glup.LocalWebId = localwebid.Value.CriteoId.Value.ToString();
+            if (uid.HasValue)
+                glup.Uid = uid.Value.ToString();
+            if (ifa.HasValue)
+                glup.Ifa = ifa.Value.ToString();
 
             // Go!
             _glupService.Emit(glup);
