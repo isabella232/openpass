@@ -52,12 +52,12 @@ namespace Criteo.IdController
                 var metricsRegistry = registrar.AddMetricsRegistry();
                 // Registers an IConsulServiceLocator implementation. Current service is read from the configuration/command line arguments automatically.
                 var serviceLocator = registrar.AddServiceLocator(metricsRegistry);
-                // Registers ISqlDbConnectionService for SQL DB access
-                var sqlConnections = registrar.AddSqlConnections(serviceLocator);
 
                 // Registers an IConfigAsCodeService that will read its configuration data from the SQL databases, with dependencies
                 var keyValueStore = registrar.AddConsulKeyValueStore(metricsRegistry);
                 var sdkConfigurationService = registrar.AddSdkConfigurationService(keyValueStore, metricsRegistry, serviceLocator);
+                
+                var sqlConnections = registrar.AddSqlConnections(serviceLocator, metricsRegistry, sdkConfigurationService);
                 var kafkaConsumer = registrar.AddKafkaConsumer(metricsRegistry, serviceLocator, sdkConfigurationService);
                 var storageManager = registrar.AddStorageManager(metricsRegistry, serviceLocator, keyValueStore);
                 var configAsCode = registrar.AddConfigAsCode(metricsRegistry, serviceLocator, storageManager, kafkaConsumer, sqlConnections);
