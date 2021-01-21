@@ -7,8 +7,10 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <Prefer32Bit>false</Prefer32Bit>
-    <MOABPublish>true</MOABPublish> <!-- Mandatory so that the build archive is published to Nexus -->
-    <OutputType>Exe</OutputType> <!-- Mandatory as it adds the necessary entry point so that the dotnet command works. Misleading, as the build still outputs a .dll file (that's OK) -->
+    <MOABPublish>true</MOABPublish>
+    <!-- Mandatory so that the build archive is published to Nexus -->
+    <OutputType>Exe</OutputType>
+    <!-- Mandatory as it adds the necessary entry point so that the dotnet command works. Misleading, as the build still outputs a .dll file (that's OK) -->
     <StartupObject>Criteo.IdController.Program</StartupObject>
     <TypeScriptToolsVersion>3.9</TypeScriptToolsVersion>
   </PropertyGroup>
@@ -20,6 +22,7 @@
     <Reference Include="Criteo.Glup.netcore" />
     <Reference Include="Criteo.Identification.Schemas.netcore" />
     <Reference Include="Criteo.Logging.netcore" />
+    <Reference Include="Criteo.Memcache.Helper.netcore" />
     <Reference Include="Criteo.Services.netcore" />
     <Reference Include="Criteo.UserAgent.netcore" />
     <Reference Include="Criteo.UserAgent.Provider.netcore" />
@@ -45,7 +48,8 @@
     <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="[default]" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="[default]" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="[default]" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="[default]" /><!-- Required to have the template engine work without raising a dependency error -->
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="[default]" />
+    <!-- Required to have the template engine work without raising a dependency error -->
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="[default]" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="[default]" />
     <PackageReference Include="System.Data.SqlClient" Version="[default]" />

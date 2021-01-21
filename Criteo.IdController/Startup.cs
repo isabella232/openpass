@@ -59,7 +59,7 @@ namespace Criteo.IdController
                 
                 var sqlConnections = registrar.AddSqlConnections(serviceLocator, metricsRegistry, sdkConfigurationService);
                 var kafkaConsumer = registrar.AddKafkaConsumer(metricsRegistry, serviceLocator, sdkConfigurationService);
-                var storageManager = registrar.AddStorageManager(metricsRegistry, serviceLocator, keyValueStore);
+                var storageManager = registrar.AddStorageManager(metricsRegistry, serviceLocator, keyValueStore, sdkConfigurationService);
                 var configAsCode = registrar.AddConfigAsCode(metricsRegistry, serviceLocator, storageManager, kafkaConsumer, sqlConnections);
 
                 // Enables tracing & request correlation
