@@ -2,7 +2,9 @@
   "name": "id-controller-ui",
   "version": "0.0.0",
   "scripts": {
-    "start": "ng serve",
+    "start": "ng serve --proxy-config proxy/proxy.conf.js",
+    "start:preprod": "ng serve --proxy-config proxy/proxy.preprod.conf.js",
+    "start:backendless": "ng serve --proxy-config proxy/proxy.backendless.conf.js",
     "build": "ng build --prod",
     "test": "ng test --watch=false",
     "lint": "npm run lint:typescript && npm run lint:prettier",
