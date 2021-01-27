@@ -1,0 +1,11 @@
+configurations {
+    frontend {}
+}
+
+moabDependencies {
+    frontend ':identification:id-controller:id-controller-ui'
+}
+
+msbuildPrepare {
+    dependsOn(configurations.frontend)
+}
