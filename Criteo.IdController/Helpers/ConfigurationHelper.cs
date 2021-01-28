@@ -26,6 +26,7 @@ namespace Criteo.IdController.Helpers
         #region Parameter-specific code
         public double EmitGlupsRatio(string domain = "")
         {
+            // This CaC is mainly used to get the ratio per domain to glup events
             var query = new EmitGlupsDomainRatio.Query(domain);
             return _emitGlupsRatioParameter?.Get(query, 0.0) ?? 0.0;
         }

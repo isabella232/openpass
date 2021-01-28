@@ -2,12 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Criteo.IdController.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using Criteo.UserAgent;
-using Criteo.Services.Glup;
 using Criteo.UserIdentification;
 using Metrics;
 using static Criteo.Glup.IdController.Types;
-using IdControllerGlup = Criteo.Glup.IdController;
 
 namespace Criteo.IdController.Controllers
 {
@@ -16,24 +13,21 @@ namespace Criteo.IdController.Controllers
     {
         private static readonly string metricPrefix = "event.";
         private readonly IConfigurationHelper _configurationHelper;
-        private readonly IGlupService _glupService;
-        private readonly IAgentSource _agentSource;
         private readonly IMetricsRegistry _metricsRegistry;
         private readonly IInternalMappingHelper _internalMappingHelper;
+        private readonly IGlupHelper _glupHelper;
         private readonly Random _randomGenerator;
 
         public EventController(
             IConfigurationHelper configurationHelper,
-            IGlupService glupService,
-            IAgentSource agentSource,
             IMetricsRegistry metricRegistry,
-            IInternalMappingHelper internalMappingHelper)
+            IInternalMappingHelper internalMappingHelper,
+            IGlupHelper glupHelper)
         {
             _configurationHelper = configurationHelper;
-            _glupService = glupService;
-            _agentSource = agentSource;
             _metricsRegistry = metricRegistry;
             _internalMappingHelper = internalMappingHelper;
+            _glupHelper = glupHelper;
             _randomGenerator = new Random();
         }
 
@@ -45,7 +39,6 @@ namespace Criteo.IdController.Controllers
             string uid,
             string ifa)
         {
-
             _metricsRegistry.GetOrRegister($"{metricPrefix}.save_event", () => new Counter(Granularity.CoarseGrain)).Increment();
 
             // the controller tries to parse the EventType from the integer received
@@ -63,76 +56,20 @@ namespace Criteo.IdController.Controllers
             var internalUserCentricAdId = await _internalMappingHelper.GetInternalUserCentricAdId(UserCentricAdId.Parse(ifa));
 
             var userAgentString = HttpContext?.Request?.Headers?["User-Agent"];
-            var uidForUAlib = internalUserCentricAdId?.Value ?? internalUid?.Value ?? internalLocalWebId?.CriteoId?.Value;
-            var parsedUserAgent = GetUserAgent(userAgentString, uidForUAlib);
 
-            EmitGlup(eventType, originHost, parsedUserAgent, internalLocalWebId, internalUid, internalUserCentricAdId);
-
-            return Ok(new { result = true }); // 200 OK - send content to avoid 500 Internal Error from the load-balancer
-        }
-
-        #region Helpers
-        private IAgent GetUserAgent(string userAgentString, Guid? uid)
-        {
-            var agentKey = new AgentKey { UserAgentHeader = userAgentString };
-            var result = _agentSource.Get(agentKey, uid);
-            return result.Agent;
-        }
-
-        private void EmitGlup(
-            EventType eventType,
-            string originHost,
-            IAgent userAgent,
-            LocalWebId? localwebid,
-            CriteoId? uid,
-            UserCentricAdId? ifa)
-        {
             // Using sampling ratio for an endpoint generating glups directly
             var samplingRatio = _configurationHelper.EmitGlupsRatio(originHost);
             if (_randomGenerator.NextDouble() > samplingRatio)
             {
                 _metricsRegistry.GetOrRegister($"{metricPrefix}.save_event.emit_glup.over_sampling_ratio", () => new Counter(Granularity.CoarseGrain)).Increment();
-                return;
+            }
+            else
+            {
+                _metricsRegistry.GetOrRegister($"{metricPrefix}.save_event.emit_glup", () => new Counter(Granularity.CoarseGrain)).Increment();
+                _glupHelper.EmitGlup(eventType, originHost, userAgentString, internalLocalWebId, internalUid, internalUserCentricAdId);
             }
 
-            _metricsRegistry.GetOrRegister($"{metricPrefix}.save_event.emit_glup", () => new Counter(Granularity.CoarseGrain)).Increment();
-
-            // Create glup event with required fields
-            var glup = new IdControllerGlup()
-            {
-                Event = eventType,
-                OriginHost = originHost
-            };
-
-            // User Agent
-            if (userAgent?.UserAgentHash != null)
-                glup.Uahashfull = userAgent.UserAgentHash;
-            if (userAgent?.BrowserName != null)
-                glup.UaBrowserFamily = userAgent.BrowserName;
-            if (userAgent?.BrowserMajorVersion != null)
-                glup.UaBrowserMajor = userAgent.BrowserMajorVersion;
-            if (userAgent?.BrowserMinorVersion != null)
-                glup.UaBrowserMinor = userAgent.BrowserMinorVersion;
-            if (userAgent?.FormFactor != null)
-                glup.UaFormFactor = userAgent.FormFactor;
-            if (userAgent?.OperatingSystemName != null)
-                glup.UaOsFamily = userAgent.OperatingSystemName;
-            if (userAgent?.OperatingSystemMajorVersion != null)
-                glup.UaOsMajor = userAgent.OperatingSystemMajorVersion;
-            if (userAgent?.OperatingSystemMinorVersion != null)
-                glup.UaOsMinor = userAgent.OperatingSystemMinorVersion;
-
-            // Optional
-            if (localwebid.HasValue && localwebid.Value.CriteoId.HasValue)
-                glup.LocalWebId = localwebid.Value.CriteoId.Value.ToString();
-            if (uid.HasValue)
-                glup.Uid = uid.Value.ToString();
-            if (ifa.HasValue)
-                glup.Ifa = ifa.Value.ToString();
-
-            // Go!
-            _glupService.Emit(glup);
+            return Ok(new { result = true }); // 200 OK with dummy content
         }
-        #endregion
     }
 }

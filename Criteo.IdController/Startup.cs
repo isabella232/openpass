@@ -71,30 +71,6 @@ namespace Criteo.IdController
                 registrar.AddGlup(metricsRegistry, serviceLocator, kafkaProducer, configAsCode);
             });
 
-            // UserAgent parsing library
-            services.AddSingleton<IAgentSource>(r =>
-            {
-                var serviceLifecycleManager = r.GetService<IServiceLifecycleManager>();
-                var sqlDbConnectionService = r.GetService<ISqlDbConnectionService>();
-                var graphiteHelper = r.GetService<IGraphiteHelper>();
-                var glupService = r.GetService<IGlupService>();
-                var cacService = r.GetService<IConfigAsCodeService>();
-                var storageManager = r.GetService<IStorageManager>();
-
-                var agentSource = UserAgentProviderProvider.CreateAgentSource(
-                    serviceLifecycleManager,
-                    sqlDbConnectionService,
-                    graphiteHelper,
-                    glupService,
-                    cacService,
-                    storageManager);
-
-                // Force preload to have the offline db and avoid having runtime errors
-                agentSource.Preload();
-
-                return agentSource;
-            });
-
             // Configuration helper
             services.AddSingleton<IConfigurationHelper>(r =>
             {
@@ -113,6 +89,30 @@ namespace Criteo.IdController
                 var identityMapper = new IdentityMapper(storageManager, glupService, cacService, graphiteHelper, UserIdentificationContext.UserCentricAdId);
 
                 return new InternalMappingHelper(cacService, identityMapper);
+            });
+
+            // Glup helper
+            services.AddSingleton<IGlupHelper>(r =>
+            {
+                // Instantiate User Agent parsing library
+                var glupService = r.GetService<IGlupService>();
+                var serviceLifecycleManager = r.GetService<IServiceLifecycleManager>();
+                var sqlDbConnectionService = r.GetService<ISqlDbConnectionService>();
+                var graphiteHelper = r.GetService<IGraphiteHelper>();
+                var cacService = r.GetService<IConfigAsCodeService>();
+                var storageManager = r.GetService<IStorageManager>();
+                var agentSource = UserAgentProviderProvider.CreateAgentSource(
+                    serviceLifecycleManager,
+                    sqlDbConnectionService,
+                    graphiteHelper,
+                    glupService,
+                    cacService,
+                    storageManager);
+
+                // Force preload to have the offline db and avoid having runtime errors
+                agentSource.Preload();
+
+                return new GlupHelper(glupService, agentSource);
             });
 
             // User Management helper
