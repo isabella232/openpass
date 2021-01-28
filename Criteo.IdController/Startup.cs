@@ -3,14 +3,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
-using Criteo.AspNetCore.Administration;
 using Criteo.AspNetCore.Helpers;
 using Criteo.ConfigAsCode;
 using Criteo.IdController.Helpers;
 using Criteo.Services;
 using Criteo.Services.Glup;
-using Criteo.Services.Graphite;
 using Criteo.UserAgent;
 using Criteo.UserAgent.Provider;
 using Criteo.UserIdentification.Services;
@@ -66,14 +63,8 @@ namespace Criteo.IdController
                 var kafkaProducer = registrar.AddKafkaProducer(metricsRegistry, serviceLocator, sdkConfigurationService);
                 registrar.AddTracing(metricsRegistry, kafkaProducer);
 
-                // Registers an IGraphiteHelper
-                var graphiteHelper = registrar.AddGraphiteHelper(serviceLocator, new GraphiteSettings
-                {
-                    ApplicationName = "identification-id-controller"
-                });
-
                 // Register glup
-                registrar.AddGlup(metricsRegistry, serviceLocator, graphiteHelper, kafkaProducer, configAsCode);
+                registrar.AddGlup(metricsRegistry, serviceLocator, kafkaProducer, configAsCode);
             });
 
             // UserAgent parsing library
