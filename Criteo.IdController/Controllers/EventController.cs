@@ -22,7 +22,7 @@ namespace Criteo.IdController.Controllers
         private readonly IInternalMappingHelper _internalMappingHelper;
         private readonly Random _randomGenerator;
 
-        internal EventController(
+        public EventController(
             IConfigurationHelper configurationHelper,
             IGlupService glupService,
             IAgentSource agentSource,

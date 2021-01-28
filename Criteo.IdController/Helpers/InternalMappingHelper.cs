@@ -6,14 +6,14 @@ using Criteo.UserIdentification.Services.IdentityMapping;
 
 namespace Criteo.IdController.Helpers
 {
-    internal interface IInternalMappingHelper
+    public interface IInternalMappingHelper
     {
         Task<CriteoId?> GetInternalCriteoId(CriteoId? criteoId);
         Task<LocalWebId?> GetInternalLocalWebId(LocalWebId? localWebId);
         Task<UserCentricAdId?> GetInternalUserCentricAdId(UserCentricAdId? userCentricAdId);
     }
 
-    internal class InternalMappingHelper : IInternalMappingHelper
+    public class InternalMappingHelper : IInternalMappingHelper
     {
         private readonly IIdentityMapper _identityMapper;
 
