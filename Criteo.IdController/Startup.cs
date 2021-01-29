@@ -13,6 +13,7 @@ using Criteo.UserAgent;
 using Criteo.UserAgent.Provider;
 using Criteo.UserIdentification.Services;
 using Criteo.UserIdentification.Services.IdentityMapping;
+using Microsoft.Extensions.Caching.Memory;
 using Sdk.Interfaces.Hosting;
 using Sdk.Interfaces.KeyValueStore;
 using Sdk.Monitoring;
@@ -117,6 +118,9 @@ namespace Criteo.IdController
 
             // User Management helper
             services.AddSingleton<IUserManagementHelper, UserManagementHelper>();
+
+            // Add in-memory cache to store OTPs temporarily
+            services.AddMemoryCache();
 
             services.AddMvc(options =>
             {
