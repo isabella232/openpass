@@ -1,24 +1,20 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { ApplicationRef, DoBootstrap, Injector, NgModule } from '@angular/core';
+import { createCustomElement } from '@angular/elements';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AngularMaterialModule } from './angular-material/angular-material.module';
-import { FEKLayoutsModule } from 'cds11-layouts';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    AngularMaterialModule,
-    FEKLayoutsModule,
-    FlexLayoutModule,
-  ],
+  imports: [BrowserModule],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule implements DoBootstrap {
+  constructor(private injector: Injector) {
+    const webElement = createCustomElement(AppComponent, { injector });
+    customElements.define('usrf-identification', webElement);
+  }
+
+  ngDoBootstrap(appRef: ApplicationRef) {}
+}
