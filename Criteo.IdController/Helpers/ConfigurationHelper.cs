@@ -6,6 +6,7 @@ namespace Criteo.IdController.Helpers
     public interface IConfigurationHelper
     {
         double EmitGlupsRatio(string domain = "");
+        bool EnableOtp { get; }
     }
 
     public class ConfigurationHelper : IConfigurationHelper
@@ -14,6 +15,8 @@ namespace Criteo.IdController.Helpers
 
         // CaC parameters
         private EmitGlupsDomainRatio.ParameterImpl _emitGlupsRatioParameter;
+        private EnableOTP.ParameterImpl _enableOtpParameter;
+        private EnableOTP.Query _enableOtpQuery;
 
         public ConfigurationHelper(IConfigAsCodeService cacService)
         {
@@ -21,6 +24,9 @@ namespace Criteo.IdController.Helpers
 
             // CaC parameters
             _emitGlupsRatioParameter = EmitGlupsDomainRatio.CreateParameter(_cacService);
+
+            _enableOtpParameter = EnableOTP.CreateParameter(_cacService);
+            _enableOtpQuery = new EnableOTP.Query();
         }
 
         #region Parameter-specific code
@@ -30,6 +36,8 @@ namespace Criteo.IdController.Helpers
             var query = new EmitGlupsDomainRatio.Query(domain);
             return _emitGlupsRatioParameter?.Get(query, 0.0) ?? 0.0;
         }
+
+        public bool EnableOtp => _enableOtpParameter?.Get(_enableOtpQuery, true) ?? true;
         #endregion
     }
 }
