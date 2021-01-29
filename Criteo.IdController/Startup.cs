@@ -8,6 +8,7 @@ using Criteo.ConfigAsCode;
 using Criteo.IdController.Helpers;
 using Criteo.Services;
 using Criteo.Services.Glup;
+using Criteo.Services.Graphite;
 using Criteo.UserAgent;
 using Criteo.UserAgent.Provider;
 using Criteo.UserIdentification.Services;
@@ -53,7 +54,7 @@ namespace Criteo.IdController
                 // Registers an IConfigAsCodeService that will read its configuration data from the SQL databases, with dependencies
                 var keyValueStore = registrar.AddConsulKeyValueStore(metricsRegistry);
                 var sdkConfigurationService = registrar.AddSdkConfigurationService(keyValueStore, metricsRegistry, serviceLocator);
-                
+
                 var sqlConnections = registrar.AddSqlConnections(serviceLocator, metricsRegistry, sdkConfigurationService);
                 var kafkaConsumer = registrar.AddKafkaConsumer(metricsRegistry, serviceLocator, sdkConfigurationService);
                 var storageManager = registrar.AddStorageManager(metricsRegistry, serviceLocator, keyValueStore, sdkConfigurationService);
@@ -62,6 +63,9 @@ namespace Criteo.IdController
                 // Enables tracing & request correlation
                 var kafkaProducer = registrar.AddKafkaProducer(metricsRegistry, serviceLocator, sdkConfigurationService);
                 registrar.AddTracing(metricsRegistry, kafkaProducer);
+
+                // Add GraphiteHelper for the UserAgent library
+                registrar.AddGraphiteHelper(serviceLocator, new GraphiteSettings { ApplicationName = "identification-id-controller" });
 
                 // Register glup
                 registrar.AddGlup(metricsRegistry, serviceLocator, kafkaProducer, configAsCode);
