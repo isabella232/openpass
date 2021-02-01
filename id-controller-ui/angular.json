@@ -22,7 +22,7 @@
       "prefix": "usrf",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "ngx-build-plus:build",
           "options": {
             "outputPath": "dist",
             "index": "src/index.html",
@@ -30,7 +30,6 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.scss"],
             "scripts": []
           },
@@ -60,18 +59,33 @@
                   "maximumWarning": "2kb",
                   "maximumError": "4kb"
                 }
+              ],
+              "assets": [
+                "src/favicon.ico",
+                "src/assets",
+                {
+                  "input": "src/assets-prod",
+                  "output": "assets",
+                  "glob": "*.js"
+                }
               ]
+            },
+            "development": {
+              "assets": ["src/favicon.ico", "src/assets"]
             }
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "ngx-build-plus:dev-server",
           "options": {
             "browserTarget": "id-controller-ui:build"
           },
           "configurations": {
             "production": {
               "browserTarget": "id-controller-ui:build:production"
+            },
+            "development": {
+              "browserTarget": "id-controller-ui:build:development"
             }
           }
         },
