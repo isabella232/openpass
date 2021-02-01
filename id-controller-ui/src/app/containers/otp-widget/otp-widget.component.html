@@ -1,8 +1,8 @@
 <div *ngIf="mode === widgetMods.modal" class="backdrop"></div>
 
 <div class="container">
-  <div class="widget-body" [ngSwitch]="currentView">
-    <usrf-main-view *ngSwitchCase="widgetViews.main"></usrf-main-view>
+  <div class="widget-body" [class.shadow]="mode === widgetMods.modal" [ngSwitch]="currentView">
+    <usrf-main-view *ngSwitchCase="widgetViews.main" (proceed)="changeView(widgetViews.auth)"></usrf-main-view>
     <usrf-auth-view *ngSwitchCase="widgetViews.auth"></usrf-auth-view>
     <usrf-agreement-view *ngSwitchCase="widgetViews.agreement"></usrf-agreement-view>
     <usrf-success-signed-view *ngSwitchCase="widgetViews.successSigned"></usrf-success-signed-view>

@@ -1,5 +1,6 @@
-:host {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
+@import 'shadow-styles/variables';
+
+@import 'shadow-styles/base';
+@import 'shadow-styles/grid';
+@import 'shadow-styles/buttons';
+@import 'shadow-styles/typography';

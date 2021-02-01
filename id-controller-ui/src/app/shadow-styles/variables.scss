@@ -1,0 +1,9 @@
+:host {
+  --main-color: #020a40;
+  --accent-color: #4e8400;
+  --secondary-color: #77cc02;
+
+  --text-color: var(--main-color);
+  --link-color: var(--accent-color);
+  --base-radius: 3px;
+}

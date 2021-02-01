@@ -1,0 +1,28 @@
+.btn {
+  border: none;
+  background: transparent;
+  padding: 10px;
+  cursor: pointer;
+  appearance: none;
+  border-radius: var(--base-radius);
+
+  &-primary {
+    background: var(--main-color);
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    transition: background 0.15s;
+
+    &:active {
+      background: #2d387f;
+    }
+  }
+
+  &-wide {
+    width: 100%;
+  }
+
+  &:focus {
+    outline: transparent solid 1px;
+  }
+}
