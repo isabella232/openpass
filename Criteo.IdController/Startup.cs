@@ -1,4 +1,3 @@
-using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -9,11 +8,10 @@ using Criteo.IdController.Helpers;
 using Criteo.Services;
 using Criteo.Services.Glup;
 using Criteo.Services.Graphite;
-using Criteo.UserAgent;
 using Criteo.UserAgent.Provider;
 using Criteo.UserIdentification.Services;
 using Criteo.UserIdentification.Services.IdentityMapping;
-using Microsoft.Extensions.Caching.Memory;
+using Metrics;
 using Sdk.Interfaces.Hosting;
 using Sdk.Interfaces.KeyValueStore;
 using Sdk.Monitoring;
@@ -118,6 +116,15 @@ namespace Criteo.IdController
 
             // User Management helper
             services.AddSingleton<IUserManagementHelper, UserManagementHelper>();
+
+             // Email helper
+             services.AddSingleton<IEmailHelper>(r =>
+             {
+                 var metricsRegistry = r.GetService<IMetricsRegistry>();
+                 var emailConfiguration = new EmailConfiguration(Configuration);
+
+                 return new EmailHelper(metricsRegistry, emailConfiguration);
+             });
 
             // Add in-memory cache to store OTPs temporarily
             services.AddMemoryCache();
