@@ -3,10 +3,11 @@ import { ApplicationRef, DoBootstrap, Injector, NgModule } from '@angular/core';
 import { createCustomElement } from '@angular/elements';
 
 import { AppComponent } from './app.component';
+import { OtpWidgetModule } from './containers/otp-widget/otp-widget.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule],
+  imports: [BrowserModule, OtpWidgetModule],
   providers: [],
   bootstrap: [],
 })
