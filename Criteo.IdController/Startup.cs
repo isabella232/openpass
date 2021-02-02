@@ -70,65 +70,25 @@ namespace Criteo.IdController
                 registrar.AddGlup(metricsRegistry, serviceLocator, kafkaProducer, configAsCode);
             });
 
-            // Configuration helper
-            services.AddSingleton<IConfigurationHelper>(r =>
-            {
-                var cacService = r.GetService<IConfigAsCodeService>();
-                return new ConfigurationHelper(cacService);
-            });
-
-            // Internal Mapping helper (revocable id)
-            services.AddSingleton<IInternalMappingHelper>(r =>
-            {
-                var storageManager = r.GetService<IStorageManager>();
-                var glupService = r.GetService<IGlupService>();
-                var cacService = r.GetService<IConfigAsCodeService>();
-                var graphiteHelper = r.GetService<IGraphiteHelper>();
-
-                var identityMapper = new IdentityMapper(storageManager, glupService, cacService, graphiteHelper, UserIdentificationContext.UserCentricAdId);
-
-                return new InternalMappingHelper(cacService, identityMapper);
-            });
-
-            // Glup helper
-            services.AddSingleton<IGlupHelper>(r =>
-            {
-                // Instantiate User Agent parsing library
-                var glupService = r.GetService<IGlupService>();
-                var serviceLifecycleManager = r.GetService<IServiceLifecycleManager>();
-                var sqlDbConnectionService = r.GetService<ISqlDbConnectionService>();
-                var graphiteHelper = r.GetService<IGraphiteHelper>();
-                var cacService = r.GetService<IConfigAsCodeService>();
-                var storageManager = r.GetService<IStorageManager>();
-                var agentSource = UserAgentProviderProvider.CreateAgentSource(
-                    serviceLifecycleManager,
-                    sqlDbConnectionService,
-                    graphiteHelper,
-                    glupService,
-                    cacService,
-                    storageManager);
-
-                // Force preload to have the offline db and avoid having runtime errors
-                agentSource.Preload();
-
-                return new GlupHelper(glupService, agentSource);
-            });
-
-            // User Management helper
-            services.AddSingleton<IUserManagementHelper, UserManagementHelper>();
-
-             // Email helper
-             services.AddSingleton<IEmailHelper>(r =>
-             {
-                 var metricsRegistry = r.GetService<IMetricsRegistry>();
-                 var emailConfiguration = new EmailConfiguration(Configuration);
-
-                 return new EmailHelper(metricsRegistry, emailConfiguration);
-             });
-
             // Add in-memory cache to store OTPs temporarily
             services.AddMemoryCache();
 
+            // [Custom] Add configuration helper
+            services.AddConfigurationHelper();
+
+            // [Custom] Add internal mapping helper
+            services.AddInternalMappingHelper();
+
+            // [Custom] Add glup helper
+            services.AddGlupHelper();
+
+            // [Custom] Add user management helper
+            services.AddUserManagementHelper();
+
+            // [Custom] Add email helper
+            services.AddEmailHelper(Configuration);
+
+            // Configure MVC
             services.AddMvc(options =>
             {
                 // filters added here are applied for *all* controllers & actions that passed the middlewares chain.
