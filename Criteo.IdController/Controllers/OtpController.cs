@@ -55,7 +55,7 @@ namespace Criteo.IdController.Controllers
                 return NotFound();
             }
 
-            if (string.IsNullOrEmpty(email))
+            if (!IsValidEmail(email))
             {
                 SendMetric($"{prefix}.bad_request");
                 return BadRequest();
@@ -94,7 +94,7 @@ namespace Criteo.IdController.Controllers
                 return NotFound();
             }
 
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(otp))
+            if (!(IsValidEmail(email) && IsValidOtp(otp)))
             {
                 SendMetric($"{prefix}.bad_request");
                 return BadRequest();
@@ -129,6 +129,27 @@ namespace Criteo.IdController.Controllers
         private void SendMetric(string metric)
         {
             _metricsRegistry.GetOrRegister(metric, () => new Counter(Granularity.CoarseGrain)).Increment();
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                return false;
+
+            try
+            {
+                var mail = new System.Net.Mail.MailAddress(email);
+                return mail.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private bool IsValidOtp(string otp)
+        {
+            return !string.IsNullOrEmpty(otp) && (otp.Length == _otpCodeLength) && otp.All(c => _codeCharacters.Contains(c));
         }
         #endregion
     }

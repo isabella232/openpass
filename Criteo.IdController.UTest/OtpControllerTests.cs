@@ -74,9 +74,9 @@ namespace Criteo.IdController.UTest
             Assert.IsAssignableFrom<NotFoundResult>(response);
         }
 
-        [TestCase(null)]
-        [TestCase("")]
-        public void BadRequestWhenGenerationEmailIsNotProvided(string email)
+        [Test]
+        public void BadRequestWhenGenerationEmailIsInvalid(
+            [Values(null, "", "mail.com")] string email)
         {
             var response = _otpController.GenerateOtp(email);
 
@@ -84,11 +84,21 @@ namespace Criteo.IdController.UTest
         }
 
         [Test]
-        public void BadRequestWhenValidationParametersAreNotProvided(
-            [Values(null, "")] string email,
-            [Values(null, "")] string otp)
+        public void BadRequestWhenValidationEmailIsInvalid(
+            [Values(null, "", "mail.com")] string email)
         {
-            var response = _otpController.ValidateOtp(email, otp);
+            var validOtp = "123456";
+            var response = _otpController.ValidateOtp(email, validOtp);
+
+            Assert.IsAssignableFrom<BadRequestResult>(response);
+        }
+
+        [Test]
+        public void BadRequestWhenValidationOtpIsInvalid(
+            [Values(null, "", "abcdef", "123abc", "123", "1234567")] string otp)
+        {
+            var validEmail = "example@mail.com";
+            var response = _otpController.ValidateOtp(validEmail, otp);
 
             Assert.IsAssignableFrom<BadRequestResult>(response);
         }
