@@ -1,0 +1,64 @@
+:host {
+  --error-color: #e95151;
+  --success-color: #3e8a3e;
+}
+
+.form-control {
+  &[type='text'],
+  &[type='number'],
+  &[type='email'] {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: var(--base-radius);
+    border: 1px solid var(--main-color);
+    outline: 1px solid transparent;
+
+    &:not(:placeholder-shown):invalid {
+      border-color: var(--error-color);
+    }
+
+    &:focus {
+      border-color: var(--secondary-color);
+    }
+  }
+
+  &[type='number'] {
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      appearance: none;
+      margin: 0;
+    }
+
+    -moz-appearance: textfield;
+  }
+
+  &[type='checkbox'] {
+    appearance: none;
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border-radius: var(--base-radius);
+    border: 1px solid var(--main-color);
+    outline: 1px solid transparent;
+
+    &:checked {
+      background: var(--main-color);
+      &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 0.2rem;
+        height: 0.5rem;
+        border-radius: 0.5px;
+        border: 0 solid transparent;
+        border-right: 2px solid #fff;
+        border-bottom: 2px solid #fff;
+        transform: rotate(45deg) translate(4px, -2px);
+      }
+    }
+  }
+}
+
+.form-group {
+  margin: 0.5rem 0;
+}

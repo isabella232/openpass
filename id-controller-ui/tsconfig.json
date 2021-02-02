@@ -19,7 +19,7 @@
     "module": "es2020",
     "lib": ["es2018", "dom"],
     "paths": {
-      "@env": ["src/environment/environment"],
+      "@env": ["src/environments/environment"],
       "@enums/*": ["src/app/enums/*"],
       "@components/*": ["src/app/components/*"],
       "@services/*": ["src/app/services/*"]

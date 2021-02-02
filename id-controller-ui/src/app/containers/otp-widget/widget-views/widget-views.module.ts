@@ -5,6 +5,7 @@ import { AuthViewComponent } from './auth-view/auth-view.component';
 import { AgreementViewComponent } from './agreement-view/agreement-view.component';
 import { SuccessSignedViewComponent } from './success-signed-view/success-signed-view.component';
 import { AlreadySignedViewComponent } from './already-signed-view/already-signed-view.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,6 @@ import { AlreadySignedViewComponent } from './already-signed-view/already-signed
     SuccessSignedViewComponent,
     AlreadySignedViewComponent,
   ],
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
 })
 export class WidgetViewsModule {}
