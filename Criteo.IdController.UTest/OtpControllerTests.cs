@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using Criteo.IdController.Controllers;
 using Criteo.IdController.Helpers;
+using Criteo.UserIdentification;
 using Metrics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,7 @@ namespace Criteo.IdController.UTest
         private Mock<IMemoryCache> _memoryCache;
         private Mock<IConfigurationHelper> _configurationHelperMock;
         private Mock<IEmailHelper> _emailHelperMock;
+        private Mock<IGlupHelper> _glupHelperMock;
 
         [SetUp]
         public void Setup()
@@ -43,8 +45,15 @@ namespace Criteo.IdController.UTest
             _configurationHelperMock = new Mock<IConfigurationHelper>();
             _configurationHelperMock.Setup(c => c.EnableOtp).Returns(true);
             _emailHelperMock = new Mock<IEmailHelper>();
+            _glupHelperMock = new Mock<IGlupHelper>();
 
-            _otpController = new OtpController(_hostingEnvironmentMock.Object, _metricRegistryMock.Object, _memoryCache.Object, _configurationHelperMock.Object, _emailHelperMock.Object);
+            _otpController = new OtpController(
+                _hostingEnvironmentMock.Object,
+                _metricRegistryMock.Object,
+                _memoryCache.Object,
+                _configurationHelperMock.Object,
+                _emailHelperMock.Object,
+                _glupHelperMock.Object);
         }
 
         [Test]
@@ -104,12 +113,50 @@ namespace Criteo.IdController.UTest
             Assert.IsAssignableFrom<OkResult>(response);
         }
 
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("origin.com")]
+        public void GenerationGlupEmitted(string originHost)
+        {
+            _otpController.GenerateOtp("example@mail.com", originHost);
+
+            _glupHelperMock.Verify(g => g.EmitGlup(
+                    It.Is<EventType>(e => e == EventType.EmailEntered),
+                    It.Is<string>(h => h == originHost),
+                    It.IsAny<string>(),
+                    It.IsAny<LocalWebId?>(),
+                    It.IsAny<CriteoId?>(),
+                    It.IsAny<UserCentricAdId?>()),
+                Times.Once);
+        }
+
+        [TestCase(null)]
+        [TestCase("origin.com")]
+        public void ValidationGlupEmitted(string originHost)
+        {
+            object code = "123456";
+            _memoryCache
+                .Setup(m => m.TryGetValue(It.IsAny<object>(), out code))
+                .Returns(true);
+
+            _otpController.ValidateOtp("example@mail.com", (string) code, originHost);
+
+            _glupHelperMock.Verify(g => g.EmitGlup(
+                It.Is<EventType>(e => e == EventType.EmailValidated),
+                It.Is<string>(h => h == originHost),
+                It.IsAny<string>(),
+                It.IsAny<LocalWebId?>(),
+                It.IsAny<CriteoId?>(),
+                It.IsAny<UserCentricAdId?>()),
+                Times.Once);
+        }
+
         [Test]
         public void GenerateOTPAndAddToCache()
         {
             var email = "example@mail.com";
             _otpController.GenerateOtp(email);
-            _memoryCache.Verify(m => m.CreateEntry(It.Is<string>(s => s == email)));
+            _memoryCache.Verify(m => m.CreateEntry(It.Is<string>(s => s == email)), Times.Once);
         }
 
         [Test]
@@ -117,7 +164,7 @@ namespace Criteo.IdController.UTest
         {
             var email = "example@mail.com";
             _otpController.GenerateOtp(email);
-            _emailHelperMock.Verify(e => e.SendOtpEmail(It.Is<string>(s => s == email), It.IsAny<string>()));
+            _emailHelperMock.Verify(e => e.SendOtpEmail(It.Is<string>(s => s == email), It.IsAny<string>()), Times.Once);
         }
 
         [Test]

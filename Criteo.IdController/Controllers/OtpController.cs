@@ -22,6 +22,7 @@ namespace Criteo.IdController.Controllers
         private readonly IMemoryCache _activeOtps; // Mapping: (email -> OTP)
         private readonly IConfigurationHelper _configurationHelper;
         private readonly IEmailHelper _emailHelper;
+        private readonly IGlupHelper _glupHelper;
 
         private readonly Random _randomGenerator;
 
@@ -30,18 +31,20 @@ namespace Criteo.IdController.Controllers
             IMetricsRegistry metricRegistry,
             IMemoryCache memoryCache,
             IConfigurationHelper configurationHelper,
-            IEmailHelper emailHelper)
+            IEmailHelper emailHelper,
+            IGlupHelper glupHelper)
         {
             _hostingEnvironment = hostingEnvironment;
             _metricsRegistry = metricRegistry;
             _activeOtps = memoryCache;
             _configurationHelper = configurationHelper;
             _emailHelper = emailHelper;
+            _glupHelper = glupHelper;
             _randomGenerator = new Random();
         }
 
         [HttpPost("generate")]
-        public IActionResult GenerateOtp(string email)
+        public IActionResult GenerateOtp(string email, string originHost = null)
         {
             var prefix = $"{_metricPrefix}.generate";
 
@@ -71,14 +74,16 @@ namespace Criteo.IdController.Controllers
             // 2. Send email
             _emailHelper.SendOtpEmail(email, otp);
 
-            // TODO: Emit glup for analytics
+            // 3. Emit glup
+            var userAgentString = HttpContext?.Request?.Headers?["User-Agent"];
+            _glupHelper.EmitGlup(EventType.EmailEntered, originHost, userAgentString);
 
             // Status code 204 -> resource created but not content returned
             return NoContent();
         }
 
         [HttpPost("validate")]
-        public IActionResult ValidateOtp(string email, string otp)
+        public IActionResult ValidateOtp(string email, string otp, string originHost = null)
         {
             var prefix = $"{_metricPrefix}.validate";
 
@@ -99,7 +104,12 @@ namespace Criteo.IdController.Controllers
             if (_activeOtps.TryGetValue(email, out string validOtp) && (otp == validOtp))
             {
                 SendMetric($"{prefix}.valid");
-                _activeOtps.Remove(email); // code is valid only once
+                // Remove code: OTP is valid only once
+                _activeOtps.Remove(email);
+                // Emit glup
+                var userAgentString = HttpContext?.Request?.Headers?["User-Agent"];
+                _glupHelper.EmitGlup(EventType.EmailValidated, originHost, userAgentString);
+
                 // TODO: Generate + set cookie?
                 return Ok();
             }

@@ -41,7 +41,7 @@ namespace Criteo.IdController.Helpers
             var glup = new IdControllerGlup()
             {
                 Event = eventType,
-                OriginHost = originHost
+                OriginHost = originHost ?? "" // must never be null
             };
 
             var uidForUAlib = ifa?.Value ?? uid?.Value ?? localwebid?.CriteoId?.Value;
