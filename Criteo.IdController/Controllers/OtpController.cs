@@ -16,19 +16,23 @@ namespace Criteo.IdController.Controllers
         private static readonly string _codeCharacters = "1234567890";
         private static readonly string _metricPrefix = "otp";
 
-        private readonly IConfigurationHelper _configurationHelper;
         private readonly IMetricsRegistry _metricsRegistry;
         private readonly IMemoryCache _activeOtps; // Mapping: (email -> OTP)
+        private readonly IConfigurationHelper _configurationHelper;
+        private readonly IEmailHelper _emailHelper;
+
         private readonly Random _randomGenerator;
 
         public OtpController(
-            IConfigurationHelper configurationHelper,
             IMetricsRegistry metricRegistry,
-            IMemoryCache memoryCache)
+            IMemoryCache memoryCache,
+            IConfigurationHelper configurationHelper,
+            IEmailHelper emailHelper)
         {
-            _configurationHelper = configurationHelper;
             _metricsRegistry = metricRegistry;
             _activeOtps = memoryCache;
+            _configurationHelper = configurationHelper;
+            _emailHelper = emailHelper;
             _randomGenerator = new Random();
         }
 
@@ -50,10 +54,15 @@ namespace Criteo.IdController.Controllers
                 return BadRequest();
             }
 
-            // Generate OTP and add it to cache (keyed by email)
+            // TODO: Validate email
+
+            // 1. Generate OTP and add it to cache (keyed by email)
             var otp = GenerateRandomCode();
             _activeOtps.Set(email, otp, TimeSpan.FromMinutes(_otpCodeLifetimeMinutes));
-            // TODO: Send email
+
+            // 2. Send email
+            _emailHelper.SendOtpEmail(email, otp);
+
             // TODO: Emit glup for analytics
 
             // Status code 204 -> resource created but not content returned
