@@ -4,7 +4,7 @@ using NUnit.Framework;
 using Criteo.IdController.Controllers;
 using Criteo.IdController.Helpers;
 using Metrics;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using static Criteo.Glup.IdController.Types;
@@ -19,6 +19,7 @@ namespace Criteo.IdController.UTest
 
         private OtpController _otpController;
 
+        private Mock<IHostingEnvironment> _hostingEnvironmentMock;
         private Mock<IMetricsRegistry> _metricRegistryMock;
         private Mock<IMemoryCache> _memoryCache;
         private Mock<IConfigurationHelper> _configurationHelperMock;
@@ -27,6 +28,7 @@ namespace Criteo.IdController.UTest
         [SetUp]
         public void Setup()
         {
+            _hostingEnvironmentMock = new Mock<IHostingEnvironment>();
             _configurationHelperMock = new Mock<IConfigurationHelper>();
             _configurationHelperMock.Setup(c => c.EnableOtp).Returns(true);
             _metricRegistryMock = new Mock<IMetricsRegistry>();
@@ -42,11 +44,11 @@ namespace Criteo.IdController.UTest
             _configurationHelperMock.Setup(c => c.EnableOtp).Returns(true);
             _emailHelperMock = new Mock<IEmailHelper>();
 
-            _otpController = new OtpController(_metricRegistryMock.Object, _memoryCache.Object, _configurationHelperMock.Object, _emailHelperMock.Object);
+            _otpController = new OtpController(_hostingEnvironmentMock.Object, _metricRegistryMock.Object, _memoryCache.Object, _configurationHelperMock.Object, _emailHelperMock.Object);
         }
 
         [Test]
-        public void ForbiddenWhenFeatureNotEnabled()
+        public void ForbiddenWhenGenerationNotEnabled()
         {
             _configurationHelperMock.Setup(c => c.EnableOtp).Returns(false);
             var response = _otpController.GenerateOtp("example@mail.com");
@@ -54,9 +56,18 @@ namespace Criteo.IdController.UTest
             Assert.IsAssignableFrom<NotFoundResult>(response);
         }
 
+        [Test]
+        public void ForbiddenWhenValidationNotEnabled()
+        {
+            _configurationHelperMock.Setup(c => c.EnableOtp).Returns(false);
+            var response = _otpController.ValidateOtp("example@mail.com", "123456");
+
+            Assert.IsAssignableFrom<NotFoundResult>(response);
+        }
+
         [TestCase(null)]
         [TestCase("")]
-        public void BadRequestWhenEmailIsNotProvided(string email)
+        public void BadRequestWhenGenerationEmailIsNotProvided(string email)
         {
             var response = _otpController.GenerateOtp(email);
 
@@ -64,11 +75,33 @@ namespace Criteo.IdController.UTest
         }
 
         [Test]
-        public void ValidRequest()
+        public void BadRequestWhenValidationParametersAreNotProvided(
+            [Values(null, "")] string email,
+            [Values(null, "")] string otp)
+        {
+            var response = _otpController.ValidateOtp(email, otp);
+
+            Assert.IsAssignableFrom<BadRequestResult>(response);
+        }
+
+        [Test]
+        public void ValidRequestGeneration()
         {
             var response = _otpController.GenerateOtp("example@mail.com");
 
             Assert.IsAssignableFrom<NoContentResult>(response);
+        }
+
+        [Test]
+        public void ValidRequestValidation()
+        {
+            object otp = "123456";
+            _memoryCache
+                .Setup(m => m.TryGetValue(It.IsAny<object>(), out otp))
+                .Returns(true);
+            var response = _otpController.ValidateOtp("example@mail.com", "123456");
+
+            Assert.IsAssignableFrom<OkResult>(response);
         }
 
         [Test]
@@ -105,6 +138,46 @@ namespace Criteo.IdController.UTest
                 Assert.AreEqual(_otpCodeLength, code.Length);
             }
             Assert.AreNotEqual(firstCode, lastCode);
+        }
+
+        [Test]
+        public void OTPSuccessfulFullValidation()
+        {
+            var email = "example@mail.com";
+
+            // Generate
+            object code = null;
+            _emailHelperMock.Setup(e => e.SendOtpEmail(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>((_, otp) => code = otp);
+            var response = _otpController.GenerateOtp(email);
+            Assert.IsAssignableFrom<NoContentResult>(response);
+
+            // Validate
+            _memoryCache
+                .Setup(m => m.TryGetValue(It.IsAny<object>(), out code))
+                .Returns(true);
+            response = _otpController.ValidateOtp(email, (string) code);
+            Assert.IsAssignableFrom<OkResult>(response);
+        }
+
+        [Test]
+        public void OTPFailedFullValidation()
+        {
+            var email = "example@mail.com";
+
+            // Generate
+            object code = null;
+            _emailHelperMock.Setup(e => e.SendOtpEmail(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>((_, otp) => code = otp);
+            var response = _otpController.GenerateOtp(email);
+            Assert.IsAssignableFrom<NoContentResult>(response);
+
+            // Validate
+            _memoryCache
+                .Setup(m => m.TryGetValue(It.IsAny<object>(), out code))
+                .Returns(true);
+            var nextCode = (int.Parse((string) code) + 1) % 99999; // Force different code (avoid overflow)
+            var erroneousCode = $"{nextCode:000000}"; // Add leading zeros if necessary
+            response = _otpController.ValidateOtp(email, erroneousCode);
+            Assert.IsAssignableFrom<NotFoundResult>(response);
         }
     }
 }
