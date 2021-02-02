@@ -1,5 +1,6 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, Input, ViewEncapsulation } from '@angular/core';
 import { WidgetModes } from '@enums/widget/widget-modes.enum';
+import { environment } from '@env';
 
 @Component({
   selector: 'usrf-identification',
@@ -22,4 +23,11 @@ export class AppComponent {
     }
   }
   private widgetMode = WidgetModes.inline;
+
+  constructor(private elementRef: ElementRef) {
+    if (!environment.production) {
+      // in webcomponent mode we can read prop assigned to app component.
+      this.mode = this.elementRef.nativeElement.getAttribute('mode');
+    }
+  }
 }

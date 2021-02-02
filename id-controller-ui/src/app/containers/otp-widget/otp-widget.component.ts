@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, Input, OnInit } from '@angular/core';
 import { Views } from '@enums/widget/views.enum';
 import { WidgetModes } from '@enums/widget/widget-modes.enum';
 
@@ -10,6 +10,12 @@ import { WidgetModes } from '@enums/widget/widget-modes.enum';
 export class OtpWidgetComponent implements OnInit {
   @Input() mode: WidgetModes;
 
+  @HostBinding('class.modal')
+  get isModal() {
+    return this.mode === WidgetModes.modal && this.isOpen;
+  }
+
+  isOpen = true;
   widgetMods = WidgetModes;
   widgetViews = Views;
   currentView = Views.main;

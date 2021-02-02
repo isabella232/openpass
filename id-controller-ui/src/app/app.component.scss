@@ -6,3 +6,7 @@
 @import 'shadow-styles/typography';
 @import 'shadow-styles/shared';
 @import 'shadow-styles/forms';
+
+:host {
+  display: contents;
+}
