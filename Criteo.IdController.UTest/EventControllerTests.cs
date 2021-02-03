@@ -21,6 +21,7 @@ namespace Criteo.IdController.UTest
         private Mock<IMetricsRegistry> _metricRegistryMock;
         private Mock<IInternalMappingHelper> _internalMappingHelperMock;
 
+        private const string _testUserAgent = "TestUserAgent";
         private const string _testingLwid = "00000000-0000-0000-0000-000000000001";
         private const string _testingUid = "00000000-0000-0000-0000-000000000002";
         private const string _testingIfa = "00000000-0000-0000-0000-000000000003";
@@ -45,7 +46,12 @@ namespace Criteo.IdController.UTest
         [TestCase(EventType.BannerRequest, "originHost.com")]
         public async Task GlupEmittedWhenRequiredParametersArePresent(EventType eventType, string originHost)
         {
-            await _eventController.SaveEvent(eventType, originHost, null, null, null);
+            var request = new EventController.EventRequest()
+            {
+                EventType = eventType,
+                OriginHost = originHost
+            };
+            await _eventController.SaveEvent(_testUserAgent, request);
 
             _glupHelperMock.Verify(
                 x => x.EmitGlup(
@@ -63,7 +69,12 @@ namespace Criteo.IdController.UTest
         [TestCase(EventType.BannerRequest, null)]
         public async Task GlupNotEmittedWhenRequiredParametersAreNotPresent(EventType eventType, string originHost)
         {
-            await _eventController.SaveEvent(eventType, originHost, null, null, null);
+            var request = new EventController.EventRequest()
+            {
+                EventType = eventType,
+                OriginHost = originHost
+            };
+            await _eventController.SaveEvent(_testUserAgent, request);
 
             _glupHelperMock.Verify(
                 x => x.EmitGlup(
@@ -83,7 +94,12 @@ namespace Criteo.IdController.UTest
             // use edge cases to test ratio (regardless of the value of the randomly generated value)
             _configurationHelperMock.Setup(x => x.EmitGlupsRatio(It.IsAny<string>())).Returns(ratio);
 
-            await _eventController.SaveEvent(EventType.BannerRequest, "originHost.com", null, null, null);
+            var request = new EventController.EventRequest()
+            {
+                EventType = EventType.BannerRequest,
+                OriginHost = "originHost.com"
+            };
+            await _eventController.SaveEvent(_testUserAgent, request);
 
             _glupHelperMock.Verify(
                 x => x.EmitGlup(
@@ -121,7 +137,15 @@ namespace Criteo.IdController.UTest
                 expectedIfa = revIfa.Value.ToString();
             }
 
-            await _eventController.SaveEvent(EventType.BannerRequest, host, _testingLwid, _testingUid, _testingIfa);
+            var request = new EventController.EventRequest()
+            {
+                EventType = EventType.BannerRequest,
+                OriginHost = host,
+                LocalWebId = _testingLwid,
+                Uid = _testingUid,
+                Ifa = _testingIfa
+            };
+            await _eventController.SaveEvent(_testUserAgent, request);
 
             _glupHelperMock.Verify(
                 x => x.EmitGlup(

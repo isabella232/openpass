@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using static Criteo.Glup.IdController.Types;
-using IdControllerGlup = Criteo.Glup.IdController;
 
 namespace Criteo.IdController.UTest
 {
@@ -17,6 +16,7 @@ namespace Criteo.IdController.UTest
     public class OtpControllerTests
     {
         private const int _otpCodeLength = 6;
+        private const string _testUserAgent = "TestUserAgent";
 
         private OtpController _otpController;
 
@@ -60,7 +60,8 @@ namespace Criteo.IdController.UTest
         public void ForbiddenWhenGenerationNotEnabled()
         {
             _configurationHelperMock.Setup(c => c.EnableOtp).Returns(false);
-            var response = _otpController.GenerateOtp("example@mail.com");
+            var request = new OtpController.GenerateRequest() { Email = "example@mail.com" };
+            var response = _otpController.GenerateOtp(_testUserAgent, request);
 
             Assert.IsAssignableFrom<NotFoundResult>(response);
         }
@@ -69,7 +70,8 @@ namespace Criteo.IdController.UTest
         public void ForbiddenWhenValidationNotEnabled()
         {
             _configurationHelperMock.Setup(c => c.EnableOtp).Returns(false);
-            var response = _otpController.ValidateOtp("example@mail.com", "123456");
+            var request = new OtpController.ValidateRequest() { Email = "example@mail.com", Otp = "123456" };
+            var response = _otpController.ValidateOtp(_testUserAgent, request);
 
             Assert.IsAssignableFrom<NotFoundResult>(response);
         }
@@ -78,7 +80,8 @@ namespace Criteo.IdController.UTest
         public void BadRequestWhenGenerationEmailIsInvalid(
             [Values(null, "", "mail.com")] string email)
         {
-            var response = _otpController.GenerateOtp(email);
+            var request = new OtpController.GenerateRequest() { Email = email };
+            var response = _otpController.GenerateOtp(_testUserAgent, request);
 
             Assert.IsAssignableFrom<BadRequestResult>(response);
         }
@@ -88,7 +91,8 @@ namespace Criteo.IdController.UTest
             [Values(null, "", "mail.com")] string email)
         {
             var validOtp = "123456";
-            var response = _otpController.ValidateOtp(email, validOtp);
+            var request = new OtpController.ValidateRequest() { Email = email, Otp = validOtp };
+            var response = _otpController.ValidateOtp(_testUserAgent, request);
 
             Assert.IsAssignableFrom<BadRequestResult>(response);
         }
@@ -98,7 +102,8 @@ namespace Criteo.IdController.UTest
             [Values(null, "", "abcdef", "123abc", "123", "1234567")] string otp)
         {
             var validEmail = "example@mail.com";
-            var response = _otpController.ValidateOtp(validEmail, otp);
+            var request = new OtpController.ValidateRequest() { Email = validEmail, Otp = otp };
+            var response = _otpController.ValidateOtp(_testUserAgent, request);
 
             Assert.IsAssignableFrom<BadRequestResult>(response);
         }
@@ -106,7 +111,8 @@ namespace Criteo.IdController.UTest
         [Test]
         public void ValidRequestGeneration()
         {
-            var response = _otpController.GenerateOtp("example@mail.com");
+            var request = new OtpController.GenerateRequest() { Email = "example@mail.com" };
+            var response = _otpController.GenerateOtp(_testUserAgent, request);
 
             Assert.IsAssignableFrom<NoContentResult>(response);
         }
@@ -118,7 +124,8 @@ namespace Criteo.IdController.UTest
             _memoryCache
                 .Setup(m => m.TryGetValue(It.IsAny<object>(), out otp))
                 .Returns(true);
-            var response = _otpController.ValidateOtp("example@mail.com", "123456");
+            var request = new OtpController.ValidateRequest() { Email = "example@mail.com", Otp = "123456" };
+            var response = _otpController.ValidateOtp(_testUserAgent, request);
 
             Assert.IsAssignableFrom<OkResult>(response);
         }
@@ -128,7 +135,8 @@ namespace Criteo.IdController.UTest
         [TestCase("origin.com")]
         public void GenerationGlupEmitted(string originHost)
         {
-            _otpController.GenerateOtp("example@mail.com", originHost);
+            var request = new OtpController.GenerateRequest() { Email = "example@mail.com", OriginHost = originHost };
+            _otpController.GenerateOtp(_testUserAgent, request);
 
             _glupHelperMock.Verify(g => g.EmitGlup(
                     It.Is<EventType>(e => e == EventType.EmailEntered),
@@ -149,7 +157,8 @@ namespace Criteo.IdController.UTest
                 .Setup(m => m.TryGetValue(It.IsAny<object>(), out code))
                 .Returns(true);
 
-            _otpController.ValidateOtp("example@mail.com", (string) code, originHost);
+            var request = new OtpController.ValidateRequest() { Email = "example@mail.com", Otp = (string) code, OriginHost = originHost };
+            _otpController.ValidateOtp(_testUserAgent, request);
 
             _glupHelperMock.Verify(g => g.EmitGlup(
                 It.Is<EventType>(e => e == EventType.EmailValidated),
@@ -165,7 +174,8 @@ namespace Criteo.IdController.UTest
         public void GenerateOTPAndAddToCache()
         {
             var email = "example@mail.com";
-            _otpController.GenerateOtp(email);
+            var request = new OtpController.GenerateRequest() { Email = email };
+            _otpController.GenerateOtp(_testUserAgent, request);
             _memoryCache.Verify(m => m.CreateEntry(It.Is<string>(s => s == email)), Times.Once);
         }
 
@@ -173,7 +183,8 @@ namespace Criteo.IdController.UTest
         public void GenerateOTPAndSendEmail()
         {
             var email = "example@mail.com";
-            _otpController.GenerateOtp(email);
+            var request = new OtpController.GenerateRequest() { Email = email };
+            _otpController.GenerateOtp(_testUserAgent, request);
             _emailHelperMock.Verify(e => e.SendOtpEmail(It.Is<string>(s => s == email), It.IsAny<string>()), Times.Once);
         }
 
@@ -184,10 +195,11 @@ namespace Criteo.IdController.UTest
             string lastCode = null;
 
             var email = "example@mail.com";
+            var request = new OtpController.GenerateRequest() { Email = email };
             _emailHelperMock.Setup(e => e.SendOtpEmail(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>((_, otp) => firstCode = otp);
-            _otpController.GenerateOtp(email);
+            _otpController.GenerateOtp(_testUserAgent, request);
             _emailHelperMock.Setup(e => e.SendOtpEmail(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>((_, otp) => lastCode = otp);
-            _otpController.GenerateOtp(email);
+            _otpController.GenerateOtp(_testUserAgent, request);
 
             foreach (var code in new[] { firstCode, lastCode })
             {
@@ -204,15 +216,17 @@ namespace Criteo.IdController.UTest
 
             // Generate
             object code = null;
+            var requestGenerate = new OtpController.GenerateRequest() { Email = email };
             _emailHelperMock.Setup(e => e.SendOtpEmail(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>((_, otp) => code = otp);
-            var response = _otpController.GenerateOtp(email);
+            var response = _otpController.GenerateOtp(_testUserAgent, requestGenerate);
             Assert.IsAssignableFrom<NoContentResult>(response);
 
             // Validate
             _memoryCache
                 .Setup(m => m.TryGetValue(It.IsAny<object>(), out code))
                 .Returns(true);
-            response = _otpController.ValidateOtp(email, (string) code);
+            var requestValidate = new OtpController.ValidateRequest() { Email = email, Otp = (string) code };
+            response = _otpController.ValidateOtp(_testUserAgent, requestValidate);
             Assert.IsAssignableFrom<OkResult>(response);
         }
 
@@ -223,8 +237,9 @@ namespace Criteo.IdController.UTest
 
             // Generate
             object code = null;
+            var requestGenerate = new OtpController.GenerateRequest() { Email = email };
             _emailHelperMock.Setup(e => e.SendOtpEmail(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>((_, otp) => code = otp);
-            var response = _otpController.GenerateOtp(email);
+            var response = _otpController.GenerateOtp(_testUserAgent, requestGenerate);
             Assert.IsAssignableFrom<NoContentResult>(response);
 
             // Validate
@@ -233,7 +248,8 @@ namespace Criteo.IdController.UTest
                 .Returns(true);
             var nextCode = (int.Parse((string) code) + 1) % 99999; // Force different code (avoid overflow)
             var erroneousCode = $"{nextCode:000000}"; // Add leading zeros if necessary
-            response = _otpController.ValidateOtp(email, erroneousCode);
+            var requestValidate = new OtpController.ValidateRequest() { Email = email, Otp = erroneousCode };
+            response = _otpController.ValidateOtp(_testUserAgent, requestValidate);
             Assert.IsAssignableFrom<NotFoundResult>(response);
         }
     }

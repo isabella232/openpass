@@ -15,32 +15,33 @@ export enum EventType {
 }
 
 export function sendEvent(eventType: number, originHost: string = ""): void {
-    const targetUrl = generateTargetUrl(eventType, originHost);
+    const eventData = getEventData(eventType, originHost);
     // TODO: Get localwebid, uid or ifa from cookies (or tags)
 
-    fetch(targetUrl, {
+    fetch(eventUrl, {
         method: "POST",
         credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(eventData)
     })
     .catch((error) => console.error(`[IdController] Error when sending event: ${error}`));
 }
 
-export function generateTargetUrl(
+export function getEventData(
     eventType: number,
     originHost: string,
     localwebid?: string,
     uid?: string,
-    ifa?: string) : string {
-    let targetUrl = `${eventUrl}?eventType=${eventType}&originHost=${originHost}`;
-
-    if (localwebid)
-        targetUrl += `&localwebid=${localwebid}`;
-    if (uid)
-        targetUrl += `&uid=${uid}`;
-    if (ifa)
-        targetUrl += `&ifa=${ifa}`;
-
-    return targetUrl;
+    ifa?: string): EventRequest {
+    return {
+        EventType: eventType,
+        OriginHost: originHost,
+        LocalWebId: localwebid,
+        Uid: uid,
+        Ifa: ifa
+    };
 }
 
 export function addPostMessageEvtListener(currentWindow: Window) {
