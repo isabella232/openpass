@@ -13,9 +13,7 @@ namespace Criteo.IdController.Controllers
     public class OtpController : Controller
     {
         private const int _otpCodeLifetimeMinutes = 15;
-        private const int _otpCodeLength = 6;
-        private static readonly string _codeCharacters = "1234567890";
-        private static readonly string _metricPrefix = "otp";
+        private const string _metricPrefix = "otp";
 
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IMetricsRegistry _metricsRegistry;
@@ -23,8 +21,7 @@ namespace Criteo.IdController.Controllers
         private readonly IConfigurationHelper _configurationHelper;
         private readonly IEmailHelper _emailHelper;
         private readonly IGlupHelper _glupHelper;
-
-        private readonly Random _randomGenerator;
+        private readonly ICodeGeneratorHelper _codeGeneratorHelper;
 
         public OtpController(
             IHostingEnvironment hostingEnvironment,
@@ -32,7 +29,8 @@ namespace Criteo.IdController.Controllers
             IMemoryCache memoryCache,
             IConfigurationHelper configurationHelper,
             IEmailHelper emailHelper,
-            IGlupHelper glupHelper)
+            IGlupHelper glupHelper,
+            ICodeGeneratorHelper codeGeneratorHelper)
         {
             _hostingEnvironment = hostingEnvironment;
             _metricsRegistry = metricRegistry;
@@ -40,7 +38,7 @@ namespace Criteo.IdController.Controllers
             _configurationHelper = configurationHelper;
             _emailHelper = emailHelper;
             _glupHelper = glupHelper;
-            _randomGenerator = new Random();
+            _codeGeneratorHelper = codeGeneratorHelper;
         }
 
         #region Request models
@@ -73,7 +71,7 @@ namespace Criteo.IdController.Controllers
                 return NotFound();
             }
 
-            if (!IsValidEmail(request.Email))
+            if (!_emailHelper.IsValidEmail(request.Email))
             {
                 SendMetric($"{prefix}.bad_request");
                 return BadRequest();
@@ -82,7 +80,7 @@ namespace Criteo.IdController.Controllers
             // TODO: Validate email
 
             // 1. Generate OTP and add it to cache (keyed by email)
-            var otp = GenerateRandomCode();
+            var otp = _codeGeneratorHelper.GenerateRandomCode();
             _activeOtps.Set(request.Email, otp, TimeSpan.FromMinutes(_otpCodeLifetimeMinutes));
 
             // TODO: Check how to properly do this quick fix for OTP validation testing when doing development
@@ -113,7 +111,7 @@ namespace Criteo.IdController.Controllers
                 return NotFound();
             }
 
-            if (!(IsValidEmail(request.Email) && IsValidOtp(request.Otp)))
+            if (!(_emailHelper.IsValidEmail(request.Email) && _codeGeneratorHelper.IsValidCode(request.Otp)))
             {
                 SendMetric($"{prefix}.bad_request");
                 return BadRequest();
@@ -139,36 +137,9 @@ namespace Criteo.IdController.Controllers
         }
 
         #region Helpers
-        private string GenerateRandomCode()
-        {
-            return new string(Enumerable.Repeat(_codeCharacters, _otpCodeLength)
-                .Select(s => s[_randomGenerator.Next(s.Length)]).ToArray());
-        }
-
         private void SendMetric(string metric)
         {
             _metricsRegistry.GetOrRegister(metric, () => new Counter(Granularity.CoarseGrain)).Increment();
-        }
-
-        private bool IsValidEmail(string email)
-        {
-            if (string.IsNullOrEmpty(email))
-                return false;
-
-            try
-            {
-                var mail = new System.Net.Mail.MailAddress(email);
-                return mail.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private bool IsValidOtp(string otp)
-        {
-            return !string.IsNullOrEmpty(otp) && (otp.Length == _otpCodeLength) && otp.All(c => _codeCharacters.Contains(c));
         }
         #endregion
     }

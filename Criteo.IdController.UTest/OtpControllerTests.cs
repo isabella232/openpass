@@ -15,7 +15,6 @@ namespace Criteo.IdController.UTest
     [TestFixture]
     public class OtpControllerTests
     {
-        private const int _otpCodeLength = 6;
         private const string _testUserAgent = "TestUserAgent";
 
         private OtpController _otpController;
@@ -26,6 +25,7 @@ namespace Criteo.IdController.UTest
         private Mock<IConfigurationHelper> _configurationHelperMock;
         private Mock<IEmailHelper> _emailHelperMock;
         private Mock<IGlupHelper> _glupHelperMock;
+        private Mock<ICodeGeneratorHelper> _codeGeneratorHelperMock;
 
         [SetUp]
         public void Setup()
@@ -45,7 +45,10 @@ namespace Criteo.IdController.UTest
             _configurationHelperMock = new Mock<IConfigurationHelper>();
             _configurationHelperMock.Setup(c => c.EnableOtp).Returns(true);
             _emailHelperMock = new Mock<IEmailHelper>();
+            _emailHelperMock.Setup(e => e.IsValidEmail(It.IsAny<string>())).Returns(true);
             _glupHelperMock = new Mock<IGlupHelper>();
+            _codeGeneratorHelperMock = new Mock<ICodeGeneratorHelper>();
+            _codeGeneratorHelperMock.Setup(c => c.IsValidCode(It.IsAny<string>())).Returns(true);
 
             _otpController = new OtpController(
                 _hostingEnvironmentMock.Object,
@@ -53,7 +56,8 @@ namespace Criteo.IdController.UTest
                 _memoryCache.Object,
                 _configurationHelperMock.Object,
                 _emailHelperMock.Object,
-                _glupHelperMock.Object);
+                _glupHelperMock.Object,
+                _codeGeneratorHelperMock.Object);
         }
 
         [Test]
@@ -77,32 +81,45 @@ namespace Criteo.IdController.UTest
         }
 
         [Test]
-        public void BadRequestWhenGenerationEmailIsInvalid(
-            [Values(null, "", "mail.com")] string email)
+        public void BadRequestWhenGenerationEmailIsInvalid()
         {
-            var request = new OtpController.GenerateRequest() { Email = email };
+            _emailHelperMock.Setup(e => e.IsValidEmail(It.IsAny<string>())).Returns(false);
+
+            var request = new OtpController.GenerateRequest();
             var response = _otpController.GenerateOtp(_testUserAgent, request);
 
             Assert.IsAssignableFrom<BadRequestResult>(response);
         }
 
         [Test]
-        public void BadRequestWhenValidationEmailIsInvalid(
-            [Values(null, "", "mail.com")] string email)
+        public void BadRequestWhenValidationEmailIsInvalid()
         {
-            var validOtp = "123456";
-            var request = new OtpController.ValidateRequest() { Email = email, Otp = validOtp };
+            _emailHelperMock.Setup(e => e.IsValidEmail(It.IsAny<string>())).Returns(false);
+
+            var request = new OtpController.ValidateRequest();
             var response = _otpController.ValidateOtp(_testUserAgent, request);
 
             Assert.IsAssignableFrom<BadRequestResult>(response);
         }
 
         [Test]
-        public void BadRequestWhenValidationOtpIsInvalid(
-            [Values(null, "", "abcdef", "123abc", "123", "1234567")] string otp)
+        public void BadRequestWhenValidationOtpIsInvalid()
         {
-            var validEmail = "example@mail.com";
-            var request = new OtpController.ValidateRequest() { Email = validEmail, Otp = otp };
+            _codeGeneratorHelperMock.Setup(c => c.IsValidCode(It.IsAny<string>())).Returns(false);
+
+            var request = new OtpController.ValidateRequest();
+            var response = _otpController.ValidateOtp(_testUserAgent, request);
+
+            Assert.IsAssignableFrom<BadRequestResult>(response);
+        }
+
+        [Test]
+        public void BadRequestWhenValidationEmailAndOtpAreInvalid()
+        {
+            _emailHelperMock.Setup(e => e.IsValidEmail(It.IsAny<string>())).Returns(false);
+            _codeGeneratorHelperMock.Setup(c => c.IsValidCode(It.IsAny<string>())).Returns(false);
+
+            var request = new OtpController.ValidateRequest();
             var response = _otpController.ValidateOtp(_testUserAgent, request);
 
             Assert.IsAssignableFrom<BadRequestResult>(response);
@@ -111,7 +128,7 @@ namespace Criteo.IdController.UTest
         [Test]
         public void ValidRequestGeneration()
         {
-            var request = new OtpController.GenerateRequest() { Email = "example@mail.com" };
+            var request = new OtpController.GenerateRequest();
             var response = _otpController.GenerateOtp(_testUserAgent, request);
 
             Assert.IsAssignableFrom<NoContentResult>(response);
@@ -183,47 +200,32 @@ namespace Criteo.IdController.UTest
         public void GenerateOTPAndSendEmail()
         {
             var email = "example@mail.com";
+            var code = "123456";
+
+            _codeGeneratorHelperMock.Setup(c => c.GenerateRandomCode()).Returns(code);
+
             var request = new OtpController.GenerateRequest() { Email = email };
             _otpController.GenerateOtp(_testUserAgent, request);
-            _emailHelperMock.Verify(e => e.SendOtpEmail(It.Is<string>(s => s == email), It.IsAny<string>()), Times.Once);
-        }
-
-        [Test]
-        public void OTPCodesAreProperlyGenerated()
-        {
-            string firstCode = null;
-            string lastCode = null;
-
-            var email = "example@mail.com";
-            var request = new OtpController.GenerateRequest() { Email = email };
-            _emailHelperMock.Setup(e => e.SendOtpEmail(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>((_, otp) => firstCode = otp);
-            _otpController.GenerateOtp(_testUserAgent, request);
-            _emailHelperMock.Setup(e => e.SendOtpEmail(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>((_, otp) => lastCode = otp);
-            _otpController.GenerateOtp(_testUserAgent, request);
-
-            foreach (var code in new[] { firstCode, lastCode })
-            {
-                Assert.IsNotNull(code);
-                Assert.AreEqual(_otpCodeLength, code.Length);
-            }
-            Assert.AreNotEqual(firstCode, lastCode);
+            _emailHelperMock.Verify(e => e.SendOtpEmail(It.Is<string>(s => s == email), It.Is<string>(c => c == code)), Times.Once);
         }
 
         [Test]
         public void OTPSuccessfulFullValidation()
         {
             var email = "example@mail.com";
+            var code = "123456";
+
+            _codeGeneratorHelperMock.Setup(c => c.GenerateRandomCode()).Returns(code);
 
             // Generate
-            object code = null;
             var requestGenerate = new OtpController.GenerateRequest() { Email = email };
-            _emailHelperMock.Setup(e => e.SendOtpEmail(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>((_, otp) => code = otp);
             var response = _otpController.GenerateOtp(_testUserAgent, requestGenerate);
             Assert.IsAssignableFrom<NoContentResult>(response);
 
             // Validate
+            object cacheCode = code;
             _memoryCache
-                .Setup(m => m.TryGetValue(It.IsAny<object>(), out code))
+                .Setup(m => m.TryGetValue(It.IsAny<object>(), out cacheCode))
                 .Returns(true);
             var requestValidate = new OtpController.ValidateRequest() { Email = email, Otp = (string) code };
             response = _otpController.ValidateOtp(_testUserAgent, requestValidate);
@@ -234,20 +236,18 @@ namespace Criteo.IdController.UTest
         public void OTPFailedFullValidation()
         {
             var email = "example@mail.com";
+            object code = "123456";
 
             // Generate
-            object code = null;
             var requestGenerate = new OtpController.GenerateRequest() { Email = email };
-            _emailHelperMock.Setup(e => e.SendOtpEmail(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>((_, otp) => code = otp);
             var response = _otpController.GenerateOtp(_testUserAgent, requestGenerate);
             Assert.IsAssignableFrom<NoContentResult>(response);
 
             // Validate
+            var erroneousCode = "012345";
             _memoryCache
                 .Setup(m => m.TryGetValue(It.IsAny<object>(), out code))
                 .Returns(true);
-            var nextCode = (int.Parse((string) code) + 1) % 99999; // Force different code (avoid overflow)
-            var erroneousCode = $"{nextCode:000000}"; // Add leading zeros if necessary
             var requestValidate = new OtpController.ValidateRequest() { Email = email, Otp = erroneousCode };
             response = _otpController.ValidateOtp(_testUserAgent, requestValidate);
             Assert.IsAssignableFrom<NotFoundResult>(response);

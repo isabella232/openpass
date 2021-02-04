@@ -88,6 +88,9 @@ namespace Criteo.IdController
             // [Custom] Add email helper
             services.AddEmailHelper(Configuration);
 
+            // [Custom] Add code generator helper (for generating and validating OTP codes)
+            services.AddCodeGeneratorHelper();
+
             // Configure MVC
             services.AddMvc(options =>
             {

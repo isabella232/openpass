@@ -95,5 +95,12 @@ namespace Criteo.IdController
 
             return services;
         }
+
+        public static IServiceCollection AddCodeGeneratorHelper(this IServiceCollection services)
+        {
+            services.AddSingleton<ICodeGeneratorHelper, CodeGeneratorHelper>();
+
+            return services;
+        }
     }
 }

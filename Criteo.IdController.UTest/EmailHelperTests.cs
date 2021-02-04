@@ -11,6 +11,36 @@ namespace Criteo.IdController.UTest
     [TestFixture]
     public class EmailHelperTests
     {
+        private IEmailHelper _emailHelper;
+
+        [SetUp]
+        public void Setup()
+        {
+            _emailHelper = new EmailHelper(Mock.Of<IMetricsRegistry>(), Mock.Of<IEmailConfiguration>());
+        }
+
+        [Test]
+        public void ValidEmailTest()
+        {
+            var validEmail = "hello@example.com";
+            var validation = _emailHelper.IsValidEmail(validEmail);
+
+            Assert.IsTrue(validation);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("email.com")]
+        [TestCase("@email.com")]
+        [TestCase("email@")]
+        [TestCase("email@.com")]
+        public void InvalidEmailTest(string email)
+        {
+            var validation = _emailHelper.IsValidEmail(email);
+
+            Assert.IsFalse(validation);
+        }
+
         #region Email configuration
         [Test]
         public void UserConfigurationTest()

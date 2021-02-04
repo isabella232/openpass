@@ -10,6 +10,7 @@ namespace Criteo.IdController.Helpers
     public interface IEmailHelper
     {
         void SendOtpEmail(string recipient, string otp);
+        bool IsValidEmail(string email);
     }
 
     public class EmailHelper : IEmailHelper
@@ -48,6 +49,22 @@ namespace Criteo.IdController.Helpers
             var body = $"Your temporary login code is: {otp}";
 
             SendEmailAsync(recipient, subject, body, "otp");
+        }
+
+        public bool IsValidEmail(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                return false;
+
+            try
+            {
+                var mail = new MailAddress(email);
+                return mail.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private void SendEmailAsync(string recipient, string subject, string body, string token, bool isBodyHtml = false)
