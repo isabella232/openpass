@@ -1,9 +1,9 @@
 import { Component, ElementRef, Input, ViewEncapsulation } from '@angular/core';
-import { WidgetModes } from '@enums/widget/widget-modes.enum';
-import { environment } from '@env';
+import { environment } from '../environments/environment';
+import { WidgetModes } from '../../../id-controller-ui/src/app/enums/widget/widget-modes.enum';
 
 @Component({
-  selector: 'usrf-identification',
+  selector: 'wdgt-identification',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom,

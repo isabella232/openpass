@@ -1,4 +1,4 @@
-const WEBCOMPONENT_PATH = '//localhost:4200';
+const WEBCOMPONENT_PATH = '//localhost:4300';
 
 (() => {
   const hash = new Date().getMilliseconds();
@@ -7,6 +7,6 @@ const WEBCOMPONENT_PATH = '//localhost:4200';
     script.src = `${WEBCOMPONENT_PATH}/${url}?ver=${hash}`;
     document.head.append(script);
   };
-
-  ['main.js', 'polyfills.js', 'runtime.js', 'styles.js', 'vendor.js'].forEach(requireScript);
+  requireScript('main.js');
+  requireScript('polyfills.js');
 })();

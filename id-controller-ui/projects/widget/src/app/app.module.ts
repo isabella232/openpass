@@ -1,14 +1,13 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { ApplicationRef, DoBootstrap, Injector, NgModule } from '@angular/core';
-import { createCustomElement } from '@angular/elements';
-import { environment } from '@env';
+import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { OtpWidgetModule } from './containers/otp-widget/otp-widget.module';
+import { environment } from '../environments/environment';
+import { createCustomElement } from '@angular/elements';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, OtpWidgetModule],
+  imports: [BrowserModule],
   providers: [],
   bootstrap: environment.production ? [] : [AppComponent],
 })

@@ -17,13 +17,7 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "es2020",
-    "lib": ["es2018", "dom"],
-    "paths": {
-      "@env": ["src/environments/environment"],
-      "@enums/*": ["src/app/enums/*"],
-      "@components/*": ["src/app/components/*"],
-      "@services/*": ["src/app/services/*"]
-    }
+    "lib": ["es2018", "dom"]
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,

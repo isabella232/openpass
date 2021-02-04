@@ -1,0 +1,21 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/app",
+    "types": [],
+    "paths": {
+      "@env": ["projects/id-controller-ui/src/environments/environment"],
+      "@enums/*": ["projects/id-controller-ui/src/app/enums/*"],
+      "@components/*": ["projects/id-controller-ui/src/app/components/*"],
+      "@services/*": ["projects/id-controller-ui/src/app/services/*"]
+    }
+  },
+  "files": [
+    "./src/main.ts",
+    "./src/polyfills.ts"
+  ],
+  "include": [
+    "./src/**/*.d.ts"
+  ]
+}

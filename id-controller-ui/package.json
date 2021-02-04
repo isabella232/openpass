@@ -2,15 +2,23 @@
   "name": "id-controller-ui",
   "version": "0.0.0",
   "scripts": {
-    "start": "ng serve --proxy-config proxy/proxy.conf.js --configuration=development",
-    "start:preprod": "ng serve --proxy-config proxy/proxy.preprod.conf.js --configuration=development",
-    "start:backendless": "ng serve --proxy-config proxy/proxy.backendless.conf.js --configuration=development",
-    "build": "ng build --prod --output-hashing none --single-bundle",
+    "start": "npm run start:id-controller-ui | npm run start:widget",
+    "start:preprod": "npm run start:id-controller-ui:preprod | npm run start:widget:preprod",
+    "start:backendless": "npm run start:id-controller-ui:backendless | npm run start:widget:backendless",
+    "start:widget": "ng serve --project widget --proxy-config proxy/proxy.conf.js --configuration=development",
+    "start:widget:preprod": "ng serve --project widget --proxy-config proxy/proxy.conf.js --configuration=development",
+    "start:widget:backendless": "ng serve --project widget --proxy-config proxy/proxy.conf.js --configuration=development",
+    "start:id-controller-ui": "ng serve --project id-controller-ui --proxy-config proxy/proxy.conf.js",
+    "start:id-controller-ui:preprod": "ng serve --project id-controller-ui --proxy-config proxy/proxy.conf.js",
+    "start:id-controller-ui:backendless": "ng serve --project id-controller-ui --proxy-config proxy/proxy.conf.js",
+    "build": "npm run build:id-controller-ui && npm run build:widget",
+    "build:id-controller-ui": "ng build --prod",
+    "build:widget": "ng build --prod --project widget --single-bundle",
     "test": "ng test --watch=false",
     "lint": "npm run lint:typescript && npm run lint:prettier",
     "lint:typescript": "ng lint",
-    "lint:prettier": "prettier --list-different \"./{src,cypress}/**/*.{ts,component.html}\"",
-    "prettier": "prettier --write \"./{src,cypress}/**/*.{ts,component.html}\" --loglevel silent"
+    "lint:prettier": "prettier --list-different \"./{projects,cypress}/**/*.{ts,component.html}\"",
+    "prettier": "prettier --write \"./{projects,cypress}/**/*.{ts,component.html}\" --loglevel silent"
   },
   "husky": {
     "hooks": {
