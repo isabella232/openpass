@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, ViewEncapsulation } from '@angular/core';
 import { environment } from '../environments/environment';
-import { WidgetModes } from '../../../id-controller-ui/src/app/enums/widget/widget-modes.enum';
+import { WidgetModes } from './enums/widget-modes.enum';
 
 @Component({
   selector: 'wdgt-identification',

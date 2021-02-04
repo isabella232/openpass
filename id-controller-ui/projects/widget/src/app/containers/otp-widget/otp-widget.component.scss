@@ -1,0 +1,69 @@
+@import "~projects/id-controller-ui/src/styles/variables";
+@import "~projects/id-controller-ui/src/styles/base";
+@import "~projects/id-controller-ui/src/styles/buttons";
+@import "~projects/id-controller-ui/src/styles/typography";
+@import "~projects/id-controller-ui/src/styles/grid";
+
+:host {
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  &.modal {
+    position: fixed;
+    top: 0;
+    z-index: 2147483647;
+  }
+}
+
+.container {
+  height: 100%;
+  display: grid;
+  place-content: center;
+  position: relative;
+}
+
+.widget-body {
+  width: 100%;
+  max-width: 400px;
+  min-width: 200px;
+  padding: 1rem 2rem;
+  background: #fff;
+
+  &.shadow {
+    box-shadow: 1px 0 7px 3px rgb(0 0 0 / 4%), 0 -1px 7px 3px rgb(0 0 0 / 4%), -1px 0 7px 3px rgb(0 0 0 / 4%);
+  }
+}
+
+.backdrop {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  background: rgb(0 0 0 / 10%);
+}
+
+.spec-list-option {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+
+  .spec-list-icon {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+}
+
+h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.op-logo-container {
+  max-width: 200px;
+
+  img {
+    width: 100%;
+  }
+}
