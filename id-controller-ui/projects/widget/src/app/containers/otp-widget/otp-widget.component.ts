@@ -1,6 +1,7 @@
 import { Component, HostBinding, Inject, Input, OnInit } from '@angular/core';
 import { WidgetModes } from '../../enums/widget-modes.enum';
 import { environment } from '../../../environments/environment';
+import { EnvironmentService } from '../../services/environment.service';
 
 @Component({
   selector: 'wdgt-otp-widget',
@@ -18,6 +19,7 @@ export class OtpWidgetComponent implements OnInit {
   isOpen = true;
   widgetMods = WidgetModes;
   websiteName = 'Website Name';
+  webComponentHost: string;
 
   get openerConfigs(): string {
     const { innerHeight, innerWidth } = this.window;
@@ -36,11 +38,15 @@ export class OtpWidgetComponent implements OnInit {
       .join(',');
   }
 
-  constructor(@Inject('Window') private window: Window) {}
+  constructor(@Inject('Window') private window: Window, private environmentService: EnvironmentService) {
+    this.webComponentHost = environmentService.isPreprod
+      ? 'https://my-advertising-experience.preprod.crto.in/open-pass/widget'
+      : environment.webComponentHost;
+  }
 
   ngOnInit(): void {}
 
   launchIdController() {
-    this.window.open('//localhost:4200/', 'blank', this.openerConfigs);
+    this.window.open(environment.idControllerAppUrl, '_blank', this.openerConfigs);
   }
 }

@@ -24,7 +24,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/id-controller-ui",
+            "baseHref": "/open-pass/",
+            "deployUrl": "/open-pass/",
+            "outputPath": "dist",
             "index": "projects/id-controller-ui/src/index.html",
             "main": "projects/id-controller-ui/src/main.ts",
             "polyfills": "projects/id-controller-ui/src/polyfills.ts",

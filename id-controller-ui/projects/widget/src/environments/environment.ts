@@ -4,6 +4,8 @@
 
 export const environment = {
   production: false,
+  webComponentHost: 'http://localhost:4300',
+  idControllerAppUrl: 'http://localhost:4200/open-pass',
 };
 
 /*

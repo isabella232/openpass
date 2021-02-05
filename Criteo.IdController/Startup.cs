@@ -16,6 +16,8 @@ using Sdk.Interfaces.Hosting;
 using Sdk.Interfaces.KeyValueStore;
 using Sdk.Monitoring;
 using Sdk.ProductionResources.ConnectionStrings;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace Criteo.IdController
 {
@@ -117,6 +119,14 @@ namespace Criteo.IdController
 
             // Enables response compression when applicable
             app.UseResponseCompression();
+
+            if (!_env.IsDevelopment())
+            {
+                // Enable serving static files
+                var path = Path.Combine(_env.ContentRootPath, "dist");
+                var provider = new PhysicalFileProvider(path);
+                app.UseFileServer(new FileServerOptions { FileProvider = provider, RequestPath = "/open-pass" });
+            }
 
             app.UseStaticFiles();
 

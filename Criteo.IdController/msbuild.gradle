@@ -6,6 +6,8 @@ moabDependencies {
     frontend ':identification:id-controller:id-controller-ui'
 }
 
-msbuildPrepare {
-    dependsOn(configurations.frontend)
+msbuildPackage {
+    from(configurations.frontend) {
+        into("Criteo.IdController/dist")
+    }
 }

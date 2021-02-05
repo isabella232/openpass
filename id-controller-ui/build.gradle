@@ -1,1 +1,5 @@
 apply plugin: 'com.criteo.angular-application'
+
+npmBuild {
+    outputFolder.set(file('dist'))
+}
