@@ -1,0 +1,40 @@
+summary::-webkit-details-marker {
+  position: absolute;
+  right: 1rem;
+  top: calc(50% - 6px);
+  width: 12px;
+  height: 12px;
+  transform: scale(-1, 1);
+  color: var(--main-color);
+}
+
+summary {
+  position: relative;
+  line-height: 50px;
+  outline: none;
+  cursor: pointer;
+  background: #eee;
+  padding: 0 0.5rem;
+  &::after {
+    content: '';
+    background: transparent;
+    position: absolute;
+    bottom: 0;
+    height: 4px;
+    width: 100%;
+    left: 0;
+    transition: background 0.15s;
+  }
+}
+
+details[open] {
+  summary {
+    &::after {
+      background: var(--secondary-color);
+    }
+
+    &::-webkit-details-marker {
+      transform: scale(1, 1);
+    }
+  }
+}

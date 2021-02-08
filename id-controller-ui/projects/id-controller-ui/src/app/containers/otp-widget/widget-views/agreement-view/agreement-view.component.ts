@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./agreement-view.component.scss'],
 })
 export class AgreementViewComponent implements OnInit {
+  websiteName = 'Website Name';
   constructor() {}
 
   ngOnInit(): void {}

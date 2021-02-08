@@ -4,6 +4,22 @@
 
 :host {
   color: var(--text-color);
-  font-family: sans-serif;
+  font-family: 'Raleway', sans-serif;
   font-size: 0.8rem;
+}
+
+.spec-list-option {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+
+  .spec-list-icon {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
 }
