@@ -17,7 +17,7 @@
           "strict": true
         }
       },
-      "root": "",
+      "root": "projects/id-controller-ui",
       "sourceRoot": "projects/id-controller-ui/src",
       "prefix": "usrf",
       "architect": {

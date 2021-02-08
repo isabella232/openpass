@@ -1,4 +1,5 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'usrf-auth-view',
@@ -6,8 +7,6 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
   styleUrls: ['./auth-view.component.scss'],
 })
 export class AuthViewComponent implements OnInit {
-  @Output() proceed = new EventEmitter<void>();
-
   websiteName = 'WebsiteName';
   toBeVerified = false;
 
@@ -15,7 +14,7 @@ export class AuthViewComponent implements OnInit {
   verificationCode: string;
   allowToShareEmail = false;
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit() {}
 
@@ -35,6 +34,6 @@ export class AuthViewComponent implements OnInit {
 
   private checkVerification() {
     // TODO: check verification
-    this.proceed.emit();
+    this.router.navigate(['agreement']);
   }
 }

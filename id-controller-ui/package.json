@@ -18,7 +18,7 @@
     "lint": "npm run lint:typescript && npm run lint:prettier",
     "lint:typescript": "ng lint",
     "lint:prettier": "prettier --list-different \"./{projects,cypress}/**/*.{ts,component.html}\"",
-    "prettier": "prettier --write \"./{projects,cypress}/**/*.{ts,component.html}\" --loglevel silent"
+    "prettier": "prettier --write \"./projects/id-controller-ui/src/**/*.{ts,component.html}\" --loglevel silent"
   },
   "husky": {
     "hooks": {
@@ -26,7 +26,7 @@
     }
   },
   "lint-staged": {
-    "*": "npm run lint:prettier"
+    "*.{js,scss,ts,html,json}": "npm run prettier"
   },
   "private": true,
   "dependencies": {
@@ -51,6 +51,7 @@
     "@angular-eslint/template-parser": "^1.1.0",
     "@angular/cli": "~11.1.1",
     "@angular/compiler-cli": "~11.1.0",
+    "@angular/router": "^11.1.0",
     "@cypress/webpack-preprocessor": "^5.5.0",
     "@types/cypress": "^1.1.3",
     "@types/jasmine": "~3.6.3",
@@ -71,7 +72,7 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
-    "lint-staged": "^10.5.3",
+    "lint-staged": "^10.5.4",
     "ngx-build-plus": "^11.0.0",
     "prettier": "^2.2.1",
     "ts-node": "~9.1.1",

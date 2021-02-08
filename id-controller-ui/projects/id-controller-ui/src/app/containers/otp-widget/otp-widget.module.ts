@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OtpWidgetComponent } from './otp-widget.component';
-import { WidgetViewsModule } from './widget-views/widget-views.module';
+import { OtpWidgetRoutingModule } from './otp-widget-routing.module';
 
 @NgModule({
-  imports: [CommonModule, WidgetViewsModule],
+  imports: [CommonModule, OtpWidgetRoutingModule],
   declarations: [OtpWidgetComponent],
   exports: [OtpWidgetComponent],
 })
