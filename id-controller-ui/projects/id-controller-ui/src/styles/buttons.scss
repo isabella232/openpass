@@ -26,3 +26,12 @@
     outline: transparent solid 1px;
   }
 }
+
+a.btn {
+  display: inline-block;
+  text-align: center;
+
+  &:hover {
+    text-decoration: none;
+  }
+}

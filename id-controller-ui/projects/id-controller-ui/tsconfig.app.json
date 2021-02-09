@@ -8,14 +8,10 @@
       "@env": ["projects/id-controller-ui/src/environments/environment"],
       "@enums/*": ["projects/id-controller-ui/src/app/enums/*"],
       "@components/*": ["projects/id-controller-ui/src/app/components/*"],
-      "@services/*": ["projects/id-controller-ui/src/app/services/*"]
+      "@services/*": ["projects/id-controller-ui/src/app/services/*"],
+      "@utils/*": ["projects/id-controller-ui/src/app/utils/*"]
     }
   },
-  "files": [
-    "./src/main.ts",
-    "./src/polyfills.ts"
-  ],
-  "include": [
-    "./src/**/*.d.ts"
-  ]
+  "files": ["./src/main.ts", "./src/polyfills.ts"],
+  "include": ["./src/**/*.d.ts"]
 }

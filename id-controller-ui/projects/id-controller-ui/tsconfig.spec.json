@@ -3,22 +3,15 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
-    "types": [
-      "jasmine"
-    ],
+    "types": ["jasmine"],
     "paths": {
       "@env": ["projects/id-controller-ui/src/environments/environment"],
       "@enums/*": ["projects/id-controller-ui/src/app/enums/*"],
       "@components/*": ["projects/id-controller-ui/src/app/components/*"],
-      "@services/*": ["projects/id-controller-ui/src/app/services/*"]
+      "@services/*": ["projects/id-controller-ui/src/app/services/*"],
+      "@utils/*": ["projects/id-controller-ui/src/app/utils/*"]
     }
   },
-  "files": [
-    "src/test.ts",
-    "src/polyfills.ts"
-  ],
-  "include": [
-    "src/**/*.spec.ts",
-    "src/**/*.d.ts"
-  ]
+  "files": ["src/test.ts", "src/polyfills.ts"],
+  "include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
 }

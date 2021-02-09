@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { localStorage } from '@utils/storage-decorator';
 
 @Component({
   selector: 'usrf-auth-view',
@@ -7,6 +8,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./auth-view.component.scss'],
 })
 export class AuthViewComponent implements OnInit {
+  @localStorage('crto.email')
+  private storageUserEmail: string;
+
   websiteName = 'WebsiteName';
   toBeVerified = false;
 
@@ -34,6 +38,7 @@ export class AuthViewComponent implements OnInit {
 
   private checkVerification() {
     // TODO: check verification
+    this.storageUserEmail = this.userEmail;
     this.router.navigate(['agreement']);
   }
 }
