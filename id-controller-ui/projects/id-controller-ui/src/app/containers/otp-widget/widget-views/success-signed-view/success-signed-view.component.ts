@@ -7,7 +7,7 @@ import { localStorage } from '@utils/storage-decorator';
   styleUrls: ['./success-signed-view.component.scss'],
 })
 export class SuccessSignedViewComponent {
-  @localStorage('crto.email')
+  @localStorage('openpass.email')
   private userEmail: string;
 
   get secureEmail() {

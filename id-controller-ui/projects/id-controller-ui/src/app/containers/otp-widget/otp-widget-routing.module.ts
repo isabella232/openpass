@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { OtpWidgetComponent } from './otp-widget.component';
+import { AuthenticatedGuard } from '../../guards/authenticated.guard';
+import { GuestGuard } from '../../guards/guest.guard';
 
 const routes: Routes = [
   {
@@ -15,11 +17,13 @@ const routes: Routes = [
       {
         path: 'auth',
         loadChildren: () => import('./widget-views/auth-view/auth-view.module').then((m) => m.AuthViewModule),
+        canActivate: [GuestGuard],
       },
       {
         path: 'agreement',
         loadChildren: () =>
           import('./widget-views/agreement-view/agreement-view.module').then((m) => m.AgreementViewModule),
+        canActivate: [GuestGuard],
       },
       {
         path: 'success',
@@ -27,6 +31,7 @@ const routes: Routes = [
           import('./widget-views/success-signed-view/success-signed-view.module').then(
             (m) => m.SuccessSignedViewModule
           ),
+        canActivate: [GuestGuard],
       },
       {
         path: 'signed',
@@ -34,6 +39,7 @@ const routes: Routes = [
           import('./widget-views/already-signed-view/already-signed-view.module').then(
             (m) => m.AlreadySignedViewModule
           ),
+        canActivate: [AuthenticatedGuard],
       },
     ],
   },

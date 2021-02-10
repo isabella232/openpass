@@ -8,7 +8,7 @@ import { localStorage } from '@utils/storage-decorator';
   styleUrls: ['./auth-view.component.scss'],
 })
 export class AuthViewComponent implements OnInit {
-  @localStorage('crto.email')
+  @localStorage('openpass.email')
   private storageUserEmail: string;
 
   websiteName = 'WebsiteName';

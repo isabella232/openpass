@@ -1,1 +1,26 @@
-<p>already-signed-view works!</p>
+<h2>Hi there!</h2>
+<p><b>Welcome back to OpenPass.</b></p>
+<p>You have an OpenPass account.</p>
+<form (submit)="submitForm()" class="mt-4" ngNativeValidate>
+  <div class="form-group">
+    <input
+      name="email"
+      placeholder="Enter email address"
+      class="form-control"
+      type="email"
+      required
+      [(ngModel)]="userEmail"
+    />
+  </div>
+  <div class="form-group">
+    <a href="">Not you?</a>
+  </div>
+  <div class="form-group mt-5">
+    <button type="submit" class="btn btn-primary btn-wide">CONTINUE TO SITE</button>
+  </div>
+</form>
+
+<div class="provided-by">
+  <strong>Provided by</strong>
+  <img src="./assets/images/open-pass-logo-sm.png" alt="OpenPass" />
+</div>
