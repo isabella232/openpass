@@ -1,6 +1,6 @@
-<h2>Hi there!</h2>
-<p><b>Welcome back to OpenPass.</b></p>
-<p>You have an OpenPass account.</p>
+<h1>Hi there!</h1>
+<h3 class="mb-2">Welcome back to OpenPass.</h3>
+<p class="mt-2">You have an OpenPass account.</p>
 <form (submit)="submitForm()" class="mt-4" ngNativeValidate>
   <div class="form-group">
     <input
@@ -11,16 +11,14 @@
       required
       [(ngModel)]="userEmail"
     />
+    <div class="hint">Email address is not valid</div>
   </div>
   <div class="form-group">
-    <a href="">Not you?</a>
+    <button type="button" class="btn btn-link">Not you?</button>
   </div>
   <div class="form-group mt-5">
     <button type="submit" class="btn btn-primary btn-wide">CONTINUE TO SITE</button>
   </div>
 </form>
 
-<div class="provided-by">
-  <strong>Provided by</strong>
-  <img src="./assets/images/open-pass-logo-sm.png" alt="OpenPass" />
-</div>
+<usrf-copyright></usrf-copyright>

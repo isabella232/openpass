@@ -1,8 +1,8 @@
-@import "~projects/id-controller-ui/src/styles/variables";
-@import "~projects/id-controller-ui/src/styles/base";
-@import "~projects/id-controller-ui/src/styles/buttons";
-@import "~projects/id-controller-ui/src/styles/typography";
-@import "~projects/id-controller-ui/src/styles/grid";
+@import '~projects/id-controller-ui/src/styles/variables';
+@import '~projects/id-controller-ui/src/styles/base';
+@import '~projects/id-controller-ui/src/styles/buttons';
+@import '~projects/id-controller-ui/src/styles/typography';
+@import '~projects/id-controller-ui/src/styles/grid';
 
 :host {
   width: 100%;
@@ -62,6 +62,7 @@ h3 {
 
 .op-logo-container {
   max-width: 200px;
+  margin-bottom: 1.5rem;
 
   img {
     width: 100%;

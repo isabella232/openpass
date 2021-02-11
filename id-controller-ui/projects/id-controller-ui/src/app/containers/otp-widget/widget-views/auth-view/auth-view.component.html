@@ -1,16 +1,16 @@
 <ng-container *ngIf="!toBeVerified">
-  <h2>Hi there!</h2>
-  <p><b>Welcome to OpenPass.</b></p>
-  <p>
+  <h1>Hi there!</h1>
+  <h3 class="mb-2">Welcome to OpenPass.</h3>
+  <p class="mt-2">
     Please enter your email address. <br />
     You will only need to do this once for all OpenPass sites.
     <b>Your email address will not be shared without your permission.</b>
   </p>
 </ng-container>
 <ng-container *ngIf="toBeVerified">
-  <h2>Thanks!</h2>
-  <p><b>Check your email...</b></p>
-  <p>Please enter the verification code that was sent to your email address.</p>
+  <h1>Thanks!</h1>
+  <h3 class="mb-2">Check your email...</h3>
+  <p class="mt-2">Please enter the verification code that was sent to your email address.</p>
 </ng-container>
 
 <form (submit)="submitForm()" ngNativeValidate>
@@ -23,6 +23,7 @@
       required
       [(ngModel)]="userEmail"
     />
+    <div class="hint">Email address is not valid</div>
   </div>
   <div *ngIf="toBeVerified" class="form-group">
     <input
@@ -36,11 +37,12 @@
   </div>
   <div class="form-group">
     <label class="pl-3 align-center">
-      <input class="form-control" name="share email" type="checkbox" [(ngModel)]="allowToShareEmail" />
+      <input class="form-control mr-2" name="share email" type="checkbox" [(ngModel)]="allowToShareEmail" />
       Share my email with {{ websiteName }}
     </label>
   </div>
 
+  <div *ngIf="!toBeVerified" class="py-3"></div>
   <div class="pt-3">
     <button type="submit" class="btn btn-primary btn-wide">Continue</button>
   </div>
@@ -49,7 +51,4 @@
   <a href="">Other way to access this site</a>
 </div>
 
-<div class="provided-by">
-  <strong>Provided by</strong>
-  <img src="./assets/images/open-pass-logo-sm.png" alt="OpenPass" />
-</div>
+<usrf-copyright></usrf-copyright>

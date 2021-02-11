@@ -1,9 +1,15 @@
-:host {
-  --main-color: #020a40;
-  --accent-color: #4e8400;
-  --secondary-color: #77cc02;
+$primary-dark: #020a40;
+$primary-light: #78cc00;
 
-  --text-color: var(--main-color);
-  --link-color: var(--accent-color);
-  --base-radius: 2px;
-}
+$secondary-neutral-1: #484848;
+$secondary-neutral-2: #868686;
+$secondary-neutral-3: #cfcccc;
+
+$secondary-accent-1: #2d4d00;
+$secondary-accent-2: #4e8400;
+
+$error-color: #f00;
+
+$text-color: $primary-dark;
+$link-color: $secondary-accent-2;
+$base-radius: 2px;

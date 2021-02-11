@@ -2,12 +2,34 @@
   text-align: center;
 }
 
+.text-small {
+  font-size: 0.62rem;
+}
+
 a {
-  color: var(--link-color);
+  color: $link-color;
   text-decoration: none;
   font-weight: 600;
+  transition: color 0.15s;
 
   &:hover {
-    text-decoration: underline;
+    &:not(.btn) {
+      color: $secondary-accent-1;
+    }
   }
+}
+
+h1 {
+  font-size: 1.5rem;
+  line-height: 1.87rem;
+}
+
+h2 {
+  font-size: 1.18rem;
+  line-height: 1.46rem;
+}
+
+h3 {
+  font-size: 0.875rem;
+  line-height: 1.12rem;
 }

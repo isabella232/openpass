@@ -1,20 +1,21 @@
 .btn {
   border: none;
   background: transparent;
-  padding: 10px;
+  padding: 0.75rem;
   cursor: pointer;
   appearance: none;
-  border-radius: var(--base-radius);
+  border-radius: $base-radius;
+  letter-spacing: 0.02em;
 
   &-primary {
-    background: var(--main-color);
+    background: $primary-dark;
     color: #fff;
     text-transform: uppercase;
-    font-size: 0.9rem;
-    transition: background 0.15s;
+    font-size: 0.87rem;
+    transition: color 0.15s;
 
     &:active {
-      background: #2d387f;
+      color: $primary-light;
     }
   }
 
@@ -24,6 +25,16 @@
 
   &:focus {
     outline: transparent solid 1px;
+  }
+
+  &-link {
+    color: $link-color;
+    transition: color 0.15s;
+    padding: 0;
+
+    &:hover {
+      color: $secondary-accent-1;
+    }
   }
 }
 

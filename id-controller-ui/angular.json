@@ -34,7 +34,10 @@
             "aot": true,
             "assets": ["projects/id-controller-ui/src/assets", "projects/id-controller-ui/src/favicon.ico"],
             "styles": ["projects/id-controller-ui/src/styles.scss"],
-            "scripts": []
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": ["projects/id-controller-ui/src/styles"]
+            }
           },
           "configurations": {
             "production": {
@@ -92,7 +95,10 @@
             "karmaConfig": "projects/id-controller-ui/karma.conf.js",
             "assets": ["projects/id-controller-ui/src/favicon.ico", "projects/id-controller-ui/src/assets"],
             "styles": [],
-            "scripts": []
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": ["projects/id-controller-ui/src/styles"]
+            }
           }
         },
         "lint": {
