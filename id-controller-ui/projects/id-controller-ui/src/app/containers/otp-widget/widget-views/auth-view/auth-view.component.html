@@ -16,6 +16,7 @@
 <form (submit)="submitForm()" ngNativeValidate>
   <div class="form-group">
     <input
+      [class.invalid]="emailVerificationFailed"
       name="email"
       placeholder="Enter email address"
       class="form-control"
@@ -27,6 +28,7 @@
   </div>
   <div *ngIf="toBeVerified" class="form-group">
     <input
+      [class.invalid]="codeVerificationFailed"
       name="verification code"
       placeholder="Enter verification code"
       class="form-control"
@@ -34,6 +36,7 @@
       required
       [(ngModel)]="verificationCode"
     />
+    <div class="hint">Code is not valid. Check the code and try one more time</div>
   </div>
   <div class="form-group">
     <label class="pl-3 align-center">
@@ -52,3 +55,5 @@
 </div>
 
 <usrf-copyright></usrf-copyright>
+
+<div *ngIf="isFetching" class="loader"></div>

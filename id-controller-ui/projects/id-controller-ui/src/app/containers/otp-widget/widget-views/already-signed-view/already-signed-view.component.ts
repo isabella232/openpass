@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { localStorage } from '@utils/storage-decorator';
+import { AuthService } from '@services/auth.service';
 
 @Component({
   selector: 'usrf-already-signed-view',
@@ -12,7 +13,10 @@ export class AlreadySignedViewComponent implements OnInit {
 
   userEmail: string;
 
+  constructor(private authService: AuthService) {}
+
   ngOnInit() {
+    this.authService.setTokenToOpener();
     this.userEmail = this.storageUserEmail;
   }
 

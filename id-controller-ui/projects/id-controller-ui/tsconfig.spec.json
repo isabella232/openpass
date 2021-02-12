@@ -9,7 +9,9 @@
       "@enums/*": ["projects/id-controller-ui/src/app/enums/*"],
       "@components/*": ["projects/id-controller-ui/src/app/components/*"],
       "@services/*": ["projects/id-controller-ui/src/app/services/*"],
-      "@utils/*": ["projects/id-controller-ui/src/app/utils/*"]
+      "@utils/*": ["projects/id-controller-ui/src/app/utils/*"],
+      "@rest/*": ["projects/id-controller-ui/src/app/rest/*"],
+      "@shared/*": ["projects/shared/*"]
     }
   },
   "files": ["src/test.ts", "src/polyfills.ts"],

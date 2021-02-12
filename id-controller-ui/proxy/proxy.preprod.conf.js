@@ -1,7 +1,7 @@
 module.exports = [
   {
     context: ['/api'],
-    target: 'https://criteo.com/', // Change url to preprod
+    target: 'https://my-advertising-experience.preprod.crto.in',
     changeOrigin: true,
     secure: true,
   },

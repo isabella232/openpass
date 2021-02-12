@@ -1,26 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { localStorage } from '@utils/storage-decorator';
+import { OtpService } from '@rest/otp/otp.service';
+import { OtpDto } from '@rest/otp/otp.dto';
 
 @Component({
   selector: 'usrf-auth-view',
   templateUrl: './auth-view.component.html',
   styleUrls: ['./auth-view.component.scss'],
 })
-export class AuthViewComponent implements OnInit {
+export class AuthViewComponent {
   @localStorage('openpass.email')
   private storageUserEmail: string;
 
+  isFetching = false;
   websiteName = 'WebsiteName';
   toBeVerified = false;
 
   userEmail: string;
   verificationCode: string;
   allowToShareEmail = false;
+  codeVerificationFailed = false;
+  emailVerificationFailed = false;
 
-  constructor(private router: Router) {}
-
-  ngOnInit() {}
+  constructor(private router: Router, private otpService: OtpService) {}
 
   submitForm() {
     if (!this.toBeVerified) {
@@ -31,14 +34,33 @@ export class AuthViewComponent implements OnInit {
   }
 
   private checkEmail() {
-    // TODO: sendEmail to the server
-    console.log('submitForm');
-    this.toBeVerified = true;
+    this.isFetching = true;
+    this.emailVerificationFailed = false;
+    const otp = new OtpDto({ email: this.userEmail });
+    this.otpService.generateOtp(otp).subscribe(
+      () => (this.toBeVerified = true),
+      () => {
+        this.isFetching = false;
+        this.emailVerificationFailed = true;
+      },
+      () => (this.isFetching = false)
+    );
   }
 
   private checkVerification() {
-    // TODO: check verification
-    this.storageUserEmail = this.userEmail;
-    this.router.navigate(['agreement']);
+    this.isFetching = true;
+    this.codeVerificationFailed = false;
+    const otp = new OtpDto({ email: this.userEmail, otp: this.verificationCode });
+    this.otpService.validateOtp(otp).subscribe(
+      () => {
+        this.storageUserEmail = this.userEmail;
+        this.router.navigate(['agreement'], { queryParamsHandling: 'preserve' });
+      },
+      () => {
+        this.isFetching = false;
+        this.codeVerificationFailed = true;
+      },
+      () => (this.isFetching = false)
+    );
   }
 }

@@ -3,12 +3,14 @@ const userMock = require('../cypress/fixtures/foo.json');
 const mockedRoutes = new Map([
   [/api\/self$/, () => userMock], // example
   [/api\/users\/\d+$/, (id) => ({ ...userMock, id })], // example
+  [/api\/generate$/, () => ''],
+  [/api\/validate$/, () => ''],
 ]);
 
 module.exports = [
   {
     context: ['/api'],
-    target: 'https://criteo.com/', // Change url to preprod
+    target: 'https://my-advertising-experience.preprod.crto.in',
     changeOrigin: true,
     secure: true,
     bypass: (req, res) => {

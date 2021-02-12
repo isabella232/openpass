@@ -17,7 +17,8 @@
       font-size: 0.6rem;
     }
 
-    &:not(:placeholder-shown):invalid {
+    &:not(:placeholder-shown):invalid,
+    &.invalid {
       border-color: $error-color;
 
       & + .hint {

@@ -1,6 +1,6 @@
-<div *ngIf="mode === widgetMods.modal" class="backdrop"></div>
+<div *ngIf="mode === widgetMods.modal && isOpen" class="backdrop"></div>
 
-<div class="container">
+<div *ngIf="isOpen" class="container">
   <div class="widget-body" [class.shadow]="mode === widgetMods.modal">
     <h3>Get Access With</h3>
     <div class="op-logo-container">

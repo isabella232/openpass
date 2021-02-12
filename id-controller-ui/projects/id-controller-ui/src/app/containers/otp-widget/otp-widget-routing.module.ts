@@ -23,7 +23,6 @@ const routes: Routes = [
         path: 'agreement',
         loadChildren: () =>
           import('./widget-views/agreement-view/agreement-view.module').then((m) => m.AgreementViewModule),
-        canActivate: [GuestGuard],
       },
       {
         path: 'success',
@@ -31,7 +30,6 @@ const routes: Routes = [
           import('./widget-views/success-signed-view/success-signed-view.module').then(
             (m) => m.SuccessSignedViewModule
           ),
-        canActivate: [GuestGuard],
       },
       {
         path: 'signed',

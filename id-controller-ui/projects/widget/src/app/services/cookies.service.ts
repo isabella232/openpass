@@ -19,6 +19,12 @@ export class CookiesService {
     return undefined;
   }
 
+  setCookie(name: string, value: string | undefined, days: number, path = '/') {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    this.document.cookie = `${name}=${value}; expires=${date.toUTCString()}; path=${path}`;
+  }
+
   private getCookiesMap(): { [key: string]: string } {
     const parsedCookies = this.document.cookie.split('; ');
     const cookiesMap = parsedCookies.map((cookieString) => cookieString.split('='));

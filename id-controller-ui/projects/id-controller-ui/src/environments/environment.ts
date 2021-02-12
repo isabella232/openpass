@@ -4,6 +4,8 @@
 
 export const environment = {
   production: false,
+  namespace: '/api',
+  cookieName: 'OP_token',
 };
 
 /*
