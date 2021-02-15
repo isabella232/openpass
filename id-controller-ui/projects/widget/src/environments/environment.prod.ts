@@ -1,6 +1,8 @@
+const appHost = 'https://my-advertising-experience.crto.in';
+
 export const environment = {
   production: true,
-  webComponentHost: 'https://my-advertising-experience.crto.in/open-pass/widget',
-  idControllerAppUrl: 'https://my-advertising-experience.crto.in/open-pass',
+  webComponentHost: appHost + '/open-pass/widget',
+  idControllerAppUrl: appHost + '/open-pass',
   cookieName: 'OP_token',
 };

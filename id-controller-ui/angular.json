@@ -173,6 +173,31 @@
                 }
               ]
             },
+            "preprod": {
+              "outputPath": "dist/preprod/widget",
+              "optimization": true,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "projects/widget/src/environments/environment.ts",
+                  "with": "projects/widget/src/environments/environment.preprod.ts"
+                }
+              ],
+              "assets": [
+                "projects/widget/src/favicon.ico",
+                "projects/widget/src/assets",
+                {
+                  "input": "projects/widget/src/assets-preprod",
+                  "output": "assets",
+                  "glob": "*.js"
+                }
+              ]
+            },
             "development": {
               "assets": ["projects/widget/src/favicon.ico", "projects/widget/src/assets"]
             }

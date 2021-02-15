@@ -1,4 +1,4 @@
-const APP_PATH = 'https://my-advertising-experience.crto.in/open-pass/widget';
+const APP_PATH = 'https://my-advertising-experience.preprod.crto.in/open-pass/preprod/widget';
 
 (() => {
   const hash = new Date().getMilliseconds();

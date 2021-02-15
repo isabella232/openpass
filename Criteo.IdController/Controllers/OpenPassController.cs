@@ -1,4 +1,5 @@
 using System.IO;
+using Criteo.DevKit;
 using Metrics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,34 @@ namespace Criteo.IdController.Controllers
         {
             _hostingEnvironment = hostingEnvironment;
             _metricsRegistry = metricRegistry;
+        }
+
+        [HttpGet("widget-app")]
+        public IActionResult Widget([FromQuery(Name = "isIframe")] string isIframe, [FromQuery(Name = "iframeParent")] string iframeParent)
+        {
+            var scriptPath = Path.Combine(
+                _hostingEnvironment.ContentRootPath,
+                "dist",
+                 HostingEnvironmentHelper.GetEnvironment() == HostingEnvironment.PreProd ? "preprod" : "",
+                 "widget/assets/widget.js"
+             );
+
+            if (isIframe?.Length > 0)
+            {
+                // TODO: implement iframe loading
+                return Ok(isIframe);
+            }
+            else
+            {
+                return new PhysicalFileResult(scriptPath, new MediaTypeHeaderValue("application/javascript"));
+            }
+        }
+
+        [HttpGet("iframe-app")]
+        public IActionResult Iframe()
+        {
+            _metricsRegistry.GetOrRegister($"{metricPrefix}.widget-iframe", () => new Counter(Granularity.CoarseGrain)).Increment();
+            return new PhysicalFileResult(Path.Combine(_hostingEnvironment.ContentRootPath, "dist/widget/index.html"), new MediaTypeHeaderValue("text/html"));
         }
 
         [HttpGet("{*anything}")]

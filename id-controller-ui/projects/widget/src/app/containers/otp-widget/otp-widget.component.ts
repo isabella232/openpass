@@ -1,12 +1,11 @@
 import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { WidgetModes } from '../../enums/widget-modes.enum';
 import { environment } from '../../../environments/environment';
-import { EnvironmentService } from '../../services/environment.service';
 import { PostMessagesService } from '../../services/post-messages.service';
 import { Subscription } from 'rxjs';
 import { CookiesService } from '../../services/cookies.service';
-import { PostMessageActions } from '../../../../../shared/enums/post-message-actions.enum';
-import { PostMessagePayload } from '../../../../../shared/types/post-message-payload';
+import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
+import { PostMessagePayload } from '@shared/types/post-message-payload';
 
 @Component({
   selector: 'wdgt-otp-widget',
@@ -24,7 +23,7 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
   isOpen = true;
   widgetMods = WidgetModes;
   websiteName = 'Website Name';
-  webComponentHost: string;
+  webComponentHost = environment.webComponentHost;
 
   private messageSubscription: Subscription;
 
@@ -48,13 +47,8 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
   constructor(
     @Inject('Window') private window: Window,
     private cookiesService: CookiesService,
-    private environmentService: EnvironmentService,
     private postMessageService: PostMessagesService
-  ) {
-    this.webComponentHost = environmentService.isPreprod
-      ? 'https://my-advertising-experience.preprod.crto.in/open-pass/widget'
-      : environment.webComponentHost;
-  }
+  ) {}
 
   ngOnInit() {
     const hasCookie = !!this.cookiesService.getCookie(environment.cookieName);
