@@ -1,5 +1,5 @@
 <ng-container *ngIf="!toBeVerified">
-  <h1>Hi there!</h1>
+  <h1 data-test="auth-page-title">Hi there!</h1>
   <h3 class="mb-2">Welcome to OpenPass.</h3>
   <p class="mt-2">
     Please enter your email address. <br />
@@ -8,7 +8,7 @@
   </p>
 </ng-container>
 <ng-container *ngIf="toBeVerified">
-  <h1>Thanks!</h1>
+  <h1 data-test="auth-page-title">Thanks!</h1>
   <h3 class="mb-2">Check your email...</h3>
   <p class="mt-2">Please enter the verification code that was sent to your email address.</p>
 </ng-container>
@@ -17,6 +17,7 @@
   <div class="form-group">
     <input
       [class.invalid]="emailVerificationFailed"
+      data-test="auth-input-email"
       name="email"
       placeholder="Enter email address"
       class="form-control"
@@ -24,11 +25,12 @@
       required
       [(ngModel)]="userEmail"
     />
-    <div class="hint">Email address is not valid</div>
+    <div class="hint" data-test="auth-email-warning">Email address is not valid</div>
   </div>
   <div *ngIf="toBeVerified" class="form-group">
     <input
       [class.invalid]="codeVerificationFailed"
+      data-test="auth-input-code"
       name="verification code"
       placeholder="Enter verification code"
       class="form-control"
@@ -36,7 +38,7 @@
       required
       [(ngModel)]="verificationCode"
     />
-    <div class="hint">Code is not valid. Check the code and try one more time</div>
+    <div class="hint" data-test="auth-code-warning">Code is not valid. Check the code and try one more time</div>
   </div>
   <div class="form-group">
     <label class="pl-3 align-center">
@@ -47,7 +49,7 @@
 
   <div *ngIf="!toBeVerified" class="py-3"></div>
   <div class="pt-3">
-    <button type="submit" class="btn btn-primary btn-wide">Continue</button>
+    <button data-test="auth-action-btn" type="submit" class="btn btn-primary btn-wide">Continue</button>
   </div>
 </form>
 <div class="text-center p-3">

@@ -1,6 +1,6 @@
 {
   "viewportWidth": 1440,
   "viewportHeight": 960,
-  "baseUrl": "http://localhost:4200",
+  "baseUrl": "http://localhost:4200/open-pass",
   "video": false
 }

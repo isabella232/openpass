@@ -37,6 +37,6 @@ export class PostMessagesService {
       type: PostMessageTypes.openPass,
       payload,
     };
-    this.window.opener.postMessage(data, this.trustedOrigin);
+    (this.window.opener || this.window.parent).postMessage(data, this.trustedOrigin);
   }
 }

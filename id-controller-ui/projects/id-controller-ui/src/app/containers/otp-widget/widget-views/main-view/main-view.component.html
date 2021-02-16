@@ -7,26 +7,32 @@
   relevant ads, wish supports their business and keeps the content free.
 </p>
 <div class="my-3">
-  <div class="spec-list-option">
+  <div class="spec-list-option" data-test="main-pros-item">
     <div class="spec-list-icon">
       <img src="./assets/images/email-sec.png" alt="info" />
     </div>
     <div>Your information will never be shared with anyone without your permission.</div>
   </div>
-  <div class="spec-list-option">
+  <div class="spec-list-option" data-test="main-pros-item">
     <div class="spec-list-icon">
       <img src="./assets/images/ntwrk.png" alt="lock" />
     </div>
     <div>Unlock access to a large network of websites for free.</div>
   </div>
-  <div class="spec-list-option">
+  <div class="spec-list-option" data-test="main-pros-item">
     <div class="spec-list-icon">
       <img src="./assets/images/priv-cntrl.png" alt="safe" />
     </div>
     <div>Control your privacy with just <a href="https://criteo.com/privacy">one link</a>.</div>
   </div>
 </div>
-<button type="button" class="btn btn-wide btn-primary" routerLink="auth" queryParamsHandling="preserve">
+<button
+  type="button"
+  class="btn btn-wide btn-primary"
+  routerLink="auth"
+  queryParamsHandling="preserve"
+  data-test="main-action-btn"
+>
   Sign up with OpenPass
 </button>
 <div class="text-center p-3">

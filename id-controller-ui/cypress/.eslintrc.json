@@ -1,0 +1,18 @@
+{
+  "root": true,
+  "ignorePatterns": [""],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "parserOptions": {
+        "project": ["tsconfig.json"],
+        "createDefaultProgram": true
+      },
+      "extends": [],
+      "rules": {
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": "error"
+      }
+    }
+  ]
+}
