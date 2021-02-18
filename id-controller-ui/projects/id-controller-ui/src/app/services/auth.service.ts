@@ -28,4 +28,8 @@ export class AuthService {
     };
     this.postMessagesService.sendMessage(message);
   }
+
+  resetToken() {
+    this.cookiesService.resetCookie(this.cookieName);
+  }
 }

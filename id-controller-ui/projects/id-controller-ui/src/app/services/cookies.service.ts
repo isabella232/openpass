@@ -19,6 +19,10 @@ export class CookiesService {
     return undefined;
   }
 
+  resetCookie(name: string) {
+    this.document.cookie = name + '=; Max-Age=-1;';
+  }
+
   private getCookiesMap(): { [key: string]: string } {
     const parsedCookies = this.document.cookie.split('; ');
     const cookiesMap = parsedCookies.map((cookieString) => cookieString.split('='));

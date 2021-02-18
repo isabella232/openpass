@@ -38,5 +38,13 @@ context('Signed', () => {
     it('should contains correct user Email', () => {
       page.pageComponent.getEmailInput().should('have.value', fakeEmail);
     });
+
+    it('should redirect to auth by clicking "Not me"', () => {
+      page.pageComponent.getResetBtn().click();
+      cy.location('pathname').should('be.eq', '/open-pass/auth');
+
+      // reset state
+      CookiesHelper.setAppToken();
+    });
   });
 });
