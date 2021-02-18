@@ -21,14 +21,26 @@
     top: 0;
     left: 0;
     z-index: 2147483647;
+
+    .container {
+      overflow: auto;
+      padding: 2em;
+    }
   }
 }
 
 .container {
   height: 100%;
-  display: grid;
-  place-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
+
+  @supports (display: grid) {
+    & {
+      display: grid;
+    }
+  }
 }
 
 .widget-body {

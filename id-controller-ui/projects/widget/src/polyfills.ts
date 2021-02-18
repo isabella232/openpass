@@ -62,4 +62,9 @@ import 'zone.js/dist/zone'; // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
-import '@ungap/custom-elements';
+
+import '@webcomponents/shadydom'; // IE11
+import '@webcomponents/custom-elements'; // IE11
+
+import 'core-js/features/url'; // IE11
+import 'core-js/features/url-search-params'; // IE11

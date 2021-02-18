@@ -1,12 +1,19 @@
-const APP_PATH = 'https://my-advertising-experience.crto.in/open-pass/widget';
+!function (doc) {
+  const APP_PATH = 'https://my-advertising-experience.crto.in/open-pass/widget';
+  const hash = new Date().getMilliseconds(), t = 'script';
 
-(() => {
-  const hash = new Date().getMilliseconds();
-  const requireScript = (url) => {
-    const script = document.createElement('script');
-    script.src = `${APP_PATH}/${url}?ver=${hash}`;
-    document.head.append(script);
-  };
-  requireScript('polyfills.js');
-  requireScript('main.js');
-})();
+  function require(sn) {
+    const es5 = doc.createElement(t);
+    es5.src = APP_PATH + '/' + sn + '-es5.js?ver=' + hash;
+    es5.defer = es5.noModule = true;
+    es5.async = false;
+    doc.head.appendChild(es5);
+    const es2015 = doc.createElement(t);
+    es2015.src = APP_PATH + '/' + sn + '-es2015.js?ver=' + hash;
+    es2015.async = false;
+    es2015.type = 'module';
+    doc.head.appendChild(es2015);
+  }
+
+  ['polyfills', 'main'].forEach(require);
+}(document);
