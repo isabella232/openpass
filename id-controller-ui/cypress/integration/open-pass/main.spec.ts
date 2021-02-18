@@ -1,5 +1,5 @@
 import { MainPage } from '../../pages/main.page';
-import { environment } from '../../../projects/id-controller-ui/src/environments/environment';
+import { CookiesHelper } from '../../helpers/cookies-helper';
 
 context('Main page', () => {
   let page: MainPage;
@@ -27,13 +27,13 @@ context('Main page', () => {
   });
 
   it('should redirect to /signed if cookie is present', () => {
-    cy.setCookie(environment.cookieName, 'fake-token');
+    CookiesHelper.setAppToken();
     page.pageComponent.getActionBtn().click();
 
     cy.location('pathname').should('be.eq', '/open-pass/signed');
 
     // reset state
     cy.go('back');
-    cy.clearCookie(environment.cookieName);
+    CookiesHelper.removeAppToken();
   });
 });

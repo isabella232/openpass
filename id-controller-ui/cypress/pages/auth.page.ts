@@ -1,4 +1,4 @@
-import { BasePage } from './proto/base-page';
+import { BasePage } from './base-page';
 import { AuthPageComponent } from './components/auth/auth-page.component';
 
 export class AuthPage extends BasePage {

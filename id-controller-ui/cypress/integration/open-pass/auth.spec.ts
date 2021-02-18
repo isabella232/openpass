@@ -1,12 +1,12 @@
 import { AuthPage } from '../../pages/auth.page';
-import { environment } from '../../../projects/id-controller-ui/src/environments/environment';
+import { CookiesHelper } from '../../helpers/cookies-helper';
 
 context('Auth Page', () => {
   let page = new AuthPage();
 
   context('with token', () => {
     before(() => {
-      cy.setCookie(environment.cookieName, 'fake-token');
+      CookiesHelper.setAppToken();
       page.goToPage();
     });
 
@@ -17,7 +17,7 @@ context('Auth Page', () => {
 
   context('without token', () => {
     before(() => {
-      cy.clearCookie(environment.cookieName);
+      CookiesHelper.removeAppToken();
       page.goToPage();
     });
 

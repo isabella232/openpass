@@ -1,4 +1,4 @@
-<h1>Hi there!</h1>
+<h1 data-test="signed-page-title">Hi there!</h1>
 <h3 class="mb-2">Welcome back to OpenPass.</h3>
 <p class="mt-2">You have an OpenPass account.</p>
 <form (submit)="submitForm()" class="mt-4" ngNativeValidate>
@@ -9,15 +9,16 @@
       class="form-control"
       type="email"
       required
+      data-test="signed-user-email"
       [(ngModel)]="userEmail"
     />
     <div class="hint">Email address is not valid</div>
   </div>
   <div class="form-group">
-    <button type="button" class="btn btn-link">Not you?</button>
+    <button type="button" class="btn btn-link" data-test="signed-reset-btn">Not you?</button>
   </div>
   <div class="form-group mt-5">
-    <button type="submit" class="btn btn-primary btn-wide">CONTINUE TO SITE</button>
+    <button type="submit" class="btn btn-primary btn-wide" data-test="signed-action-btn">CONTINUE TO SITE</button>
   </div>
 </form>
 
