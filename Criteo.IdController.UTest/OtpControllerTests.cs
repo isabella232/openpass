@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Criteo.IdController.Controllers;
@@ -6,8 +8,12 @@ using Criteo.IdController.Helpers;
 using Criteo.UserIdentification;
 using Metrics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
 using static Criteo.Glup.IdController.Types;
 
 namespace Criteo.IdController.UTest
@@ -16,6 +22,8 @@ namespace Criteo.IdController.UTest
     public class OtpControllerTests
     {
         private const string _testUserAgent = "TestUserAgent";
+        private const string _cookieName = "openpass_token";
+        private const int _cookieLifetimeDays = 390;
 
         private OtpController _otpController;
 
@@ -50,14 +58,7 @@ namespace Criteo.IdController.UTest
             _codeGeneratorHelperMock = new Mock<ICodeGeneratorHelper>();
             _codeGeneratorHelperMock.Setup(c => c.IsValidCode(It.IsAny<string>())).Returns(true);
 
-            _otpController = new OtpController(
-                _hostingEnvironmentMock.Object,
-                _metricRegistryMock.Object,
-                _memoryCache.Object,
-                _configurationHelperMock.Object,
-                _emailHelperMock.Object,
-                _glupHelperMock.Object,
-                _codeGeneratorHelperMock.Object);
+            _otpController = GetOtpController();
         }
 
         [Test]
@@ -142,9 +143,20 @@ namespace Criteo.IdController.UTest
                 .Setup(m => m.TryGetValue(It.IsAny<object>(), out otp))
                 .Returns(true);
             var request = new OtpController.ValidateRequest() { Email = "example@mail.com", Otp = "123456" };
+
             var response = _otpController.ValidateOtp(_testUserAgent, request);
 
-            Assert.IsAssignableFrom<OkResult>(response);
+            // token in JSON response
+            Assert.IsAssignableFrom<OkObjectResult>(response);
+            var responseData = GetResponseData(response);
+            Assert.IsTrue(Guid.TryParse((string) responseData.token, out _));
+
+            // token in cookie
+            var cookie = GetSetCookieHeaderToken(_otpController.HttpContext.Response);
+            Assert.NotNull(cookie);
+            Assert.IsTrue(Guid.TryParse(cookie.Value, out _));
+            var expectedExpire = DateTime.Today.AddDays(_cookieLifetimeDays);
+            Assert.That(cookie?.Expires?.DateTime, Is.EqualTo(expectedExpire).Within(1).Days);
         }
 
         [TestCase(null)]
@@ -229,7 +241,7 @@ namespace Criteo.IdController.UTest
                 .Returns(true);
             var requestValidate = new OtpController.ValidateRequest() { Email = email, Otp = (string) code };
             response = _otpController.ValidateOtp(_testUserAgent, requestValidate);
-            Assert.IsAssignableFrom<OkResult>(response);
+            Assert.IsAssignableFrom<OkObjectResult>(response);
         }
 
         [Test]
@@ -252,5 +264,38 @@ namespace Criteo.IdController.UTest
             response = _otpController.ValidateOtp(_testUserAgent, requestValidate);
             Assert.IsAssignableFrom<NotFoundResult>(response);
         }
+
+        #region Helpers
+        private OtpController GetOtpController(Dictionary<string, string> cookies = null)
+        {
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Cookies = new RequestCookieCollection(cookies);
+
+            var otpController = new OtpController(_hostingEnvironmentMock.Object, _metricRegistryMock.Object,
+                _memoryCache.Object, _configurationHelperMock.Object, _emailHelperMock.Object, _glupHelperMock.Object,
+                _codeGeneratorHelperMock.Object)
+            {
+                ControllerContext = new ControllerContext { HttpContext = httpContext }
+            };
+
+            return otpController;
+        }
+
+        private dynamic GetResponseData(IActionResult response)
+        {
+            var responseContent = response as OkObjectResult;
+            var data = responseContent?.Value;
+
+            return data;
+        }
+
+        private SetCookieHeaderValue GetSetCookieHeaderToken(HttpResponse response)
+        {
+            var setCookies = response.GetTypedHeaders().SetCookie;
+            var cookie = setCookies?.FirstOrDefault(c => c.Name == _cookieName);
+
+            return cookie;
+        }
+        #endregion
     }
 }

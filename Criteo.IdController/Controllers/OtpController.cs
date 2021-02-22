@@ -4,6 +4,7 @@ using Criteo.IdController.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Metrics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using static Criteo.Glup.IdController.Types;
 
@@ -14,6 +15,8 @@ namespace Criteo.IdController.Controllers
     {
         private const int _otpCodeLifetimeMinutes = 15;
         private const string _metricPrefix = "otp";
+        private const string _cookieName = "openpass_token";
+        private const int _cookieLifetimeDays = 390;
 
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IMetricsRegistry _metricsRegistry;
@@ -22,6 +25,8 @@ namespace Criteo.IdController.Controllers
         private readonly IEmailHelper _emailHelper;
         private readonly IGlupHelper _glupHelper;
         private readonly ICodeGeneratorHelper _codeGeneratorHelper;
+
+        private readonly CookieOptions _defaultCookieOptions;
 
         public OtpController(
             IHostingEnvironment hostingEnvironment,
@@ -39,6 +44,11 @@ namespace Criteo.IdController.Controllers
             _emailHelper = emailHelper;
             _glupHelper = glupHelper;
             _codeGeneratorHelper = codeGeneratorHelper;
+
+            _defaultCookieOptions = new CookieOptions
+            {
+                Expires = new DateTimeOffset(DateTime.Today.AddDays(_cookieLifetimeDays))
+            };
         }
 
         #region Request models
@@ -76,8 +86,6 @@ namespace Criteo.IdController.Controllers
                 SendMetric($"{prefix}.bad_request");
                 return BadRequest();
             }
-
-            // TODO: Validate email
 
             // 1. Generate OTP and add it to cache (keyed by email)
             var otp = _codeGeneratorHelper.GenerateRandomCode();
@@ -127,8 +135,12 @@ namespace Criteo.IdController.Controllers
                 // Emit glup
                 _glupHelper.EmitGlup(EventType.EmailValidated, request.OriginHost, userAgent);
 
-                // TODO: Generate + set cookie?
-                return Ok();
+                // Set cookie and send token back in payload
+                var token = Guid.NewGuid().ToString();
+                // TODO: Set a proper session cookie which is not the token (Secure and HttpOnly)
+                Response.Cookies.Append(_cookieName, token, _defaultCookieOptions);
+
+                return Ok(new { token });
             }
 
             SendMetric($"{prefix}.invalid");
