@@ -83,14 +83,21 @@ namespace Criteo.IdController
             return services;
         }
 
+        public static IServiceCollection AddViewRenderHelper(this IServiceCollection services)
+        {
+            services.AddSingleton<IViewRenderHelper, ViewRenderHelper>();
+            return services;
+        }
+
         public static IServiceCollection AddEmailHelper(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IEmailHelper>(r =>
             {
                 var metricsRegistry = r.GetService<IMetricsRegistry>();
+                var viewRender = r.GetService<IViewRenderHelper>();
                 var emailConfiguration = new EmailConfiguration(configuration);
 
-                return new EmailHelper(metricsRegistry, emailConfiguration);
+                return new EmailHelper(metricsRegistry, viewRender, emailConfiguration);
             });
 
             return services;

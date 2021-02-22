@@ -16,7 +16,10 @@ namespace Criteo.IdController.UTest
         [SetUp]
         public void Setup()
         {
-            _emailHelper = new EmailHelper(Mock.Of<IMetricsRegistry>(), Mock.Of<IEmailConfiguration>());
+            _emailHelper = new EmailHelper(
+                Mock.Of<IMetricsRegistry>(),
+                Mock.Of<IViewRenderHelper>(),
+                Mock.Of<IEmailConfiguration>());
         }
 
         [Test]

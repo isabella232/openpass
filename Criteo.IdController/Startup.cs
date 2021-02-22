@@ -87,6 +87,9 @@ namespace Criteo.IdController
             // [Custom] Add user management helper
             services.AddUserManagementHelper();
 
+            // [Custom] Add view render helper
+            services.AddViewRenderHelper();
+
             // [Custom] Add email helper
             services.AddEmailHelper(Configuration);
 

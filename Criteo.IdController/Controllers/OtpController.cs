@@ -95,7 +95,7 @@ namespace Criteo.IdController.Controllers
             if (_hostingEnvironment.IsDevelopment())
                 Console.Out.WriteLine($"New OTP code generated (valid for {_otpCodeLifetimeMinutes} minutes): {request.Email} -> {otp}");
 
-            // 2. Send email
+            // 2. Send email (async -> don't wait)
             _emailHelper.SendOtpEmail(request.Email, otp);
 
             // 3. Emit glup

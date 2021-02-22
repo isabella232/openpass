@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using Criteo.Logging;
 using Metrics;
 
@@ -9,7 +11,7 @@ namespace Criteo.IdController.Helpers
 {
     public interface IEmailHelper
     {
-        void SendOtpEmail(string recipient, string otp);
+        Task SendOtpEmail(string recipient, string otp);
         bool IsValidEmail(string email);
     }
 
@@ -19,12 +21,14 @@ namespace Criteo.IdController.Helpers
 
         private static readonly ILogger _logger = LogManager.GetLogger<EmailHelper>();
         private readonly IMetricsRegistry _metricsRegistry;
+        private readonly IViewRenderHelper _viewRenderHelper;
         private readonly IEmailConfiguration _config;
         private readonly SmtpClient _smtpClient;
 
-        public EmailHelper(IMetricsRegistry metricsRegistry, IEmailConfiguration emailConfiguration)
+        public EmailHelper(IMetricsRegistry metricsRegistry, IViewRenderHelper viewRenderHelper, IEmailConfiguration emailConfiguration)
         {
             _metricsRegistry = metricsRegistry;
+            _viewRenderHelper = viewRenderHelper;
             _config = emailConfiguration;
 
             _smtpClient = CreateSmtpClient();
@@ -43,12 +47,17 @@ namespace Criteo.IdController.Helpers
             return smtpClient;
         }
 
-        public void SendOtpEmail(string recipient, string otp)
+        public async Task SendOtpEmail(string recipient, string otp)
         {
-            var subject = "Temporary login code";
-            var body = $"Your temporary login code is: {otp}";
+            var viewData = new Dictionary<string, object>
+            {
+                { "Code", otp }
+            };
 
-            SendEmailAsync(recipient, subject, body, "otp");
+            var subject = "OpenPass Verification Code";
+            var body = await _viewRenderHelper.RenderToStringAsync("Email/VerificationCode", null, viewData);
+
+            SendEmailAsync(recipient, subject, body, "otp", isBodyHtml: true);
         }
 
         public bool IsValidEmail(string email)
