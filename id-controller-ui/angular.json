@@ -134,7 +134,11 @@
             "tsConfig": "projects/widget/tsconfig.app.json",
             "aot": true,
             "styles": ["projects/widget/src/styles.scss"],
-            "scripts": []
+            "scripts": [],
+            "assets": [
+              "projects/widget/src/favicon.ico",
+              "projects/widget/src/assets"
+            ]
           },
           "configurations": {
             "production": {
@@ -162,15 +166,6 @@
                   "maximumWarning": "6kb",
                   "maximumError": "10kb"
                 }
-              ],
-              "assets": [
-                "projects/widget/src/favicon.ico",
-                "projects/widget/src/assets",
-                {
-                  "input": "projects/widget/src/assets-prod",
-                  "output": "assets",
-                  "glob": "*.js"
-                }
               ]
             },
             "preprod": {
@@ -187,19 +182,7 @@
                   "replace": "projects/widget/src/environments/environment.ts",
                   "with": "projects/widget/src/environments/environment.preprod.ts"
                 }
-              ],
-              "assets": [
-                "projects/widget/src/favicon.ico",
-                "projects/widget/src/assets",
-                {
-                  "input": "projects/widget/src/assets-preprod",
-                  "output": "assets",
-                  "glob": "*.js"
-                }
               ]
-            },
-            "development": {
-              "assets": ["projects/widget/src/favicon.ico", "projects/widget/src/assets"]
             }
           }
         },
