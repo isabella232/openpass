@@ -33,7 +33,7 @@ namespace Criteo.IdController.Helpers
 
         // Sender configuration
         public string SenderDisplayName => _configuration.GetValue<string>("Email:Sender:DisplayName") ?? "OpenPass";
-        public string SenderEmailAddress => _configuration.GetValue<string>("Email:Sender:Address") ?? "id-persistence@criteo.com";  // FIXME: id-persistence used for testing purposes
+        public string SenderEmailAddress => _configuration.GetValue<string>("Email:Sender:Address") ?? "user-first@criteo.com";  // FIXME: use external domain once bought
 
         // Authentication configuration
         public string AuthUserName => _configuration.GetValue<string>("Email:Authentication:UserName");
