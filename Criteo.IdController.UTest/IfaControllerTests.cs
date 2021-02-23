@@ -16,13 +16,13 @@ namespace Criteo.IdController.UTest
     [TestFixture]
     public class IfaControllerTests
     {
-        private Mock<IUserManagementHelper> _userManagementHelperMock;
+        private Mock<IIdentifierGeneratorHelper> _identifierGeneratorHelperMock;
         private Mock<IMetricsRegistry> _metricRegistryMock;
 
         [SetUp]
         public void Setup()
         {
-            _userManagementHelperMock = new Mock<IUserManagementHelper>();
+            _identifierGeneratorHelperMock = new Mock<IIdentifierGeneratorHelper>();
             _metricRegistryMock = new Mock<IMetricsRegistry>();
             _metricRegistryMock.Setup(mr => mr.GetOrRegister(It.IsAny<string>(), It.IsAny<Func<Counter>>())).Returns(new Counter(Granularity.CoarseGrain));
         }
@@ -90,7 +90,7 @@ namespace Criteo.IdController.UTest
             var httpContext = new DefaultHttpContext();
             httpContext.Request.Cookies = new RequestCookieCollection(cookies);
 
-            var ifaController = new IfaController(_userManagementHelperMock.Object, _metricRegistryMock.Object)
+            var ifaController = new IfaController(_identifierGeneratorHelperMock.Object, _metricRegistryMock.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContext }
             };

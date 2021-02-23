@@ -84,8 +84,8 @@ namespace Criteo.IdController
             // [Custom] Add glup helper
             services.AddGlupHelper();
 
-            // [Custom] Add user management helper
-            services.AddUserManagementHelper();
+            // [Custom] Add identifier generator helper
+            services.AddIdentifierGeneratorHelper();
 
             // [Custom] Add view render helper
             services.AddViewRenderHelper();

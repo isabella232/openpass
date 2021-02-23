@@ -9,13 +9,13 @@ namespace Criteo.IdController.Controllers
     public class IfaController : Controller
     {
         private static readonly string metricPrefix = "ifa.";
-        private readonly IUserManagementHelper _userManagementHelper;
+        private readonly IIdentifierGeneratorHelper _identifierGeneratorHelper;
         private readonly IMetricsRegistry _metricsRegistry;
         private readonly string IfaCookieName = "ifa";
 
-        public IfaController(IUserManagementHelper userManagementHelper, IMetricsRegistry metricRegistry)
+        public IfaController(IIdentifierGeneratorHelper identifierGeneratorHelper, IMetricsRegistry metricRegistry)
         {
-            _userManagementHelper = userManagementHelper;
+            _identifierGeneratorHelper = identifierGeneratorHelper;
             _metricsRegistry = metricRegistry;
         }
 
@@ -32,7 +32,7 @@ namespace Criteo.IdController.Controllers
             }
             else
             {
-                ifa = _userManagementHelper.GenerateIfa().ToString();
+                ifa = _identifierGeneratorHelper.GenerateIdentifier().ToString();
                 _metricsRegistry.GetOrRegister($"{metricPrefix}.get.create", () => new Counter(Granularity.CoarseGrain)).Increment();
             }
 

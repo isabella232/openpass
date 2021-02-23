@@ -76,9 +76,9 @@ namespace Criteo.IdController
             return services;
         }
 
-        public static IServiceCollection AddUserManagementHelper(this IServiceCollection services)
+        public static IServiceCollection AddIdentifierGeneratorHelper(this IServiceCollection services)
         {
-            services.AddSingleton<IUserManagementHelper, UserManagementHelper>();
+            services.AddSingleton<IIdentifierGeneratorHelper, IdentifierGeneratorHelper>();
 
             return services;
         }
