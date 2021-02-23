@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Net.Http.Headers;
-using Newtonsoft.Json;
 using static Criteo.Glup.IdController.Types;
 
 namespace Criteo.IdController.UTest
@@ -27,6 +26,7 @@ namespace Criteo.IdController.UTest
 
         private OtpController _otpController;
 
+        private IIdentifierGeneratorHelper _identifierGeneratorHelper;
         private Mock<IHostingEnvironment> _hostingEnvironmentMock;
         private Mock<IMetricsRegistry> _metricRegistryMock;
         private Mock<IMemoryCache> _memoryCache;
@@ -57,6 +57,7 @@ namespace Criteo.IdController.UTest
             _glupHelperMock = new Mock<IGlupHelper>();
             _codeGeneratorHelperMock = new Mock<ICodeGeneratorHelper>();
             _codeGeneratorHelperMock.Setup(c => c.IsValidCode(It.IsAny<string>())).Returns(true);
+            _identifierGeneratorHelper = new IdentifierGeneratorHelper();
 
             _otpController = GetOtpController();
         }
@@ -272,7 +273,7 @@ namespace Criteo.IdController.UTest
             httpContext.Request.Cookies = new RequestCookieCollection(cookies);
 
             var otpController = new OtpController(_hostingEnvironmentMock.Object, _metricRegistryMock.Object,
-                _memoryCache.Object, _configurationHelperMock.Object, _emailHelperMock.Object, _glupHelperMock.Object,
+                _memoryCache.Object, _configurationHelperMock.Object, _identifierGeneratorHelper, _emailHelperMock.Object, _glupHelperMock.Object,
                 _codeGeneratorHelperMock.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = httpContext }

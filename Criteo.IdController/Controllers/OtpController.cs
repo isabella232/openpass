@@ -22,6 +22,7 @@ namespace Criteo.IdController.Controllers
         private readonly IMetricsRegistry _metricsRegistry;
         private readonly IMemoryCache _activeOtps; // Mapping: (email -> OTP)
         private readonly IConfigurationHelper _configurationHelper;
+        private readonly IIdentifierGeneratorHelper _identifierGeneratorHelper;
         private readonly IEmailHelper _emailHelper;
         private readonly IGlupHelper _glupHelper;
         private readonly ICodeGeneratorHelper _codeGeneratorHelper;
@@ -33,6 +34,7 @@ namespace Criteo.IdController.Controllers
             IMetricsRegistry metricRegistry,
             IMemoryCache memoryCache,
             IConfigurationHelper configurationHelper,
+            IIdentifierGeneratorHelper identifierGeneratorHelper,
             IEmailHelper emailHelper,
             IGlupHelper glupHelper,
             ICodeGeneratorHelper codeGeneratorHelper)
@@ -41,6 +43,7 @@ namespace Criteo.IdController.Controllers
             _metricsRegistry = metricRegistry;
             _activeOtps = memoryCache;
             _configurationHelper = configurationHelper;
+            _identifierGeneratorHelper = identifierGeneratorHelper;
             _emailHelper = emailHelper;
             _glupHelper = glupHelper;
             _codeGeneratorHelper = codeGeneratorHelper;
@@ -136,7 +139,7 @@ namespace Criteo.IdController.Controllers
                 _glupHelper.EmitGlup(EventType.EmailValidated, request.OriginHost, userAgent);
 
                 // Set cookie and send token back in payload
-                var token = Guid.NewGuid().ToString();
+                var token = _identifierGeneratorHelper.GenerateIdentifier().ToString();
                 // TODO: Set a proper session cookie which is not the token (Secure and HttpOnly)
                 Response.Cookies.Append(_cookieName, token, _defaultCookieOptions);
 
