@@ -32,25 +32,7 @@ namespace Criteo.IdController.UTest
         {
             var ifaController = GetIfaController();
 
-            var response = ifaController.GetOrCreateIfa(null);
-
-            // Returned IFA
-            var data = GetResponseData(response);
-            Assert.NotNull(data);
-
-            // IFA in cookie
-            var cookie = GetSetCookieHeaderIfa(ifaController.HttpContext.Response);
-            Assert.NotNull(cookie);
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("pii")] // valid
-        public void TestCreateIfaWithValidOrInvalidPii(string pii)
-        {
-            var ifaController = GetIfaController();
-
-            var response = ifaController.GetOrCreateIfa(pii);
+            var response = ifaController.GetOrCreateIfa();
 
             // Returned IFA
             var data = GetResponseData(response);
@@ -69,7 +51,7 @@ namespace Criteo.IdController.UTest
             var cookies = new Dictionary<string, string> { { "ifa", ifaUserSide } };
             var ifaController = GetIfaController(cookies);
 
-            var response = ifaController.GetOrCreateIfa(null);
+            var response = ifaController.GetOrCreateIfa();
 
             // Returned IFA
             var data = GetResponseData(response);
@@ -80,27 +62,6 @@ namespace Criteo.IdController.UTest
             var cookie = GetSetCookieHeaderIfa(ifaController.HttpContext.Response);
             Assert.NotNull(cookie);
             StringAssert.Contains(ifaUserSide, cookie.Value.ToString());
-        }
-
-        [Test]
-        public void TestCookieIfaIsIgnoredWhenPiiPresent()
-        {
-            var ifaUserSide = "62BB805D-9E63-4FE0-AB7D-4B514F86D63C";
-
-            var cookies = new Dictionary<string, string> { { "ifa", ifaUserSide } };
-            var ifaController = GetIfaController(cookies);
-
-            var response = ifaController.GetOrCreateIfa("pii");
-
-            // Returned IFA
-            var data = GetResponseData(response);
-            Assert.NotNull(data);
-            StringAssert.DoesNotContain(ifaUserSide, data);
-
-            // IFA in cookie
-            var cookie = GetSetCookieHeaderIfa(ifaController.HttpContext.Response);
-            Assert.NotNull(cookie);
-            StringAssert.DoesNotContain(ifaUserSide, cookie.Value.ToString());
         }
 
         [Test]

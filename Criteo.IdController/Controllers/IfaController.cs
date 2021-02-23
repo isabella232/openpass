@@ -19,38 +19,27 @@ namespace Criteo.IdController.Controllers
             _metricsRegistry = metricRegistry;
         }
 
+        [HttpGet]
         [HttpGet("get")]
-        public IActionResult GetOrCreateIfa(string pii)
+        public IActionResult GetOrCreateIfa()
         {
-
-            _metricsRegistry.GetOrRegister($"{metricPrefix}.get_create", () => new Counter(Granularity.CoarseGrain)).Increment();
-            var piiPresent = !string.IsNullOrEmpty(pii);
             string ifa;
 
-            // PII present -> get or create mapped IFA (ignoring the one in cookies)
-            // PII not present -> reuse the one in cookies if available or create a new one
-            if (piiPresent)
+            if (Request.Cookies.TryGetValue(IfaCookieName, out var ifaCookie))
             {
-                _metricsRegistry.GetOrRegister($"{metricPrefix}.get_create.pii_present", () => new Counter(Granularity.CoarseGrain)).Increment();
-                _userManagementHelper.TryGetOrCreateIfaMappingFromPii(pii, out var retrievedIfa);
-                ifa = retrievedIfa.ToString();
+                ifa = ifaCookie;
+                _metricsRegistry.GetOrRegister($"{metricPrefix}.get.reuse", () => new Counter(Granularity.CoarseGrain)).Increment();
             }
             else
             {
-                _metricsRegistry.GetOrRegister($"{metricPrefix}.get_create.pii_not_present", () => new Counter(Granularity.CoarseGrain)).Increment();
-                if (Request.Cookies.TryGetValue(IfaCookieName, out var ifaCookie))
-                    ifa = ifaCookie;
-                else
-                    ifa = _userManagementHelper.GenerateIfa().ToString();
+                ifa = _userManagementHelper.GenerateIfa().ToString();
+                _metricsRegistry.GetOrRegister($"{metricPrefix}.get.create", () => new Counter(Granularity.CoarseGrain)).Increment();
             }
 
             // TODO: add options (domain, expires, SameSite, Secure)
             Response.Cookies.Append(IfaCookieName, ifa);
 
-            return Ok(new
-            {
-                ifa = ifa
-            });
+            return Ok(new { ifa });
         }
 
         [HttpGet("delete")]
