@@ -1,7 +1,7 @@
 using Criteo.IdController.Helpers;
 using NUnit.Framework;
 
-namespace Criteo.IdController.UTest
+namespace Criteo.IdController.UTest.Helpers
 {
     [TestFixture]
     public class IdentifierGeneratorHelperTests

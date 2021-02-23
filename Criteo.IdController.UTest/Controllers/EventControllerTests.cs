@@ -4,13 +4,12 @@ using Moq;
 using NUnit.Framework;
 using Criteo.IdController.Controllers;
 using Criteo.IdController.Helpers;
-using Criteo.UserAgent;
 using Criteo.UserIdentification;
 using Metrics;
 using static Criteo.Glup.IdController.Types;
 using CriteoId = Criteo.UserIdentification.CriteoId;
 
-namespace Criteo.IdController.UTest
+namespace Criteo.IdController.UTest.Controllers
 {
     [TestFixture]
     public class EventControllerTests

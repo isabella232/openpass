@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Criteo.IdController.Helpers;
 using Criteo.Services.Glup;
 using Criteo.UserAgent;
@@ -9,7 +8,7 @@ using static Criteo.Glup.IdController.Types;
 using System;
 using Criteo.UserIdentification;
 
-namespace Criteo.IdController.UTest
+namespace Criteo.IdController.UTest.Helpers
 {
     [TestFixture]
     public class GlupHelperTests

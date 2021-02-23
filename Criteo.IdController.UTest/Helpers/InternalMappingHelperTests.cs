@@ -10,7 +10,7 @@ using Moq;
 using NUnit.Framework;
 using CriteoId = Criteo.UserIdentification.CriteoId;
 
-namespace Criteo.IdController.UTest
+namespace Criteo.IdController.UTest.Helpers
 {
     [TestFixture]
     public class IdentityMappingHelperTests

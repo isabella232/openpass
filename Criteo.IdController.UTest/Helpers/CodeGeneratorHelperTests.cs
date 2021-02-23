@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Criteo.IdController.Helpers;
 using NUnit.Framework;
 
-namespace Criteo.IdController.UTest
+namespace Criteo.IdController.UTest.Helpers
 {
     [TestFixture]
     public class CodeGeneratorHelperTests

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Criteo.IdController.Helpers;
 using Metrics;
@@ -6,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Moq;
 using NUnit.Framework;
 
-namespace Criteo.IdController.UTest
+namespace Criteo.IdController.UTest.Helpers
 {
     [TestFixture]
     public class EmailHelperTests

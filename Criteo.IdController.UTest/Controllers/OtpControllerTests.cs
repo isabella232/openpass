@@ -15,7 +15,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Net.Http.Headers;
 using static Criteo.Glup.IdController.Types;
 
-namespace Criteo.IdController.UTest
+namespace Criteo.IdController.UTest.Controllers
 {
     [TestFixture]
     public class OtpControllerTests

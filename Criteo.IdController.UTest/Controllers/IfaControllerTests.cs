@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 
-namespace Criteo.IdController.UTest
+namespace Criteo.IdController.UTest.Controllers
 {
     [TestFixture]
     public class IfaControllerTests
