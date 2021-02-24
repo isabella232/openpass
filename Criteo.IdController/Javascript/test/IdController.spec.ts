@@ -2,7 +2,7 @@
 // This is a workaround so we can test that the IdController API works as expected
 import IdController from '../src/IdController';
 
-const cookieName = 'id_controller_ifa';
+const cookieName = 'openpass_token';
 
 describe('IdController API', () => {
     let spyCookie: jest.SpyInstance<string, any>;

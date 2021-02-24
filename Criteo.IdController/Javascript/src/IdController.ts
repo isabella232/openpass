@@ -22,7 +22,7 @@ export default class IdController {
     private iframe!: HTMLElement;
 
     private readonly expiryHours = 13 * 24 * 30;
-    public static readonly ifaFirstPartyCookieName = "id_controller_ifa";
+    public static readonly ifaFirstPartyCookieName = "openpass_token";
 
     constructor(position: string, userOptions: Partial<Options> = {}) {
         // Fill options with default ones

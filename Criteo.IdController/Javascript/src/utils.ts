@@ -1,7 +1,7 @@
 ﻿// Handy functions used by static sites
 
 const eventUrl = '__MACRO-CONTROLLER-URI__/api/event';
-const getIfaUrl = '__MACRO-CONTROLLER-URI__/api/ifa/get';
+const getIfaUrl = '__MACRO-CONTROLLER-URI__/api/ifa';
 // __MACRO-CONTROLLER-URI__ will be replaced by the correct URI depending on build config
 
 export enum EventType {
