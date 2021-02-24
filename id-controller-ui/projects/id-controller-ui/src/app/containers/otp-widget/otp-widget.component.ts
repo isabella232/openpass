@@ -1,8 +1,35 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { PostMessagesService } from '@services/post-messages.service';
+import { DOCUMENT } from '@angular/common';
+import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
+import { delay, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'usrf-otp-widget',
   templateUrl: './otp-widget.component.html',
   styleUrls: ['./otp-widget.component.scss'],
 })
-export class OtpWidgetComponent {}
+export class OtpWidgetComponent {
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    @Inject('Window') private window: Window,
+    router: Router,
+    postMessagesService: PostMessagesService
+  ) {
+    if (this.window.opener) {
+      return;
+    }
+    router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        delay(25) // waiting for render
+      )
+      .subscribe(() => {
+        postMessagesService.sendMessage({
+          action: PostMessageActions.updateHeight,
+          height: this.document.body.scrollHeight,
+        });
+      });
+  }
+}

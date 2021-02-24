@@ -1,0 +1,50 @@
+:host {
+  &.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2147483647;
+
+    .container {
+      overflow: auto;
+      padding: 2em;
+
+      iframe {
+        height: 600px;
+        width: 400px;
+      }
+    }
+  }
+}
+
+.container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  @supports (display: grid) {
+    & {
+      display: grid;
+    }
+  }
+}
+
+.backdrop {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  left: 0;
+  top: 0;
+  background: rgb(0 0 0 / 10%);
+}
+
+
+iframe {
+  border: none;
+  width: 100%;
+  margin: auto;
+}

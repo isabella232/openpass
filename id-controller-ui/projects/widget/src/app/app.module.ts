@@ -6,10 +6,11 @@ import { environment } from '../environments/environment';
 import { createCustomElement } from '@angular/elements';
 import { OtpWidgetModule } from './containers/otp-widget/otp-widget.module';
 import { windowFactory } from './utils/window-factory';
+import { OtpIframeModule } from './containers/otp-iframe/otp-iframe.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, OtpWidgetModule],
+  imports: [BrowserModule, OtpWidgetModule, OtpIframeModule],
   providers: [{ provide: 'Window', useFactory: windowFactory }],
   bootstrap: environment.production ? [] : [AppComponent],
 })

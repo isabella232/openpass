@@ -1,1 +1,2 @@
-<wdgt-otp-widget [mode]="mode"></wdgt-otp-widget>
+<wdgt-otp-widget *ngIf="variant === variantsList.modal" [mode]="view"></wdgt-otp-widget>
+<wdgt-otp-iframe *ngIf="variant === variantsList.inSite" [view]="view"></wdgt-otp-iframe>

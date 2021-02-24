@@ -1,11 +1,8 @@
 import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { WidgetModes } from '../../enums/widget-modes.enum';
 import { environment } from '../../../environments/environment';
-import { PostMessagesService } from '../../services/post-messages.service';
-import { Subscription } from 'rxjs';
 import { CookiesService } from '../../services/cookies.service';
-import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
-import { PostMessagePayload } from '@shared/types/post-message-payload';
+import { MessageSubscriptionService } from '../../services/message-subscription.service';
 
 @Component({
   selector: 'wdgt-otp-widget',
@@ -24,8 +21,6 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
   widgetMods = WidgetModes;
   websiteName = 'Website Name';
   webComponentHost = environment.webComponentHost;
-
-  private messageSubscription: Subscription;
 
   get openerConfigs(): string {
     const { innerHeight, innerWidth } = this.window;
@@ -47,21 +42,16 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
   constructor(
     @Inject('Window') private window: Window,
     private cookiesService: CookiesService,
-    private postMessageService: PostMessagesService
+    private messageSubscriptionService: MessageSubscriptionService
   ) {}
 
   ngOnInit() {
     const hasCookie = !!this.cookiesService.getCookie(environment.cookieName);
     this.isOpen = !hasCookie;
-    if (hasCookie) {
-      return;
-    }
-    this.waitForPostMessage();
   }
 
   ngOnDestroy() {
-    this.postMessageService.stopListing();
-    this.messageSubscription?.unsubscribe?.();
+    this.messageSubscriptionService.destroyTokenListener();
   }
 
   launchIdController() {
@@ -69,20 +59,7 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
     const url = `${environment.idControllerAppUrl}?${queryParams}`;
     const openPassWindow = this.window.open(url, '_blank', this.openerConfigs);
     if (openPassWindow) {
-      this.postMessageService.startListing(openPassWindow);
-    }
-  }
-
-  private waitForPostMessage() {
-    this.messageSubscription = this.postMessageService
-      .getSubscription()
-      .subscribe((payload) => this.setCookie(payload));
-  }
-
-  private setCookie(payload: PostMessagePayload) {
-    if (payload.action === PostMessageActions.setToken) {
-      this.isOpen = !payload.token;
-      this.cookiesService.setCookie(environment.cookieName, payload.token, 31);
+      this.messageSubscriptionService.initTokenListener(openPassWindow);
     }
   }
 }
