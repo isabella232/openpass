@@ -29,7 +29,7 @@ namespace Criteo.IdController.UTest.Helpers
 
             _cookieHelper.TryGetIdentifierCookie(cookieContainerMock.Object, out _);
 
-            cookieContainerMock.Verify(c => c.TryGetValue(It.Is<string>(k => k == _identifierCookieName), out placeholder));
+            cookieContainerMock.Verify(c => c.TryGetValue(It.Is<string>(k => k == _identifierCookieName), out placeholder), Times.Once);
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace Criteo.IdController.UTest.Helpers
 
             _cookieHelper.RemoveIdentifierCookie(cookieContainerMock.Object);
 
-            cookieContainerMock.Verify(c => c.Delete(It.Is<string>(k => k == _identifierCookieName)));
+            cookieContainerMock.Verify(c => c.Delete(It.Is<string>(k => k == _identifierCookieName)), Times.Once);
         }
         #endregion
     }
