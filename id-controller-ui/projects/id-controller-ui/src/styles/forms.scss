@@ -11,7 +11,7 @@
     font-size: 0.75rem;
 
     & + .hint {
-      display: none;
+      visibility: hidden;
       color: $error-color;
       margin-top: 4px;
       font-size: 0.6rem;
@@ -22,7 +22,7 @@
       border-color: $error-color;
 
       & + .hint {
-        display: block;
+        visibility: visible;
       }
     }
 
