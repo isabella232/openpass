@@ -1,35 +1,34 @@
 import { Injectable } from '@angular/core';
-import { CookiesService } from '@services/cookies.service';
 import { PostMessagePayload } from '@shared/types/post-message-payload';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
 import { PostMessagesService } from '@services/post-messages.service';
 import { environment } from '@env';
+import { localStorage } from '@utils/storage-decorator';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  cookieName = environment.cookieName; // TODO change cookie name
+  @localStorage('openpass.token')
+  private storageUserToken: string;
+
+  cookieName = environment.cookieName;
 
   get isAuthenticated(): boolean {
-    return !!this.token;
+    return !!this.storageUserToken;
   }
 
-  get token(): string {
-    return this.cookiesService.getCookie(this.cookieName);
-  }
-
-  constructor(private cookiesService: CookiesService, private postMessagesService: PostMessagesService) {}
+  constructor(private postMessagesService: PostMessagesService) {}
 
   setTokenToOpener() {
     const message: PostMessagePayload = {
       action: PostMessageActions.setToken,
-      token: this.token,
+      token: this.storageUserToken,
     };
     this.postMessagesService.sendMessage(message);
   }
 
   resetToken() {
-    this.cookiesService.resetCookie(this.cookieName);
+    this.storageUserToken = null;
   }
 }

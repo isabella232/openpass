@@ -4,5 +4,5 @@ export const environment = {
   production: true,
   webComponentHost: appHost + '/open-pass/preprod/widget',
   idControllerAppUrl: appHost + '/open-pass',
-  cookieName: 'OP_token',
+  cookieName: 'openpass_token',
 };

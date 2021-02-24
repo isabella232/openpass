@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
   namespace: '/api',
-  cookieName: 'OP_token',
+  cookieName: 'openpass_token',
 };

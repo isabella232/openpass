@@ -13,6 +13,9 @@ export class AuthViewComponent {
   @localStorage('openpass.email')
   private storageUserEmail: string;
 
+  @localStorage('openpass.token')
+  private storageUserToken: string;
+
   isFetching = false;
   websiteName = 'WebsiteName';
   toBeVerified = false;
@@ -52,7 +55,8 @@ export class AuthViewComponent {
     this.codeVerificationFailed = false;
     const otp = new OtpDto({ email: this.userEmail, otp: this.verificationCode });
     this.otpService.validateOtp(otp).subscribe(
-      () => {
+      ({ token }) => {
+        this.storageUserToken = token;
         this.storageUserEmail = this.userEmail;
         this.router.navigate(['agreement'], { queryParamsHandling: 'preserve' });
       },

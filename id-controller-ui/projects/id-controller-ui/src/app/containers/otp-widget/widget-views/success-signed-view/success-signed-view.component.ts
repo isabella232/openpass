@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { localStorage } from '@utils/storage-decorator';
 import { timer } from 'rxjs';
 import { AuthService } from '@services/auth.service';
-import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'usrf-success-signed-view',
@@ -11,7 +10,7 @@ import { DOCUMENT } from '@angular/common';
 })
 export class SuccessSignedViewComponent implements OnInit {
   @localStorage('openpass.email')
-  private userEmail: string;
+  private readonly userEmail: string;
 
   get secureEmail() {
     const visibleCharsCount = 3;
@@ -19,19 +18,14 @@ export class SuccessSignedViewComponent implements OnInit {
     return this.userEmail?.slice(0, visibleCharsCount) + '*'.repeat(hiddenChars);
   }
 
-  constructor(
-    @Inject('Window') private window: Window,
-    @Inject(DOCUMENT) private document: Document,
-    private authService: AuthService
-  ) {}
+  constructor(@Inject('Window') private window: Window, private authService: AuthService) {}
 
   ngOnInit() {
-    // TODO: remove fake cookie setup
-    this.document.cookie = 'OP_token=fake-token';
-
     this.authService.setTokenToOpener();
     if (this.window.opener) {
       timer(5000).subscribe(() => this.window.close());
+    } else {
+      // TODO: close iframe
     }
   }
 }

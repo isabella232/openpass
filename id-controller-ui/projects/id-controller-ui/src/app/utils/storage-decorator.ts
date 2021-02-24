@@ -27,7 +27,13 @@ export const localStorage = <T>(storagePath: string): ((target: any, propertyKey
             return value;
           }
         },
-        set: (value: T) => window.localStorage.setItem(fullPath, JSON.stringify(value)),
+        set: (value: T) => {
+          if (value === null) {
+            window.localStorage.removeItem(fullPath);
+          } else {
+            window.localStorage.setItem(fullPath, JSON.stringify(value));
+          }
+        },
       },
     });
   };

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { OtpDto } from './otp.dto';
 import { Observable } from 'rxjs';
 import { environment } from '@env';
+import { TokenDto } from './token.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class OtpService {
     return this.http.post<void>(this.namespace + '/otp/generate', otp);
   }
 
-  validateOtp(otp: OtpDto): Observable<void> {
-    return this.http.post<void>(this.namespace + '/otp/validate', otp);
+  validateOtp(otp: OtpDto): Observable<TokenDto> {
+    return this.http.post<TokenDto>(this.namespace + '/otp/validate', otp);
   }
 }
