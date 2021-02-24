@@ -15,8 +15,6 @@ namespace Criteo.IdController.Controllers
     {
         private const int _otpCodeLifetimeMinutes = 15;
         private const string _metricPrefix = "otp";
-        private const string _cookieName = "openpass_token";
-        private const int _cookieLifetimeDays = 390;
 
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IMetricsRegistry _metricsRegistry;
@@ -26,8 +24,7 @@ namespace Criteo.IdController.Controllers
         private readonly IEmailHelper _emailHelper;
         private readonly IGlupHelper _glupHelper;
         private readonly ICodeGeneratorHelper _codeGeneratorHelper;
-
-        private readonly CookieOptions _defaultCookieOptions;
+        private readonly ICookieHelper _cookieHelper;
 
         public OtpController(
             IHostingEnvironment hostingEnvironment,
@@ -37,7 +34,8 @@ namespace Criteo.IdController.Controllers
             IIdentifierGeneratorHelper identifierGeneratorHelper,
             IEmailHelper emailHelper,
             IGlupHelper glupHelper,
-            ICodeGeneratorHelper codeGeneratorHelper)
+            ICodeGeneratorHelper codeGeneratorHelper,
+            ICookieHelper cookieHelper)
         {
             _hostingEnvironment = hostingEnvironment;
             _metricsRegistry = metricRegistry;
@@ -47,11 +45,7 @@ namespace Criteo.IdController.Controllers
             _emailHelper = emailHelper;
             _glupHelper = glupHelper;
             _codeGeneratorHelper = codeGeneratorHelper;
-
-            _defaultCookieOptions = new CookieOptions
-            {
-                Expires = new DateTimeOffset(DateTime.Today.AddDays(_cookieLifetimeDays))
-            };
+            _cookieHelper = cookieHelper;
         }
 
         #region Request models
@@ -140,8 +134,7 @@ namespace Criteo.IdController.Controllers
 
                 // Set cookie and send token back in payload
                 var token = _identifierGeneratorHelper.GenerateIdentifier().ToString();
-                // TODO: Set a proper session cookie which is not the token (Secure and HttpOnly)
-                Response.Cookies.Append(_cookieName, token, _defaultCookieOptions);
+                _cookieHelper.SetIdentifierCookie(Response.Cookies, token);
 
                 return Ok(new { token });
             }

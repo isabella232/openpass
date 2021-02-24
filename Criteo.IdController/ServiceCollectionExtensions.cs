@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Criteo.ConfigAsCode;
 using Criteo.IdController.Helpers;
 using Criteo.Services.Glup;
@@ -106,6 +102,13 @@ namespace Criteo.IdController
         public static IServiceCollection AddCodeGeneratorHelper(this IServiceCollection services)
         {
             services.AddSingleton<ICodeGeneratorHelper, CodeGeneratorHelper>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddCookieHelper(this IServiceCollection services)
+        {
+            services.AddSingleton<ICookieHelper, CookieHelper>();
 
             return services;
         }

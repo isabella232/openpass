@@ -3,19 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Criteo.AspNetCore.Helpers;
-using Criteo.ConfigAsCode;
-using Criteo.IdController.Helpers;
 using Criteo.Services;
-using Criteo.Services.Glup;
 using Criteo.Services.Graphite;
-using Criteo.UserAgent.Provider;
-using Criteo.UserIdentification.Services;
-using Criteo.UserIdentification.Services.IdentityMapping;
-using Metrics;
-using Sdk.Interfaces.Hosting;
-using Sdk.Interfaces.KeyValueStore;
-using Sdk.Monitoring;
-using Sdk.ProductionResources.ConnectionStrings;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 
@@ -95,6 +84,9 @@ namespace Criteo.IdController
 
             // [Custom] Add code generator helper (for generating and validating OTP codes)
             services.AddCodeGeneratorHelper();
+
+            // [Custom] Add cookie helper
+            services.AddCookieHelper();
 
             // Configure MVC
             services.AddMvc(options =>

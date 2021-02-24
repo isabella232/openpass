@@ -1,15 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Moq;
 using NUnit.Framework;
 using Criteo.IdController.Controllers;
 using Criteo.IdController.Helpers;
 using Metrics;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
 
 namespace Criteo.IdController.UTest.Controllers
 {
@@ -18,6 +14,8 @@ namespace Criteo.IdController.UTest.Controllers
     {
         private Mock<IIdentifierGeneratorHelper> _identifierGeneratorHelperMock;
         private Mock<IMetricsRegistry> _metricRegistryMock;
+        private Mock<ICookieHelper> _cookieHelperMock;
+        private IfaController _ifaController;
 
         [SetUp]
         public void Setup()
@@ -25,91 +23,75 @@ namespace Criteo.IdController.UTest.Controllers
             _identifierGeneratorHelperMock = new Mock<IIdentifierGeneratorHelper>();
             _metricRegistryMock = new Mock<IMetricsRegistry>();
             _metricRegistryMock.Setup(mr => mr.GetOrRegister(It.IsAny<string>(), It.IsAny<Func<Counter>>())).Returns(new Counter(Granularity.CoarseGrain));
+            _cookieHelperMock = new Mock<ICookieHelper>();
+
+            _ifaController = new IfaController(_identifierGeneratorHelperMock.Object, _metricRegistryMock.Object, _cookieHelperMock.Object)
+            {
+                ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
+            };
         }
 
         [Test]
-        public void TestCreateIfaWithoutPii()
+        public void TestCreateIdentifier()
         {
-            var ifaController = GetIfaController();
+            var identifier = Guid.NewGuid();
+            string placeholder;
+            _cookieHelperMock.Setup(c => c.TryGetIdentifierCookie(It.IsAny<IRequestCookieCollection>(), out placeholder)).Returns(false);
+            _identifierGeneratorHelperMock.Setup(i => i.GenerateIdentifier()).Returns(identifier);
 
-            var response = ifaController.GetOrCreateIfa();
+            var response = _ifaController.GetOrCreateIfa();
 
-            // Returned IFA
+            // Returned identifier
             var data = GetResponseData(response);
-            Assert.NotNull(data);
+            var token = (string) data.token;
+            Assert.AreEqual(identifier.ToString(), token);
 
-            // IFA in cookie
-            var cookie = GetSetCookieHeaderIfa(ifaController.HttpContext.Response);
-            Assert.NotNull(cookie);
+            // Identifier generated
+            _identifierGeneratorHelperMock.Verify(i => i.GenerateIdentifier(), Times.Once);
+
+            // Cookie is set set
+            _cookieHelperMock.Verify(c => c.SetIdentifierCookie(
+                It.IsAny<IResponseCookies>(),
+                It.Is<string>(k => k == token)), Times.Once);
         }
 
         [Test]
-        public void TestGetIfaFromCookie()
+        public void TestGetIdentifierFromCookie()
         {
-            var ifaUserSide = "62BB805D-9E63-4FE0-AB7D-4B514F86D63C";
+            var idUserSide = Guid.NewGuid().ToString();
+            _cookieHelperMock.Setup(c => c.TryGetIdentifierCookie(It.IsAny<IRequestCookieCollection>(), out idUserSide)).Returns(true);
 
-            var cookies = new Dictionary<string, string> { { "ifa", ifaUserSide } };
-            var ifaController = GetIfaController(cookies);
-
-            var response = ifaController.GetOrCreateIfa();
+            var response = _ifaController.GetOrCreateIfa();
 
             // Returned IFA
             var data = GetResponseData(response);
-            Assert.NotNull(data);
-            StringAssert.Contains(ifaUserSide, data);
+            var token = data.token;
+            Assert.AreEqual(idUserSide, token);
 
-            // IFA in cookie
-            var cookie = GetSetCookieHeaderIfa(ifaController.HttpContext.Response);
-            Assert.NotNull(cookie);
-            StringAssert.Contains(ifaUserSide, cookie.Value.ToString());
+            // Cookie is set set
+            _cookieHelperMock.Verify(c => c.SetIdentifierCookie(
+                It.IsAny<IResponseCookies>(),
+                It.Is<string>(k => k == idUserSide)), Times.Once);
         }
 
         [Test]
         public void TestDeleteIfa()
         {
-            var ifaUserSide = "62BB805D-9E63-4FE0-AB7D-4B514F86D63C";
-
-            var cookies = new Dictionary<string, string> { { "ifa", ifaUserSide } };
-            var ifaController = GetIfaController(cookies);
-
-            var response = ifaController.DeleteIfa();
+            var response = _ifaController.DeleteIfa();
 
             // Returned IFA
             var data = GetResponseData(response);
             Assert.IsNull(data);
 
-            // IFA in cookie (set to an empty value and already expired)
-            var cookie = GetSetCookieHeaderIfa(ifaController.HttpContext.Response);
-            Assert.IsNotNull(cookie);
-            Assert.AreEqual(0, cookie.Value.Length);
+            // Cookie is removed
+            _cookieHelperMock.Verify(c => c.RemoveIdentifierCookie(It.IsAny<IResponseCookies>()), Times.Once);
         }
 
         #region Helpers
-        private IfaController GetIfaController(Dictionary<string, string> cookies = null)
-        {
-            var httpContext = new DefaultHttpContext();
-            httpContext.Request.Cookies = new RequestCookieCollection(cookies);
-
-            var ifaController = new IfaController(_identifierGeneratorHelperMock.Object, _metricRegistryMock.Object)
-            {
-                ControllerContext = new ControllerContext { HttpContext = httpContext }
-            };
-
-            return ifaController;
-        }
-
-        private SetCookieHeaderValue GetSetCookieHeaderIfa(HttpResponse response)
-        {
-            var setCookies = response.GetTypedHeaders().SetCookie;
-            var cookie = setCookies?.FirstOrDefault(c => c.Name == "ifa");
-
-            return cookie;
-        }
-
-        private string GetResponseData(IActionResult response)
+        private static dynamic GetResponseData(IActionResult response)
         {
             var responseContent = response as OkObjectResult;
-            var data = responseContent?.Value.ToString();
+            var data = responseContent?.Value;
 
             return data;
         }

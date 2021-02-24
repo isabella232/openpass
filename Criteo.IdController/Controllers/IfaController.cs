@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
 using Criteo.IdController.Helpers;
 using Metrics;
@@ -9,44 +8,46 @@ namespace Criteo.IdController.Controllers
     public class IfaController : Controller
     {
         private static readonly string metricPrefix = "ifa.";
+
         private readonly IIdentifierGeneratorHelper _identifierGeneratorHelper;
         private readonly IMetricsRegistry _metricsRegistry;
-        private readonly string IfaCookieName = "ifa";
+        private readonly ICookieHelper _cookieHelper;
 
-        public IfaController(IIdentifierGeneratorHelper identifierGeneratorHelper, IMetricsRegistry metricRegistry)
+        public IfaController(IIdentifierGeneratorHelper identifierGeneratorHelper, IMetricsRegistry metricRegistry, ICookieHelper cookieHelper)
         {
             _identifierGeneratorHelper = identifierGeneratorHelper;
             _metricsRegistry = metricRegistry;
+            _cookieHelper = cookieHelper;
         }
 
         [HttpGet]
         [HttpGet("get")]
         public IActionResult GetOrCreateIfa()
         {
-            string ifa;
+            string identifier;
 
-            if (Request.Cookies.TryGetValue(IfaCookieName, out var ifaCookie))
+            if (_cookieHelper.TryGetIdentifierCookie(Request.Cookies, out var identifierCookie))
             {
-                ifa = ifaCookie;
+                identifier = identifierCookie;
                 _metricsRegistry.GetOrRegister($"{metricPrefix}.get.reuse", () => new Counter(Granularity.CoarseGrain)).Increment();
             }
             else
             {
-                ifa = _identifierGeneratorHelper.GenerateIdentifier().ToString();
+                identifier = _identifierGeneratorHelper.GenerateIdentifier().ToString();
                 _metricsRegistry.GetOrRegister($"{metricPrefix}.get.create", () => new Counter(Granularity.CoarseGrain)).Increment();
             }
 
-            // TODO: add options (domain, expires, SameSite, Secure)
-            Response.Cookies.Append(IfaCookieName, ifa);
+            // Set cookie
+            _cookieHelper.SetIdentifierCookie(Response.Cookies, identifier);
 
-            return Ok(new { ifa });
+            return Ok(new { token = identifier });
         }
 
         [HttpGet("delete")]
         public IActionResult DeleteIfa()
         {
             _metricsRegistry.GetOrRegister($"{metricPrefix}.delete", () => new Counter(Granularity.CoarseGrain)).Increment();
-            Response.Cookies.Delete(IfaCookieName);
+            _cookieHelper.RemoveIdentifierCookie(Response.Cookies);
 
             return Ok();
         }
