@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { OpenerState } from '@store/otp-widget/opener.state';
 
 @Component({
   selector: 'usrf-agreement-view',
@@ -6,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./agreement-view.component.scss'],
 })
 export class AgreementViewComponent implements OnInit {
-  websiteName = 'Website Name';
+  @Select(OpenerState.originFormatted) websiteName$: Observable<string>;
   constructor() {}
 
   ngOnInit(): void {}

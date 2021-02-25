@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { localStorage } from '@utils/storage-decorator';
 import { OtpService } from '@rest/otp/otp.service';
 import { OtpDto } from '@rest/otp/otp.dto';
+import { Select } from '@ngxs/store';
+import { OpenerState } from '@store/otp-widget/opener.state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'usrf-auth-view',
@@ -10,6 +13,8 @@ import { OtpDto } from '@rest/otp/otp.dto';
   styleUrls: ['./auth-view.component.scss'],
 })
 export class AuthViewComponent {
+  @Select(OpenerState.originFormatted) websiteName$: Observable<string>;
+
   @localStorage('openpass.email')
   private storageUserEmail: string;
 
@@ -17,7 +22,6 @@ export class AuthViewComponent {
   private storageUserToken: string;
 
   isFetching = false;
-  websiteName = 'WebsiteName';
   toBeVerified = false;
 
   userEmail: string;

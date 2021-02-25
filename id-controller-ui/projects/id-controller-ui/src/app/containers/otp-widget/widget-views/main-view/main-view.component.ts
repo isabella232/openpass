@@ -1,4 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { OpenerState } from '@store/otp-widget/opener.state';
 
 @Component({
   selector: 'usrf-main-view',
@@ -8,5 +11,5 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class MainViewComponent {
   @Output() proceed = new EventEmitter<void>();
 
-  websiteName = 'Website Name';
+  @Select(OpenerState.originFormatted) websiteName$: Observable<string>;
 }

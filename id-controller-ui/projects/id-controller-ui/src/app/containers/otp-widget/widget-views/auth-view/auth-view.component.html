@@ -43,7 +43,7 @@
   <div class="form-group">
     <label class="pl-3 align-center">
       <input class="form-control mr-2" name="share email" type="checkbox" [(ngModel)]="allowToShareEmail" />
-      Share my email with {{ websiteName }}
+      Share my email with {{ websiteName$ | async }}
     </label>
   </div>
 
