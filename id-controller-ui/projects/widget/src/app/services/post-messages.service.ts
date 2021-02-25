@@ -22,7 +22,7 @@ export class PostMessagesService {
     return this.originMessage.asObservable();
   }
 
-  startListing(window: Window) {
+  startListening(window: Window) {
     this.setReceiverWindow(window);
 
     this.window.addEventListener('message', this.listener);

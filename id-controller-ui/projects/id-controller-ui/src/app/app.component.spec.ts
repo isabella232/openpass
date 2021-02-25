@@ -3,11 +3,12 @@ import { AppComponent } from './app.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { windowFactory } from '@utils/window-factory';
+import { NgxsModule } from '@ngxs/store';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
+      imports: [RouterTestingModule, HttpClientTestingModule, NgxsModule.forRoot([])],
       providers: [{ provide: 'Window', useFactory: windowFactory }],
       declarations: [AppComponent],
     }).compileComponents();

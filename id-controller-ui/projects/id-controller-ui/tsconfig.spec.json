@@ -11,7 +11,8 @@
       "@services/*": ["projects/id-controller-ui/src/app/services/*"],
       "@utils/*": ["projects/id-controller-ui/src/app/utils/*"],
       "@rest/*": ["projects/id-controller-ui/src/app/rest/*"],
-      "@shared/*": ["projects/shared/*"]
+      "@shared/*": ["projects/shared/*"],
+      "@store/*": ["projects/id-controller-ui/src/app/store/*"]
     }
   },
   "files": ["src/test.ts", "src/polyfills.ts"],

@@ -21,7 +21,7 @@ export class MessageSubscriptionService {
 
   initTokenListener(openPassWindow: Window) {
     this.waitForPostMessage();
-    this.postMessageService.startListing(openPassWindow);
+    this.postMessageService.startListening(openPassWindow);
   }
 
   destroyTokenListener() {
