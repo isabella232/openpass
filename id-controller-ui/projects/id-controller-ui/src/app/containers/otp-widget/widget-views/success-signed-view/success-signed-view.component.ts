@@ -14,8 +14,8 @@ export class SuccessSignedViewComponent implements OnInit {
 
   get secureEmail() {
     const visibleCharsCount = 3;
-    const hiddenChars = Math.min(this.userEmail?.length - visibleCharsCount, 10);
-    return this.userEmail?.slice(0, visibleCharsCount) + '*'.repeat(hiddenChars);
+    const hiddenChars = Math.min((this.userEmail?.length || visibleCharsCount) - visibleCharsCount, 10);
+    return (this.userEmail || '***')?.slice(0, visibleCharsCount) + '*'.repeat(hiddenChars);
   }
 
   constructor(@Inject('Window') private window: Window, private authService: AuthService) {}

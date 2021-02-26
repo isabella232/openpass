@@ -7,9 +7,10 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { windowFactory } from '@utils/window-factory';
 import { environment } from '@env';
-import { OpenerState } from './store/otp-widget/opener.state';
-import { OtpWidgetState } from './store/otp-widget/otp-widget.state';
 import { NgxsDispatchPluginModule } from '@ngxs-labs/dispatch-decorator';
+import { AuthState } from '@store/otp-widget/auth.state';
+import { OpenerState } from '@store/otp-widget/opener.state';
+import { OtpWidgetState } from '@store/otp-widget/otp-widget.state';
 
 @NgModule({
   declarations: [AppComponent],
@@ -18,7 +19,7 @@ import { NgxsDispatchPluginModule } from '@ngxs-labs/dispatch-decorator';
     RouterModule,
     AppRoutingModule,
     HttpClientModule,
-    NgxsModule.forRoot([OpenerState, OtpWidgetState], {
+    NgxsModule.forRoot([OpenerState, OtpWidgetState, AuthState], {
       developmentMode: !environment.production,
     }),
     NgxsDispatchPluginModule.forRoot(),

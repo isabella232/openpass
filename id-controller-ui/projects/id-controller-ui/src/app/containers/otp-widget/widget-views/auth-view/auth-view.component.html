@@ -1,4 +1,4 @@
-<ng-container *ngIf="!toBeVerified">
+<ng-container *ngIf="!(authState$ | async).isEmailVerified">
   <h1 data-test="auth-page-title">Hi there!</h1>
   <h3 class="mb-2">Welcome to OpenPass.</h3>
   <p class="mt-2">
@@ -7,47 +7,55 @@
     <b>Your email address will not be shared without your permission.</b>
   </p>
 </ng-container>
-<ng-container *ngIf="toBeVerified">
+<ng-container *ngIf="(authState$ | async).isEmailVerified">
   <h1 data-test="auth-page-title">Thanks!</h1>
   <h3 class="mb-2">Check your email...</h3>
   <p class="mt-2">Please enter the verification code that was sent to your email address.</p>
 </ng-container>
 
-<form (submit)="submitForm()" ngNativeValidate>
+<form *ngIf="authState$ | async as authState" (submit)="submitForm()" ngNativeValidate>
   <div class="form-group">
     <input
-      [class.invalid]="emailVerificationFailed"
+      [class.invalid]="!authState.isEmailValid"
       data-test="auth-input-email"
       name="email"
       placeholder="Enter email address"
       class="form-control"
       type="email"
       required
-      [(ngModel)]="userEmail"
+      [value]="authState.email"
+      (change)="patchEmail($event)"
     />
     <div class="hint" data-test="auth-email-warning">Email address is not valid</div>
   </div>
-  <div *ngIf="toBeVerified" class="form-group">
+  <div *ngIf="authState.isEmailVerified" class="form-group">
     <input
-      [class.invalid]="codeVerificationFailed"
+      [class.invalid]="!authState.isCodeValid"
       data-test="auth-input-code"
       name="verification code"
       placeholder="Enter verification code"
       class="form-control"
       type="number"
       required
-      [(ngModel)]="verificationCode"
+      [ngModel]="authState.code"
+      (change)="patchCode($event)"
     />
     <div class="hint" data-test="auth-code-warning">Code is not valid. Check the code and try one more time</div>
   </div>
   <div class="form-group">
     <label class="pl-3 align-center">
-      <input class="form-control mr-2" name="share email" type="checkbox" [(ngModel)]="allowToShareEmail" />
+      <input
+        class="form-control mr-2"
+        name="share email"
+        type="checkbox"
+        [value]="authState.shareEmail"
+        (change)="patchShareEmail($event)"
+      />
       Share my email with {{ websiteName$ | async }}
     </label>
   </div>
 
-  <div *ngIf="!toBeVerified" class="py-3"></div>
+  <div *ngIf="!authState.isEmailVerified" class="py-3"></div>
   <div class="pt-3">
     <button data-test="auth-action-btn" type="submit" class="btn btn-primary btn-wide">Continue</button>
   </div>
@@ -58,4 +66,4 @@
 
 <usrf-copyright></usrf-copyright>
 
-<div *ngIf="isFetching" class="loader"></div>
+<div *ngIf="(authState$ | async).isFetching" class="loader"></div>

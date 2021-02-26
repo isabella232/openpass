@@ -1,74 +1,60 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { localStorage } from '@utils/storage-decorator';
-import { OtpService } from '@rest/otp/otp.service';
-import { OtpDto } from '@rest/otp/otp.dto';
-import { Select } from '@ngxs/store';
+import { Actions, ofActionDispatched, Select, Store } from '@ngxs/store';
 import { OpenerState } from '@store/otp-widget/opener.state';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { Dispatch } from '@ngxs-labs/dispatch-decorator';
+import { AuthState, IAuthState } from '@store/otp-widget/auth.state';
+import {
+  GenerateCode,
+  SetCode,
+  SetEmail,
+  SetShareEmailValue,
+  ValidateCode,
+  ValidateCodeSuccess,
+} from '@store/otp-widget/auth.actions';
 
 @Component({
   selector: 'usrf-auth-view',
   templateUrl: './auth-view.component.html',
   styleUrls: ['./auth-view.component.scss'],
 })
-export class AuthViewComponent {
+export class AuthViewComponent implements OnInit, OnDestroy {
   @Select(OpenerState.originFormatted) websiteName$: Observable<string>;
+  @Select(AuthState.fullState) authState$: Observable<IAuthState>;
 
-  @localStorage('openpass.email')
-  private storageUserEmail: string;
+  private authSubscriptions: Subscription;
 
-  @localStorage('openpass.token')
-  private storageUserToken: string;
+  constructor(private router: Router, private actions$: Actions, private store: Store) {}
 
-  isFetching = false;
-  toBeVerified = false;
-
-  userEmail: string;
-  verificationCode: string;
-  allowToShareEmail = false;
-  codeVerificationFailed = false;
-  emailVerificationFailed = false;
-
-  constructor(private router: Router, private otpService: OtpService) {}
-
+  @Dispatch()
   submitForm() {
-    if (!this.toBeVerified) {
-      this.checkEmail();
-    } else {
-      this.checkVerification();
-    }
+    const { isEmailVerified } = this.store.selectSnapshot(AuthState.fullState);
+    return isEmailVerified ? new ValidateCode() : new GenerateCode();
   }
 
-  private checkEmail() {
-    this.isFetching = true;
-    this.emailVerificationFailed = false;
-    const otp = new OtpDto({ email: this.userEmail });
-    this.otpService.generateOtp(otp).subscribe(
-      () => (this.toBeVerified = true),
-      () => {
-        this.isFetching = false;
-        this.emailVerificationFailed = true;
-      },
-      () => (this.isFetching = false)
-    );
+  @Dispatch()
+  patchEmail({ target }: Event) {
+    return new SetEmail((target as HTMLInputElement).value);
   }
 
-  private checkVerification() {
-    this.isFetching = true;
-    this.codeVerificationFailed = false;
-    const otp = new OtpDto({ email: this.userEmail, otp: this.verificationCode });
-    this.otpService.validateOtp(otp).subscribe(
-      ({ token }) => {
-        this.storageUserToken = token;
-        this.storageUserEmail = this.userEmail;
-        this.router.navigate(['agreement'], { queryParamsHandling: 'preserve' });
-      },
-      () => {
-        this.isFetching = false;
-        this.codeVerificationFailed = true;
-      },
-      () => (this.isFetching = false)
-    );
+  @Dispatch()
+  patchCode({ target }: Event) {
+    return new SetCode((target as HTMLInputElement).value);
+  }
+
+  @Dispatch()
+  patchShareEmail({ target }: Event) {
+    return new SetShareEmailValue((target as HTMLInputElement).checked);
+  }
+
+  ngOnInit() {
+    this.authSubscriptions = this.actions$
+      .pipe(ofActionDispatched(ValidateCodeSuccess))
+      .subscribe(() => this.router.navigate(['agreement']));
+  }
+
+  ngOnDestroy() {
+    this.authSubscriptions?.unsubscribe?.();
   }
 }
