@@ -10,7 +10,7 @@ import { Variants } from './enums/variants.enum';
   encapsulation: ViewEncapsulation.ShadowDom,
 })
 export class AppComponent {
-  @Input() variant = Variants.modal;
+  @Input() variant = Variants.dialog;
   @Input()
   get view(): WidgetModes {
     return this.widgetMode;

@@ -1,5 +1,7 @@
-<div *ngIf="isModal" class="backdrop"></div>
+<ng-container *ngIf="isOpen">
+  <div *ngIf="isModal" class="backdrop"></div>
 
-<div [class.container]="isModal">
-  <iframe #iframe [src]="iframeSrc" [height]="dynamicHeight$ | async"></iframe>
-</div>
+  <div [class.container]="isModal">
+    <iframe #iframe [src]="iframeSrc" [height]="dynamicHeight$ | async"></iframe>
+  </div>
+</ng-container>

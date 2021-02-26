@@ -1,4 +1,4 @@
 export enum Variants {
-  modal = 'modal',
+  dialog = 'dialog',
   inSite = 'in-site',
 }

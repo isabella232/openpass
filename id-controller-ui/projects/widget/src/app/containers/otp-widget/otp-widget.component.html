@@ -1,7 +1,7 @@
-<div *ngIf="mode === widgetMods.modal && isOpen" class="backdrop"></div>
+<div *ngIf="view === widgetMods.modal && isOpen" class="backdrop"></div>
 
 <div *ngIf="isOpen" class="container">
-  <div class="widget-body" [class.shadow]="mode === widgetMods.modal">
+  <div class="widget-body" [class.shadow]="view === widgetMods.modal">
     <h3>Get Access With</h3>
     <div class="op-logo-container">
       <img src="{{ webComponentHost }}/assets/images/open-pass-logo.svg" alt="OpenPass logo" />

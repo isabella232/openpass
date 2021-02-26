@@ -24,9 +24,7 @@ export class AlreadySignedViewComponent implements OnInit {
     if (this.userEmail !== this.storageUserEmail) {
       this.storageUserEmail = this.userEmail;
     }
-    this.authService.setTokenToOpener();
-    (this.window.opener || this.window.parent)?.focus?.();
-    this.window.close();
+    this.router.navigate(['success']);
   }
 
   resetState() {

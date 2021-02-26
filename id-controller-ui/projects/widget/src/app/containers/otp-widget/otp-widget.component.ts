@@ -3,6 +3,10 @@ import { WidgetModes } from '../../enums/widget-modes.enum';
 import { environment } from '../../../environments/environment';
 import { CookiesService } from '../../services/cookies.service';
 import { MessageSubscriptionService } from '../../services/message-subscription.service';
+import { filter } from 'rxjs/operators';
+import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
+import { Subscription } from 'rxjs';
+import { PostMessagesService } from '../../services/post-messages.service';
 
 @Component({
   selector: 'wdgt-otp-widget',
@@ -10,17 +14,19 @@ import { MessageSubscriptionService } from '../../services/message-subscription.
   styleUrls: ['./otp-widget.component.scss'],
 })
 export class OtpWidgetComponent implements OnInit, OnDestroy {
-  @Input() mode: WidgetModes;
+  @Input() view: WidgetModes;
 
   @HostBinding('class.modal')
   get isModal(): boolean {
-    return this.mode === WidgetModes.modal && this.isOpen;
+    return this.view === WidgetModes.modal && this.isOpen;
   }
 
   isOpen = true;
   widgetMods = WidgetModes;
   websiteName = 'Website Name';
+  openPassWindow: Window;
   webComponentHost = environment.webComponentHost;
+  postSubscription: Subscription;
 
   get openerConfigs(): string {
     const { innerHeight, innerWidth } = this.window;
@@ -42,6 +48,7 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
   constructor(
     @Inject('Window') private window: Window,
     private cookiesService: CookiesService,
+    private postMessagesService: PostMessagesService,
     private messageSubscriptionService: MessageSubscriptionService
   ) {}
 
@@ -52,14 +59,26 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.messageSubscriptionService.destroyTokenListener();
+    this.postSubscription?.unsubscribe?.();
   }
 
   launchIdController() {
     const queryParams = new URLSearchParams({ origin: this.window.location.origin });
     const url = `${environment.idControllerAppUrl}?${queryParams}`;
-    const openPassWindow = this.window.open(url, '_blank', this.openerConfigs);
-    if (openPassWindow) {
-      this.messageSubscriptionService.initTokenListener(openPassWindow);
+    this.openPassWindow = this.window.open(url, '_blank', this.openerConfigs);
+    if (this.openPassWindow) {
+      this.messageSubscriptionService.initTokenListener(this.openPassWindow);
+      this.listenForClosingRequest();
     }
+  }
+
+  private listenForClosingRequest() {
+    this.postSubscription = this.postMessagesService
+      .getSubscription()
+      .pipe(filter(({ action }) => action === PostMessageActions.closeChild))
+      .subscribe(() => {
+        this.openPassWindow?.close();
+        this.isOpen = false;
+      });
   }
 }
