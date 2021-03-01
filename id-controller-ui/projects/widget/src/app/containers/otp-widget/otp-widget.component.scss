@@ -49,6 +49,7 @@
   min-width: 200px;
   padding: 1rem 2rem;
   background: #fff;
+  z-index: 1;
 
   &.shadow {
     box-shadow: 1px 0 7px 3px rgb(0 0 0 / 4%), 0 -1px 7px 3px rgb(0 0 0 / 4%), -1px 0 7px 3px rgb(0 0 0 / 4%);

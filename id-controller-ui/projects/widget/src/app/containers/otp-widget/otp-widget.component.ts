@@ -7,6 +7,7 @@ import { filter } from 'rxjs/operators';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
 import { Subscription } from 'rxjs';
 import { PostMessagesService } from '../../services/post-messages.service';
+import { PublicApiService } from '../../services/public-api.service';
 
 @Component({
   selector: 'wdgt-otp-widget',
@@ -48,13 +49,15 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
   constructor(
     @Inject('Window') private window: Window,
     private cookiesService: CookiesService,
+    private publicApiService: PublicApiService,
     private postMessagesService: PostMessagesService,
     private messageSubscriptionService: MessageSubscriptionService
   ) {}
 
   ngOnInit() {
     const hasCookie = !!this.cookiesService.getCookie(environment.cookieName);
-    this.isOpen = !hasCookie;
+    const { isDeclined } = this.publicApiService.getUserData();
+    this.isOpen = !hasCookie && !isDeclined;
   }
 
   ngOnDestroy() {
@@ -70,6 +73,11 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
       this.messageSubscriptionService.initTokenListener(this.openPassWindow);
       this.listenForClosingRequest();
     }
+  }
+
+  backdropClick() {
+    this.isOpen = false;
+    this.publicApiService.setUserData({ token: null, email: null, isDeclined: true });
   }
 
   private listenForClosingRequest() {

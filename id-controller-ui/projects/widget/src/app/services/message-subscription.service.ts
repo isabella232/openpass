@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CookiesService } from './cookies.service';
+import { PublicApiService } from './public-api.service';
 import { PostMessagesService } from './post-messages.service';
 import { PostMessagePayload } from '@shared/types/post-message-payload';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
@@ -16,7 +17,8 @@ export class MessageSubscriptionService {
   constructor(
     @Inject('Window') private window: Window,
     private cookiesService: CookiesService,
-    private postMessageService: PostMessagesService
+    private postMessageService: PostMessagesService,
+    private publicApiService: PublicApiService
   ) {}
 
   initTokenListener(openPassWindow: Window) {
@@ -37,6 +39,8 @@ export class MessageSubscriptionService {
   }
 
   private setCookie(payload: PostMessagePayload) {
-    this.cookiesService.setCookie(environment.cookieName, payload.token, 31);
+    const { token, email, isDeclined } = payload;
+    this.cookiesService.setCookie(environment.cookieName, token, 31);
+    this.publicApiService.setUserData({ token, email, isDeclined });
   }
 }

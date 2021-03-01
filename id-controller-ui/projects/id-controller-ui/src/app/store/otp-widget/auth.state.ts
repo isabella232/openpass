@@ -14,7 +14,7 @@ import {
   ValidateCodeFail,
   ValidateCodeSuccess,
 } from './auth.actions';
-import { localStorage } from '@utils/storage-decorator';
+import { localStorage } from '@shared/utils/storage-decorator';
 
 export interface IAuthState {
   email: string;
@@ -52,6 +52,9 @@ export class AuthState {
 
   @localStorage('openpass.email')
   private storageUserEmail: string;
+
+  @localStorage('openpass.share-email')
+  private storageUserShareEmail: boolean;
 
   constructor(private otpService: OtpService) {}
 
@@ -116,9 +119,10 @@ export class AuthState {
 
   @Action(ValidateCodeSuccess)
   validateCodeSuccess(ctx: LocalStateContext, { token }: ValidateCodeSuccess) {
-    const { email } = ctx.getState();
+    const { email, shareEmail } = ctx.getState();
     this.storageUserToken = token;
     this.storageUserEmail = email;
+    this.storageUserShareEmail = shareEmail;
     ctx.patchState({ token });
   }
 

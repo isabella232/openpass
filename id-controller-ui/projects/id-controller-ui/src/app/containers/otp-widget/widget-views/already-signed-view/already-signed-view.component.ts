@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { localStorage } from '@utils/storage-decorator';
+import { localStorage } from '@shared/utils/storage-decorator';
 import { AuthService } from '@services/auth.service';
 import { Router } from '@angular/router';
 

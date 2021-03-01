@@ -8,6 +8,7 @@ import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
 import { WidgetModes } from '../../enums/widget-modes.enum';
 import { MessageSubscriptionService } from '../../services/message-subscription.service';
 import { CookiesService } from '../../services/cookies.service';
+import { PublicApiService } from '../../services/public-api.service';
 
 @Component({
   selector: 'wdgt-otp-iframe',
@@ -33,6 +34,7 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
     @Inject('Window') window: Window,
     sanitizer: DomSanitizer,
     private cookiesService: CookiesService,
+    private publicApiService: PublicApiService,
     private postMessagesService: PostMessagesService,
     private messageSubscriptionService: MessageSubscriptionService
   ) {
@@ -41,7 +43,8 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.isOpen = !this.cookiesService.getCookie(environment.cookieName);
+    const { isDeclined } = this.publicApiService.getUserData();
+    this.isOpen = !this.cookiesService.getCookie(environment.cookieName) && !isDeclined;
     if (this.isOpen) {
       this.subscribeToOpenPass();
       this.listenForClosingRequest();
@@ -59,6 +62,11 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     const iframeWindow = this.iframeElement.contentWindow as Window;
     this.messageSubscriptionService.initTokenListener(iframeWindow);
+  }
+
+  backdropClick() {
+    this.isOpen = false;
+    this.publicApiService.setUserData({ token: null, email: null, isDeclined: true });
   }
 
   private subscribeToOpenPass() {

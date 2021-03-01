@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { localStorage } from '@utils/storage-decorator';
+import { localStorage } from '@shared/utils/storage-decorator';
 import { timer } from 'rxjs';
 import { AuthService } from '@services/auth.service';
 import { PostMessagesService } from '@services/post-messages.service';

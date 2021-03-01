@@ -4,4 +4,6 @@ export type PostMessagePayload = {
   action: PostMessageActions;
   token?: string;
   height?: number;
+  email?: string;
+  isDeclined?: boolean;
 };
