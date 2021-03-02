@@ -127,6 +127,7 @@
         "build": {
           "builder": "ngx-build-plus:build",
           "options": {
+            "deployUrl": "http://localhost:4300/",
             "outputPath": "dist/widget",
             "index": "projects/widget/src/index.html",
             "main": "projects/widget/src/main.ts",
@@ -155,6 +156,7 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
+              "deployUrl": "https://my-advertising-experience.crto.in/open-pass/widget/",
               "budgets": [
                 {
                   "type": "initial",
@@ -177,6 +179,7 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
+              "deployUrl": "https://my-advertising-experience.preprod.crto.in/open-pass/preprod/widget/",
               "fileReplacements": [
                 {
                   "replace": "projects/widget/src/environments/environment.ts",

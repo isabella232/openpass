@@ -6,7 +6,7 @@
 <ng-container *ngIf="(authState$ | async).isEmailVerified">
   <h1 data-test="auth-page-title" translate>AUTH.HEADING_2</h1>
   <h3 class="mb-2" translate>AUTH.SUB_HEADING_2</h3>
-  <p class="mt-2">AUTH.DESCRIPTION_2</p>
+  <p class="mt-2" translate>AUTH.DESCRIPTION_2</p>
 </ng-container>
 
 <form *ngIf="authState$ | async as authState" (submit)="submitForm()" ngNativeValidate>

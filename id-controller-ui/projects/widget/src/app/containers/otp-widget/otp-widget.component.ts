@@ -1,4 +1,4 @@
-import { Component, HostBinding, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, Inject, Input, NgModule, OnDestroy, OnInit } from '@angular/core';
 import { WidgetModes } from '../../enums/widget-modes.enum';
 import { environment } from '../../../environments/environment';
 import { CookiesService } from '../../services/cookies.service';
@@ -8,13 +8,15 @@ import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
 import { Subscription } from 'rxjs';
 import { PostMessagesService } from '../../services/post-messages.service';
 import { PublicApiService } from '../../services/public-api.service';
+import { DynamicLoadable } from '../dynamic-loadable';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'wdgt-otp-widget',
   templateUrl: './otp-widget.component.html',
   styleUrls: ['./otp-widget.component.scss'],
 })
-export class OtpWidgetComponent implements OnInit, OnDestroy {
+export class OtpWidgetComponent implements OnInit, OnDestroy, DynamicLoadable {
   @Input() view: WidgetModes;
 
   @HostBinding('class.modal')
@@ -26,7 +28,6 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
   widgetMods = WidgetModes;
   websiteName = 'Website Name';
   openPassWindow: Window;
-  webComponentHost = environment.webComponentHost;
   postSubscription: Subscription;
 
   get openerConfigs(): string {
@@ -90,3 +91,9 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
       });
   }
 }
+
+@NgModule({
+  declarations: [OtpWidgetComponent],
+  imports: [CommonModule],
+})
+class OtpWidgetModule {}

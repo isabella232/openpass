@@ -1,4 +1,14 @@
-import { AfterViewInit, Component, HostBinding, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  HostBinding,
+  Inject,
+  Input,
+  NgModule,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Observable, Subscription } from 'rxjs';
@@ -9,13 +19,15 @@ import { WidgetModes } from '../../enums/widget-modes.enum';
 import { MessageSubscriptionService } from '../../services/message-subscription.service';
 import { CookiesService } from '../../services/cookies.service';
 import { PublicApiService } from '../../services/public-api.service';
+import { DynamicLoadable } from '../dynamic-loadable';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'wdgt-otp-iframe',
   templateUrl: './otp-iframe.component.html',
   styleUrls: ['./otp-iframe.component.scss'],
 })
-export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
+export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy, DynamicLoadable {
   @ViewChild('iframe') iframeElement: HTMLIFrameElement;
   @Input() view: WidgetModes;
 
@@ -84,3 +96,10 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(() => (this.isOpen = false));
   }
 }
+
+@NgModule({
+  declarations: [OtpIframeComponent],
+  imports: [CommonModule],
+  exports: [OtpIframeComponent],
+})
+class OtpIframeModule {}

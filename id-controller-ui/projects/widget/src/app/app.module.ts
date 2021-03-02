@@ -4,13 +4,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
 import { createCustomElement } from '@angular/elements';
-import { OtpWidgetModule } from './containers/otp-widget/otp-widget.module';
 import { windowFactory } from './utils/window-factory';
-import { OtpIframeModule } from './containers/otp-iframe/otp-iframe.module';
+import { ViewContainerDirective } from './directives/view-container.directive';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule, OtpWidgetModule, OtpIframeModule],
+  declarations: [AppComponent, ViewContainerDirective],
+  imports: [BrowserModule],
   providers: [{ provide: 'Window', useFactory: windowFactory }],
   bootstrap: environment.production ? [] : [AppComponent],
 })
