@@ -2,11 +2,13 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import { defaultEnv } from './default';
+
 export const environment = {
+  ...defaultEnv,
   production: false,
   webComponentHost: 'http://localhost:4300',
   idControllerAppUrl: 'http://localhost:4200/open-pass',
-  cookieName: 'openpass_token',
 };
 
 /*
