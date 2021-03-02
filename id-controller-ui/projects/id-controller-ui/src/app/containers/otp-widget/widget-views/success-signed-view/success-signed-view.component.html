@@ -2,8 +2,9 @@
   <div class="align-center my-4 message">
     <img src="./assets/images/open-pass-logo-sm.png" class="logo-sm" alt="OpenPass logo" />
     <img src="./assets/images/o-logo.png" class="logo-o" alt="OpenPass logo" />
-    <span class="ml-2 message-text text-small">
-      Securely signed in with OpenPass as {{ secureEmail }} Manage your settings in the <a>privacy portal</a>.
-    </span>
+    <span
+      class="ml-2 message-text text-small"
+      [innerHTML]="'SUCCESS.MESSAGE' | translate: { secureEmail: secureEmail }"
+    ></span>
   </div>
 </div>

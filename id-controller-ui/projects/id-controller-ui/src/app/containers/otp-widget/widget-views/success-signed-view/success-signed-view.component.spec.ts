@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SuccessSignedViewComponent } from './success-signed-view.component';
 import { NgxsModule } from '@ngxs/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 const windowFactory = () => ({
   opener: {
@@ -16,7 +17,7 @@ describe('SuccessSignedViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NgxsModule.forRoot([])],
+      imports: [NgxsModule.forRoot([]), TranslateModule.forRoot()],
       declarations: [SuccessSignedViewComponent],
       providers: [{ provide: 'Window', useFactory: windowFactory }],
     }).compileComponents();

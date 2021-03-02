@@ -1,40 +1,34 @@
-<h1 data-test="agreement-page-title">Awesome!</h1>
-<p><b>One last thing:</b></p>
-<p>
-  To access <b>{{ websiteName$ | async }}</b> and many websites for free while maintaining full control of your privacy,
-  please accept the OpenPass Terms and Conditions by clicking Agree & Go to Site.
-</p>
+<h1 data-test="agreement-page-title" translate>AGREEMENT.HEADING</h1>
+<p><b translate>AGREEMENT.SUB_HEADING</b></p>
+<p [innerHTML]="'AGREEMENT.DESCRIPTION' | translate: { websiteName: websiteName$ | async }"></p>
 <details class="pt-1 pb-4">
-  <summary data-test="agreement-summary">How does OpenPass work?</summary>
-  <p>
-    OpenPass is powered by <a href="">Unified ID</a>, which is an improvement over third-party cookies that offers more
-    privacy control. It can:
-  </p>
+  <summary data-test="agreement-summary" translate>AGREEMENT.SUMMARY.TITLE</summary>
+  <p [innerHTML]="'AGREEMENT.SUMMARY.OPEN_PASS_POWERED' | translate"></p>
   <div class="spec-list-option" data-test="agreement-unified-options">
     <div class="spec-list-icon">
       <img src="./assets/images/seen-ads.png" alt="Seen ads" />
     </div>
-    <div>Reduce how often you have to consent to annoying cookie banners</div>
+    <div translate>AGREEMENT.SUMMARY.REDUCE</div>
   </div>
   <div class="spec-list-option">
     <div class="spec-list-icon">
       <img src="./assets/images/quality.png" alt="Ads Quality" />
     </div>
-    <div>Show you more relevant and fewer repeat ads</div>
+    <div translate>AGREEMENT.SUMMARY.SHOW</div>
   </div>
   <div class="spec-list-option">
     <div class="spec-list-icon">
       <img src="./assets/images/imprv-cont.png" alt="Free content" />
     </div>
-    <div>Support free content on the open internet</div>
+    <div translate>AGREEMENT.SUMMARY.SUPPORT</div>
   </div>
-  <p>Manage your settings in the <a>privacy portal</a>.</p>
-  <p>
-    <a href="">View terms and conditions</a>
-  </p>
+  <p [innerHTML]="'AGREEMENT.SUMMARY.MENAGE_SETTINGS' | translate"></p>
+  <p [innerHTML]="'AGREEMENT.SUMMARY.TERMS_LINK' | translate"></p>
 </details>
-<a class="btn btn-primary btn-wide" routerLink="/success" data-test="agreement-action-btn"> AGREE & GO TO SITE </a>
+<a class="btn btn-primary btn-wide" routerLink="/success" data-test="agreement-action-btn" translate
+  >AGREEMENT.ACTION</a
+>
 <div class="text-center p-3">
-  <a href="">Other way to access this site</a>
+  <a href="" translate>SHARED.OTHER_WAY</a>
 </div>
 <usrf-copyright></usrf-copyright>

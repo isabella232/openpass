@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AgreementViewComponent } from './agreement-view.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('AgreementViewComponent', () => {
   let component: AgreementViewComponent;
@@ -8,6 +9,7 @@ describe('AgreementViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot()],
       declarations: [AgreementViewComponent],
     }).compileComponents();
   });

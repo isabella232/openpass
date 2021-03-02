@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxsModule } from '@ngxs/store';
 import { AuthState } from '@store/otp-widget/auth.state';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('AuthViewComponent', () => {
   let component: AuthViewComponent;
@@ -12,7 +13,12 @@ describe('AuthViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule, NgxsModule.forRoot([AuthState])],
+      imports: [
+        RouterTestingModule,
+        HttpClientTestingModule,
+        NgxsModule.forRoot([AuthState]),
+        TranslateModule.forRoot(),
+      ],
       declarations: [AuthViewComponent],
     }).compileComponents();
   });

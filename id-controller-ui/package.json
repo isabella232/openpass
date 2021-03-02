@@ -38,6 +38,8 @@
     "@angular/forms": "~11.1.0",
     "@angular/platform-browser": "~11.1.0",
     "@angular/platform-browser-dynamic": "~11.1.0",
+    "@ngx-translate/core": "^13.0.0",
+    "@ngx-translate/http-loader": "^6.0.0",
     "@ngxs-labs/dispatch-decorator": "^2.1.0",
     "@ngxs/store": "^3.7.1",
     "@webcomponents/custom-elements": "^1.4.3",

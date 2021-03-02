@@ -1,0 +1,57 @@
+{
+  "WELCOME": {
+    "HEADING": "Get Access With",
+    "DESCRIPTION": "You're about to access <b>{{websiteName}}</b> for free! OpenPass enables <b>{{websiteName}}</b> to show you more relevant ads, wish supports their business and keeps the content free.",
+    "OPEN_PASS_PROS": {
+      "INFORMATION": "Your information will never be shared with anyone without your permission.",
+      "ACCESS": "Unlock access to a large network of websites for free.",
+      "CONTROL": "Control your privacy with just <a href='https://criteo.com/privacy'>one link</a>."
+    },
+    "ACTION": "Sign up with OpenPass"
+  },
+  "SHARED": {
+    "OTHER_WAY": "Other way to access this site",
+    "COPY": "Provided by",
+    "FORM": {
+      "EMAIL_PLACEHOLDER": "Enter email address",
+      "EMAIL_ERROR": "Email address is not valid",
+      "CODE_PLACEHOLDER": "Enter verification code",
+      "CODE_ERROR": "Code is not valid. Check the code and try one more time",
+      "SHARE_LABEL": "Share my email with {{ websiteName }}"
+    }
+  },
+  "AUTH": {
+    "HEADING_1": "Hi there!",
+    "HEADING_2": "Thanks!",
+    "SUB_HEADING_1": "Welcome to OpenPass.",
+    "SUB_HEADING_2": "Check your email...",
+    "DESCRIPTION_1": "Please enter your email address. <br /> You will only need to do this once for all OpenPass sites. <b>Your email address will not be shared without your permission.</b>",
+    "DESCRIPTION_2": "Please enter the verification code that was sent to your email address.",
+    "ACTION": "Continue"
+  },
+  "AGREEMENT": {
+    "HEADING": "Awesome!",
+    "SUB_HEADING": "One last thing:",
+    "DESCRIPTION": "To access <b>{{ websiteName }}</b> and many websites for free while maintaining full control of your privacy, please accept the OpenPass Terms and Conditions by clicking Agree & Go to Site.",
+    "SUMMARY": {
+      "TITLE": "How does OpenPass work?",
+      "OPEN_PASS_POWERED": "OpenPass is powered by <a href=\"\">Unified ID</a>, which is an improvement over third-party cookies that offers more privacy control. It can:",
+      "REDUCE": "Reduce how often you have to consent to annoying cookie banners",
+      "SHOW": "Show you more relevant and fewer repeat ads",
+      "SUPPORT": "Support free content on the open internet",
+      "MENAGE_SETTINGS": "Manage your settings in the <a>privacy portal</a>.",
+      "TERMS_LINK": "<a href=\"\">View terms and conditions</a>"
+    },
+    "ACTION": "Agree & go to site"
+  },
+  "SUCCESS": {
+    "MESSAGE": "Securely signed in with OpenPass as {{ secureEmail }} Manage your settings in the <a>privacy portal</a>."
+  },
+  "SIGNED": {
+    "HEADING": "Hi there!",
+    "SUB_HEADING": "Welcome back to OpenPass.",
+    "DESCRIPTION": "You have an OpenPass account.",
+    "NOT_YOU": "Not you?",
+    "ACTION": "Continue to site"
+  }
+}

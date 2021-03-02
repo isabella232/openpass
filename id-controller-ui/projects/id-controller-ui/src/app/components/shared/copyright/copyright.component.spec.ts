@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CopyrightComponent } from './copyright.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('CopyrightComponent', () => {
   let component: CopyrightComponent;
@@ -8,6 +9,7 @@ describe('CopyrightComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot()],
       declarations: [CopyrightComponent],
     }).compileComponents();
   });

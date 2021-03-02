@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AlreadySignedViewComponent } from './already-signed-view.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxsModule } from '@ngxs/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 const windowFactory = () => ({
   opener: {
@@ -18,7 +19,7 @@ describe('AlreadySignedViewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [AlreadySignedViewComponent],
-      imports: [RouterTestingModule, NgxsModule.forRoot([])],
+      imports: [RouterTestingModule, NgxsModule.forRoot([]), TranslateModule.forRoot()],
       providers: [{ provide: 'Window', useFactory: windowFactory }],
     }).compileComponents();
   });

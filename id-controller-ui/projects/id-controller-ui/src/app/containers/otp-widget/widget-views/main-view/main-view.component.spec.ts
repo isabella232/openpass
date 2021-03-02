@@ -1,13 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MainViewComponent } from './main-view.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { NgxsModule } from '@ngxs/store';
 
-describe('WidgetMainViewComponent', () => {
+describe('MainViewComponent', () => {
   let component: MainViewComponent;
   let fixture: ComponentFixture<MainViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot(), NgxsModule.forRoot()],
       declarations: [MainViewComponent],
     }).compileComponents();
   });

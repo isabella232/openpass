@@ -1,24 +1,28 @@
-<h1 data-test="signed-page-title">Hi there!</h1>
-<h3 class="mb-2">Welcome back to OpenPass.</h3>
-<p class="mt-2">You have an OpenPass account.</p>
+<h1 data-test="signed-page-title" translate>SIGNED.HEADING</h1>
+<h3 class="mb-2" translate>SIGNED.SUB_HEADING</h3>
+<p class="mt-2" translate>SIGNED.DESCRIPTION</p>
 <form (submit)="submitForm()" class="mt-4" ngNativeValidate>
   <div class="form-group">
     <input
       name="email"
-      placeholder="Enter email address"
+      [placeholder]="'SHARED.FORM.EMAIL_PLACEHOLDER' | translate"
       class="form-control"
       type="email"
       required
       data-test="signed-user-email"
       [(ngModel)]="userEmail"
     />
-    <div class="hint">Email address is not valid</div>
+    <div class="hint" translate>SHARED.FORM.EMAIL_ERROR</div>
   </div>
   <div class="form-group">
-    <button type="button" class="btn btn-link" data-test="signed-reset-btn" (click)="resetState()">Not you?</button>
+    <button type="button" class="btn btn-link" data-test="signed-reset-btn" (click)="resetState()" translate>
+      SIGNED.NOT_YOU
+    </button>
   </div>
   <div class="form-group mt-5">
-    <button type="submit" class="btn btn-primary btn-wide" data-test="signed-action-btn">Continue to site</button>
+    <button type="submit" class="btn btn-primary btn-wide" data-test="signed-action-btn" translate>
+      SIGNED.ACTION
+    </button>
   </div>
 </form>
 

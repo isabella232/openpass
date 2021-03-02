@@ -1,16 +1,12 @@
 <ng-container *ngIf="!(authState$ | async).isEmailVerified">
-  <h1 data-test="auth-page-title">Hi there!</h1>
-  <h3 class="mb-2">Welcome to OpenPass.</h3>
-  <p class="mt-2">
-    Please enter your email address. <br />
-    You will only need to do this once for all OpenPass sites.
-    <b>Your email address will not be shared without your permission.</b>
-  </p>
+  <h1 data-test="auth-page-title" translate>AUTH.HEADING_1</h1>
+  <h3 class="mb-2" translate>AUTH.SUB_HEADING_1</h3>
+  <p class="mt-2" [innerHTML]="'AUTH.DESCRIPTION_1' | translate"></p>
 </ng-container>
 <ng-container *ngIf="(authState$ | async).isEmailVerified">
-  <h1 data-test="auth-page-title">Thanks!</h1>
-  <h3 class="mb-2">Check your email...</h3>
-  <p class="mt-2">Please enter the verification code that was sent to your email address.</p>
+  <h1 data-test="auth-page-title" translate>AUTH.HEADING_2</h1>
+  <h3 class="mb-2" translate>AUTH.SUB_HEADING_2</h3>
+  <p class="mt-2">AUTH.DESCRIPTION_2</p>
 </ng-container>
 
 <form *ngIf="authState$ | async as authState" (submit)="submitForm()" ngNativeValidate>
@@ -19,31 +15,31 @@
       [class.invalid]="!authState.isEmailValid"
       data-test="auth-input-email"
       name="email"
-      placeholder="Enter email address"
+      [placeholder]="'SHARED.FORM.EMAIL_PLACEHOLDER' | translate"
       class="form-control"
       type="email"
       required
       [value]="authState.email"
       (change)="patchEmail($event)"
     />
-    <div class="hint" data-test="auth-email-warning">Email address is not valid</div>
+    <div class="hint" data-test="auth-email-warning" translate>SHARED.FORM.EMAIL_ERROR</div>
   </div>
   <div *ngIf="authState.isEmailVerified" class="form-group">
     <input
       [class.invalid]="!authState.isCodeValid"
       data-test="auth-input-code"
       name="verification code"
-      placeholder="Enter verification code"
+      [placeholder]="'SHARED.FORM.CODE_PLACEHOLDER' | translate"
       class="form-control"
       type="number"
       required
       [ngModel]="authState.code"
       (change)="patchCode($event)"
     />
-    <div class="hint" data-test="auth-code-warning">Code is not valid. Check the code and try one more time</div>
+    <div class="hint" data-test="auth-code-warning" translate>SHARED.FORM.CODE_ERROR</div>
   </div>
   <div class="form-group">
-    <label class="pl-3 align-center">
+    <label class="pl-3 align-center" translate [translateParams]="{ websiteName: websiteName$ | async }">
       <input
         class="form-control mr-2"
         name="share email"
@@ -51,17 +47,17 @@
         [value]="authState.shareEmail"
         (change)="patchShareEmail($event)"
       />
-      Share my email with {{ websiteName$ | async }}
+      SHARED.FORM.SHARE_LABEL
     </label>
   </div>
 
   <div *ngIf="!authState.isEmailVerified" class="py-3"></div>
   <div class="pt-3">
-    <button data-test="auth-action-btn" type="submit" class="btn btn-primary btn-wide">Continue</button>
+    <button data-test="auth-action-btn" type="submit" class="btn btn-primary btn-wide" translate>AUTH.ACTION</button>
   </div>
 </form>
 <div class="text-center p-3">
-  <a href="">Other way to access this site</a>
+  <a href="" translate>SHARED.OTHER_WAY</a>
 </div>
 
 <usrf-copyright></usrf-copyright>
