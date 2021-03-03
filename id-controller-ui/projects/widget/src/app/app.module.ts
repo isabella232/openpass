@@ -1,16 +1,21 @@
-import { ApplicationRef, DoBootstrap, Injector, NgModule } from '@angular/core';
+import { ApplicationRef, DoBootstrap, Inject, Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
 import { createCustomElement } from '@angular/elements';
-import { windowFactory } from './utils/window-factory';
 import { ViewContainerDirective } from './directives/view-container.directive';
+import { windowFactory } from './utils/window-factory';
+import { deployUrl } from './utils/deploy-url-factory';
+import { DEPLOY_URL, WINDOW } from './utils/injection-tokens';
 
 @NgModule({
   declarations: [AppComponent, ViewContainerDirective],
   imports: [BrowserModule],
-  providers: [{ provide: 'Window', useFactory: windowFactory }],
+  providers: [
+    { provide: WINDOW, useFactory: windowFactory },
+    { provide: DEPLOY_URL, useFactory: deployUrl },
+  ],
   bootstrap: environment.production ? [] : [AppComponent],
 })
 export class AppModule implements DoBootstrap {

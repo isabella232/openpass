@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { PostMessageData } from '@shared/types/post-message-data';
 import { PostMessagePayload } from '@shared/types/post-message-payload';
+import { WINDOW } from '../utils/injection-tokens';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class PostMessagesService {
   private originMessage = new Subject<PostMessagePayload>();
   private receiverWindow: Window;
 
-  constructor(@Inject('Window') private window: Window) {
+  constructor(@Inject(WINDOW) private window: Window) {
     this.listener = this.listener.bind(this);
   }
 

@@ -21,6 +21,7 @@ import { CookiesService } from '../../services/cookies.service';
 import { PublicApiService } from '../../services/public-api.service';
 import { DynamicLoadable } from '../dynamic-loadable';
 import { CommonModule } from '@angular/common';
+import { WINDOW } from '../../utils/injection-tokens';
 
 @Component({
   selector: 'wdgt-otp-iframe',
@@ -43,7 +44,7 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy, Dyn
   postSubscription: Subscription;
 
   constructor(
-    @Inject('Window') window: Window,
+    @Inject(WINDOW) window: Window,
     sanitizer: DomSanitizer,
     private cookiesService: CookiesService,
     private publicApiService: PublicApiService,

@@ -7,6 +7,7 @@ import { PostMessagePayload } from '@shared/types/post-message-payload';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
 import { environment } from '../../environments/environment';
 import { filter } from 'rxjs/operators';
+import { WINDOW } from '../utils/injection-tokens';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class MessageSubscriptionService {
   private messageSubscription: Subscription;
 
   constructor(
-    @Inject('Window') private window: Window,
+    @Inject(WINDOW) private window: Window,
     private cookiesService: CookiesService,
     private postMessageService: PostMessagesService,
     private publicApiService: PublicApiService

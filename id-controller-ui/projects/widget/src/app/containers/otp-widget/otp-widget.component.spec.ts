@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OtpWidgetComponent } from './otp-widget.component';
 import { windowFactory } from '../../utils/window-factory';
+import { DEPLOY_URL, WINDOW } from '../../utils/injection-tokens';
+import { PipesModule } from '../../pipes/pipes.module';
 
 describe('OtpWidgetComponent', () => {
   let component: OtpWidgetComponent;
@@ -10,7 +12,11 @@ describe('OtpWidgetComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [OtpWidgetComponent],
-      providers: [{ provide: 'Window', useFactory: windowFactory }],
+      imports: [PipesModule],
+      providers: [
+        { provide: WINDOW, useFactory: windowFactory },
+        { provide: DEPLOY_URL, useFactory: () => {} },
+      ],
     }).compileComponents();
   });
 

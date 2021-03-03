@@ -1,10 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
+import { WINDOW } from '../utils/injection-tokens';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EnvironmentService {
-  constructor(@Inject('Window') private window: Window) {}
+  constructor(@Inject(WINDOW) private window: Window) {}
 
   get isProd() {
     return this.window.location.host.match(/.criteo\.com$/);

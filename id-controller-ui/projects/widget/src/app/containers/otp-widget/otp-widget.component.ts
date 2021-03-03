@@ -10,6 +10,8 @@ import { PostMessagesService } from '../../services/post-messages.service';
 import { PublicApiService } from '../../services/public-api.service';
 import { DynamicLoadable } from '../dynamic-loadable';
 import { CommonModule } from '@angular/common';
+import { PipesModule } from '../../pipes/pipes.module';
+import { WINDOW } from '../../utils/injection-tokens';
 
 @Component({
   selector: 'wdgt-otp-widget',
@@ -48,7 +50,7 @@ export class OtpWidgetComponent implements OnInit, OnDestroy, DynamicLoadable {
   }
 
   constructor(
-    @Inject('Window') private window: Window,
+    @Inject(WINDOW) private window: Window,
     private cookiesService: CookiesService,
     private publicApiService: PublicApiService,
     private postMessagesService: PostMessagesService,
@@ -94,6 +96,6 @@ export class OtpWidgetComponent implements OnInit, OnDestroy, DynamicLoadable {
 
 @NgModule({
   declarations: [OtpWidgetComponent],
-  imports: [CommonModule],
+  imports: [CommonModule, PipesModule],
 })
 class OtpWidgetModule {}

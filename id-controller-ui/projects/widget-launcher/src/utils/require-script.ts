@@ -4,6 +4,8 @@ let hash: number = new Date().getMilliseconds();
 export function requireScript(scriptName: string) {
   let es5 = document.createElement('script');
   let es2015 = document.createElement('script');
+  es5.setAttribute('openpass', '');
+  es2015.setAttribute('openpass', '');
   if (!environment.isDevelopment) {
     es5.src = `${environment.APP_PATH}/${scriptName}-es5.js?ver=${hash}`;
     es5.defer = es5.noModule = true;
