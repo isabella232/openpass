@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { RecognizedViewRoutingModule } from './recognized-view-routing.module';
+import { SharedModule } from '@components/shared/shared.module';
 import { RecognizedViewComponent } from './recognized-view.component';
-import { SharedModule } from '../../../components/shared/shared.module';
+import { RecognizedViewRoutingModule } from './recognized-view-routing.module';
 
 @NgModule({
   declarations: [RecognizedViewComponent],

@@ -12,31 +12,26 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        loadChildren: () => import('./widget-views/main-view/main-view.module').then((m) => m.MainViewModule),
+        loadChildren: () => import('./main-view/main-view.module').then((m) => m.MainViewModule),
       },
       {
         path: 'auth',
-        loadChildren: () => import('./widget-views/auth-view/auth-view.module').then((m) => m.AuthViewModule),
+        loadChildren: () => import('./auth-view/auth-view.module').then((m) => m.AuthViewModule),
         canActivate: [GuestGuard],
       },
       {
         path: 'agreement',
-        loadChildren: () =>
-          import('./widget-views/agreement-view/agreement-view.module').then((m) => m.AgreementViewModule),
+        loadChildren: () => import('./agreement-view/agreement-view.module').then((m) => m.AgreementViewModule),
       },
       {
         path: 'success',
         loadChildren: () =>
-          import('./widget-views/success-signed-view/success-signed-view.module').then(
-            (m) => m.SuccessSignedViewModule
-          ),
+          import('./success-signed-view/success-signed-view.module').then((m) => m.SuccessSignedViewModule),
       },
       {
         path: 'signed',
         loadChildren: () =>
-          import('./widget-views/already-signed-view/already-signed-view.module').then(
-            (m) => m.AlreadySignedViewModule
-          ),
+          import('./already-signed-view/already-signed-view.module').then((m) => m.AlreadySignedViewModule),
         canActivate: [AuthenticatedGuard],
       },
     ],

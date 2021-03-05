@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OpenPassDetailsComponent } from './open-pass-details.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { OpenPassDetailsComponent } from './open-pass-details.component';
 
 @NgModule({
   declarations: [OpenPassDetailsComponent],
