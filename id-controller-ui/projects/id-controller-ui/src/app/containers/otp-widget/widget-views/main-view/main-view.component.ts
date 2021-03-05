@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { OpenerState } from '@store/otp-widget/opener.state';
@@ -9,7 +9,6 @@ import { OpenerState } from '@store/otp-widget/opener.state';
   styleUrls: ['./main-view.component.scss'],
 })
 export class MainViewComponent {
-  @Output() proceed = new EventEmitter<void>();
-
-  @Select(OpenerState.originFormatted) websiteName$: Observable<string>;
+  @Select(OpenerState.originFormatted)
+  websiteName$: Observable<string>;
 }
