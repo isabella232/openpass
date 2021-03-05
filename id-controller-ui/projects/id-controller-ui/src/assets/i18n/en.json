@@ -10,7 +10,7 @@
     "ACTION": "Sign up with OpenPass"
   },
   "SHARED": {
-    "OTHER_WAY": "Other way to access this site",
+    "OTHER_WAY": "Other ways to access this site",
     "COPY": "Provided by",
     "FORM": {
       "EMAIL_PLACEHOLDER": "Enter email address",
