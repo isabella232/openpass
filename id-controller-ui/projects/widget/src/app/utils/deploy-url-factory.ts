@@ -1,4 +1,5 @@
 export const deployUrl = () => {
-  const openpassScripts = document.querySelector('script[openpass]') as HTMLScriptElement;
-  return new URL(openpassScripts.src).origin;
+  const openpassScriptsUrl = (document.querySelector('script[openpass]') as HTMLScriptElement).src;
+
+  return openpassScriptsUrl?.slice(0, openpassScriptsUrl?.lastIndexOf('/'));
 };
