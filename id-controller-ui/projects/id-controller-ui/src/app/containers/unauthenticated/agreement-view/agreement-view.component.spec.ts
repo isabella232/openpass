@@ -4,6 +4,7 @@ import { AgreementViewComponent } from './agreement-view.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PostMessagesService } from '@services/post-messages.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { AuthService } from '@services/auth.service';
 import { NgxsModule } from '@ngxs/store';
 import { SharedModule } from '@components/shared/shared.module';
 
@@ -17,6 +18,10 @@ describe('AgreementViewComponent', () => {
       providers: [
         {
           provide: PostMessagesService,
+          useFactory: () => {},
+        },
+        {
+          provide: AuthService,
           useFactory: () => {},
         },
       ],

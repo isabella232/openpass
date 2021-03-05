@@ -63,5 +63,10 @@
       "CONTROL": "Lorem ipsum dolor sit amet, Lorem ipsum elit. Exercitationem elit. Exercitationem"
     },
     "ACTION": "ACCESS WITH OPENPASS"
+  },
+  "RECOGNIZED": {
+    "HEADING": "Hi there!",
+    "SUB_HEADING": "Welcome back to OpenPass.",
+    "ACTION": "Continue to site"
   }
 }

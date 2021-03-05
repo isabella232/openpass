@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RecognizedViewComponent } from './recognized-view.component';
+import { PostMessagesService } from '@services/post-messages.service';
+import { AuthService } from '@services/auth.service';
 
 describe('RecognizedViewComponent', () => {
   let component: RecognizedViewComponent;
@@ -8,6 +10,16 @@ describe('RecognizedViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: PostMessagesService,
+          useFactory: () => {},
+        },
+        {
+          provide: AuthService,
+          useFactory: () => {},
+        },
+      ],
       declarations: [RecognizedViewComponent],
     }).compileComponents();
   });
