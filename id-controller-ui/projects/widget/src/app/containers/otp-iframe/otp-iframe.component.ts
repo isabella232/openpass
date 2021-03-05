@@ -19,7 +19,6 @@ import { WidgetModes } from '../../enums/widget-modes.enum';
 import { MessageSubscriptionService } from '../../services/message-subscription.service';
 import { CookiesService } from '../../services/cookies.service';
 import { PublicApiService } from '../../services/public-api.service';
-import { DynamicLoadable } from '../dynamic-loadable';
 import { CommonModule } from '@angular/common';
 import { WINDOW } from '../../utils/injection-tokens';
 
@@ -28,7 +27,7 @@ import { WINDOW } from '../../utils/injection-tokens';
   templateUrl: './otp-iframe.component.html',
   styleUrls: ['./otp-iframe.component.scss'],
 })
-export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy, DynamicLoadable {
+export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('iframe') iframeElement: HTMLIFrameElement;
   @Input() view: WidgetModes;
 

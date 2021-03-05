@@ -8,7 +8,6 @@ import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
 import { Subscription } from 'rxjs';
 import { PostMessagesService } from '../../services/post-messages.service';
 import { PublicApiService } from '../../services/public-api.service';
-import { DynamicLoadable } from '../dynamic-loadable';
 import { CommonModule } from '@angular/common';
 import { PipesModule } from '../../pipes/pipes.module';
 import { WINDOW } from '../../utils/injection-tokens';
@@ -18,7 +17,7 @@ import { WINDOW } from '../../utils/injection-tokens';
   templateUrl: './otp-widget.component.html',
   styleUrls: ['./otp-widget.component.scss'],
 })
-export class OtpWidgetComponent implements OnInit, OnDestroy, DynamicLoadable {
+export class OtpWidgetComponent implements OnInit, OnDestroy {
   @Input() view: WidgetModes;
 
   @HostBinding('class.modal')

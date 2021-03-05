@@ -19,7 +19,6 @@ import { PublicApiService } from './services/public-api.service';
 import { Subscription } from 'rxjs';
 import { Sessions } from './enums/sessions.enum';
 import { ViewContainerDirective } from './directives/view-container.directive';
-import { DynamicLoadable } from './containers/dynamic-loadable';
 
 @Component({
   selector: 'wdgt-identification',
@@ -97,8 +96,10 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private async loadComponent() {
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(await this.getComponentClass());
-    const componentRef = this.viewElement.viewContainerRef.createComponent<DynamicLoadable>(componentFactory);
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(
+      (await this.getComponentClass()) as any
+    );
+    const componentRef = this.viewElement.viewContainerRef.createComponent<any>(componentFactory);
 
     componentRef.instance.view = this.view;
   }
