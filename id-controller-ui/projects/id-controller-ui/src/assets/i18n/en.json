@@ -31,7 +31,7 @@
   },
   "AGREEMENT": {
     "HEADING": "Awesome!",
-    "SUB_HEADING": "One last thing:",
+    "SUB_HEADING": "One last thing.",
     "DESCRIPTION": "To access <b>{{ websiteName }}</b> and many websites for free while maintaining full control of your privacy, please accept the OpenPass Terms and Conditions by clicking Agree & Go to Site.",
     "SUMMARY": {
       "TITLE": "How does OpenPass work?",
@@ -53,5 +53,15 @@
     "DESCRIPTION": "You have an OpenPass account.",
     "NOT_YOU": "Not you?",
     "ACTION": "Continue to site"
+  },
+  "NON_AUTH": {
+    "HEADING": "Get Access With",
+    "DESCRIPTION": "You’re about to access Website Name for free! OpenPass enables Website Name to show you more relevant ads, which supports their business and keeps the content free.",
+    "OPEN_PASS_PROS": {
+      "INFORMATION": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem modi necessitatibus nemo rem",
+      "ACCESS": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem",
+      "CONTROL": "Lorem ipsum dolor sit amet, Lorem ipsum elit. Exercitationem elit. Exercitationem"
+    },
+    "ACTION": "ACCESS WITH OPENPASS"
   }
 }

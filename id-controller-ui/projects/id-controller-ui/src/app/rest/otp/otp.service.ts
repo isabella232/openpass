@@ -20,4 +20,8 @@ export class OtpService {
   validateOtp(otp: OtpDto): Observable<TokenDto> {
     return this.http.post<TokenDto>(this.namespace + '/otp/validate', otp);
   }
+
+  getIfa(): Observable<TokenDto> {
+    return this.http.get<TokenDto>(this.namespace + '/ifa');
+  }
 }

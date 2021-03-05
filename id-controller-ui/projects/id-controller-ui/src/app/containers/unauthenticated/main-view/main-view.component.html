@@ -1,0 +1,39 @@
+<h3 class="mb-1" translate>NON_AUTH.HEADING</h3>
+<div class="op-logo-container">
+  <img src="./assets/images/open-pass-logo.png" alt="OpenPass" />
+</div>
+<p [innerHTML]="'WELCOME.DESCRIPTION' | translate: { websiteName: (websiteName$ | async) || '' }"></p>
+<div class="my-3">
+  <div class="spec-list-option" data-test="non-auth-pros-item">
+    <div class="spec-list-icon">
+      <img src="./assets/images/email-sec.png" alt="info" />
+    </div>
+    <div translate>NON_AUTH.OPEN_PASS_PROS.INFORMATION</div>
+  </div>
+  <div class="spec-list-option" data-test="non-auth-pros-item">
+    <div class="spec-list-icon">
+      <img src="./assets/images/ntwrk.png" alt="lock" />
+    </div>
+    <div translate>NON_AUTH.OPEN_PASS_PROS.ACCESS</div>
+  </div>
+  <div class="spec-list-option" data-test="non-auth-pros-item">
+    <div class="spec-list-icon">
+      <img src="./assets/images/priv-cntrl.png" alt="safe" />
+    </div>
+    <div translate>NON_AUTH.OPEN_PASS_PROS.CONTROL</div>
+  </div>
+</div>
+<button
+  type="button"
+  class="btn btn-wide btn-primary"
+  data-test="non-auth-action-btn"
+  translate
+  (click)="fetchIfaAndProceed()"
+>
+  NON_AUTH.ACTION
+</button>
+<div class="text-center p-3">
+  <a href="" translate>SHARED.OTHER_WAY</a>
+</div>
+
+<div *ngIf="isFetching$ | async" class="loader"></div>
