@@ -9,7 +9,7 @@ namespace Criteo.IdController.UTest.Helpers
     [TestFixture]
     public class CookieHelperTests
     {
-        private const int _cookieLifetimeDays = 390;
+        private const int _cookieLifetimeDays = 30;
         private const string _identifierCookieName = "openpass_token";
 
         private ICookieHelper _cookieHelper;

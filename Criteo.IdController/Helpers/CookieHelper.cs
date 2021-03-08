@@ -12,7 +12,7 @@ namespace Criteo.IdController.Helpers
 
     public class CookieHelper : ICookieHelper
     {
-        private const int _cookieLifetimeDays = 390;
+        private const int _cookieLifetimeDays = 30;
         private const string _identifierCookieName = "openpass_token";
 
         private readonly CookieOptions _defaultCookieOptions;
