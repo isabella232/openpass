@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UnloggedComponent } from './unlogged.component';
-import { WINDOW } from '../../utils/injection-tokens';
+import { DEPLOY_URL, WINDOW } from '../../utils/injection-tokens';
+import { windowFactory } from '../../utils/window-factory';
+import { PipesModule } from '../../pipes/pipes.module';
 
 describe('UnloggedComponent', () => {
   let component: UnloggedComponent;
@@ -9,8 +11,12 @@ describe('UnloggedComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      providers: [{ provide: WINDOW, useFactory: () => {} }],
       declarations: [UnloggedComponent],
+      imports: [PipesModule],
+      providers: [
+        { provide: WINDOW, useFactory: windowFactory },
+        { provide: DEPLOY_URL, useFactory: () => {} },
+      ],
     }).compileComponents();
   });
 
