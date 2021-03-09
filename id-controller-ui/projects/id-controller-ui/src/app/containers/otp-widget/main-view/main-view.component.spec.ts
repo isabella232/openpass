@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MainViewComponent } from './main-view.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxsModule } from '@ngxs/store';
+import { EventsTrackingService } from '@services/events-tracking.service';
 
 describe('MainViewComponent', () => {
   let component: MainViewComponent;
@@ -12,6 +13,12 @@ describe('MainViewComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot(), NgxsModule.forRoot()],
       declarations: [MainViewComponent],
+      providers: [
+        {
+          provide: EventsTrackingService,
+          useFactory: () => ({ trackEvent: () => {} }),
+        },
+      ],
     }).compileComponents();
   });
 
