@@ -2,6 +2,7 @@ import { Component, Inject, NgModule, OnDestroy, OnInit, Input, HostBinding } fr
 import { WidgetModes } from '../../enums/widget-modes.enum';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 import { WINDOW } from '../../utils/injection-tokens';
 import { CookiesService } from '../../services/cookies.service';
 import { PublicApiService } from '../../services/public-api.service';
@@ -90,6 +91,6 @@ export class UnloggedComponent implements OnInit, OnDestroy {
 
 @NgModule({
   declarations: [UnloggedComponent],
-  imports: [CommonModule, PipesModule],
+  imports: [CommonModule, PipesModule, TranslateModule],
 })
 class UnloggedModule {}

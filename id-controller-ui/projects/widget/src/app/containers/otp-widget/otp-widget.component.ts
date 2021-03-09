@@ -1,4 +1,5 @@
 import { Component, HostBinding, Inject, Input, NgModule, OnDestroy, OnInit } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { WidgetModes } from '../../enums/widget-modes.enum';
 import { environment } from '../../../environments/environment';
 import { CookiesService } from '../../services/cookies.service';
@@ -95,6 +96,6 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
 
 @NgModule({
   declarations: [OtpWidgetComponent],
-  imports: [CommonModule, PipesModule],
+  imports: [CommonModule, PipesModule, TranslateModule],
 })
 class OtpWidgetModule {}
