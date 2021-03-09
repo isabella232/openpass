@@ -3,6 +3,7 @@ import { PostMessagesService } from '@services/post-messages.service';
 import { Dispatch } from '@ngxs-labs/dispatch-decorator';
 import { SaveOpener } from '@store/otp-widget/opener.actions';
 import { TranslateService } from '@ngx-translate/core';
+import { WINDOW } from '@utils/injection-tokens';
 
 @Component({
   selector: 'usrf-root',
@@ -12,7 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class AppComponent implements OnInit {
   constructor(
     private postMessageService: PostMessagesService,
-    @Inject('Window') private window: Window,
+    @Inject(WINDOW) private window: Window,
     private translateService: TranslateService
   ) {}
 

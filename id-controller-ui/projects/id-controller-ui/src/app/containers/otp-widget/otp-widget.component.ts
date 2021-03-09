@@ -4,6 +4,7 @@ import { PostMessagesService } from '@services/post-messages.service';
 import { DOCUMENT } from '@angular/common';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
 import { delay, filter } from 'rxjs/operators';
+import { WINDOW } from '@utils/injection-tokens';
 
 @Component({
   selector: 'usrf-otp-widget',
@@ -13,7 +14,7 @@ import { delay, filter } from 'rxjs/operators';
 export class OtpWidgetComponent {
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    @Inject('Window') private window: Window,
+    @Inject(WINDOW) private window: Window,
     router: Router,
     postMessagesService: PostMessagesService
   ) {

@@ -4,6 +4,7 @@ import { OtpWidgetComponent } from './otp-widget.component';
 import { windowFactory } from '../../../../../widget/src/app/utils/window-factory';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxsModule } from '@ngxs/store';
+import { WINDOW } from '@utils/injection-tokens';
 
 describe('OtpWidgetComponent', () => {
   let component: OtpWidgetComponent;
@@ -12,7 +13,7 @@ describe('OtpWidgetComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, NgxsModule.forRoot([])],
-      providers: [{ provide: 'Window', useFactory: windowFactory }],
+      providers: [{ provide: WINDOW, useFactory: windowFactory }],
       declarations: [OtpWidgetComponent],
     }).compileComponents();
   });

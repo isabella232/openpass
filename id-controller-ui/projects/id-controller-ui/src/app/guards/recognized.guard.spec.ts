@@ -4,6 +4,7 @@ import { RecognizedGuard } from './recognized.guard';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxsModule } from '@ngxs/store';
 import { windowFactory } from '@utils/window-factory';
+import { WINDOW } from '@utils/injection-tokens';
 
 describe('RecognizedGuard', () => {
   let guard: RecognizedGuard;
@@ -11,7 +12,7 @@ describe('RecognizedGuard', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, NgxsModule.forRoot([])],
-      providers: [{ provide: 'Window', useFactory: windowFactory }],
+      providers: [{ provide: WINDOW, useFactory: windowFactory }],
     });
     guard = TestBed.inject(RecognizedGuard);
   });

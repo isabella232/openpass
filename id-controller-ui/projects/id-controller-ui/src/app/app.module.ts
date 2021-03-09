@@ -14,6 +14,7 @@ import { OpenerState } from '@store/otp-widget/opener.state';
 import { OtpWidgetState } from '@store/otp-widget/otp-widget.state';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { WINDOW } from '@utils/injection-tokens';
 
 export const createTranslateLoader = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -38,7 +39,7 @@ export const createTranslateLoader = (http: HttpClient): TranslateHttpLoader =>
       },
     }),
   ],
-  providers: [{ provide: 'Window', useFactory: windowFactory }],
+  providers: [{ provide: WINDOW, useFactory: windowFactory }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

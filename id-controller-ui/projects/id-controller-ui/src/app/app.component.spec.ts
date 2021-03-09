@@ -5,12 +5,13 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { windowFactory } from '@utils/window-factory';
 import { NgxsModule } from '@ngxs/store';
 import { TranslateModule } from '@ngx-translate/core';
+import { WINDOW } from '@utils/injection-tokens';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, HttpClientTestingModule, NgxsModule.forRoot([]), TranslateModule.forRoot()],
-      providers: [{ provide: 'Window', useFactory: windowFactory }],
+      providers: [{ provide: WINDOW, useFactory: windowFactory }],
       declarations: [AppComponent],
     }).compileComponents();
   });

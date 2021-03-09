@@ -5,6 +5,7 @@ import { PostMessageData } from '@shared/types/post-message-data';
 import { PostMessageTypes } from '@shared/enums/post-message-types.enum';
 import { PostMessagePayload } from '@shared/types/post-message-payload';
 import { OpenerState } from '@store/otp-widget/opener.state';
+import { WINDOW } from '@utils/injection-tokens';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class PostMessagesService {
   }
   private originMessage = new Subject();
 
-  constructor(@Inject('Window') private window: Window, private store: Store) {}
+  constructor(@Inject(WINDOW) private window: Window, private store: Store) {}
 
   startListening() {
     this.window.addEventListener('message', (event) => {

@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { localStorage } from '@shared/utils/storage-decorator';
 import { AuthService } from '@services/auth.service';
 import { Router } from '@angular/router';
+import { WINDOW } from '@utils/injection-tokens';
 
 @Component({
   selector: 'usrf-already-signed-view',
@@ -14,7 +15,7 @@ export class AlreadySignedViewComponent implements OnInit {
 
   userEmail: string;
 
-  constructor(private authService: AuthService, @Inject('Window') private window: Window, private router: Router) {}
+  constructor(private authService: AuthService, @Inject(WINDOW) private window: Window, private router: Router) {}
 
   ngOnInit() {
     this.userEmail = this.storageUserEmail;
