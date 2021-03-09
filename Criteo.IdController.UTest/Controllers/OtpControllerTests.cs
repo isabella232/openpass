@@ -1,8 +1,10 @@
 using System;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Criteo.IdController.Controllers;
 using Criteo.IdController.Helpers;
+using Criteo.IdController.Helpers.Adapters;
 using Criteo.UserIdentification;
 using Metrics;
 using Microsoft.AspNetCore.Hosting;
@@ -22,7 +24,7 @@ namespace Criteo.IdController.UTest.Controllers
         private Mock<IMetricsRegistry> _metricRegistryMock;
         private Mock<IMemoryCache> _memoryCache;
         private Mock<IConfigurationHelper> _configurationHelperMock;
-        private Mock<IIdentifierGeneratorHelper> _identifierGeneratorHelperMock;
+        private Mock<IIdentifierAdapter> _uid2AdapterMock;
         private Mock<IEmailHelper> _emailHelperMock;
         private Mock<IGlupHelper> _glupHelperMock;
         private Mock<ICodeGeneratorHelper> _codeGeneratorHelperMock;
@@ -52,11 +54,11 @@ namespace Criteo.IdController.UTest.Controllers
             _glupHelperMock = new Mock<IGlupHelper>();
             _codeGeneratorHelperMock = new Mock<ICodeGeneratorHelper>();
             _codeGeneratorHelperMock.Setup(c => c.IsValidCode(It.IsAny<string>())).Returns(true);
-            _identifierGeneratorHelperMock = new Mock<IIdentifierGeneratorHelper>();
+            _uid2AdapterMock = new Mock<IIdentifierAdapter>();
             _cookieHelperMock = new Mock<ICookieHelper>();
 
             _otpController = new OtpController(_hostingEnvironmentMock.Object, _metricRegistryMock.Object,
-                _memoryCache.Object, _configurationHelperMock.Object, _identifierGeneratorHelperMock.Object, _emailHelperMock.Object, _glupHelperMock.Object,
+                _memoryCache.Object, _configurationHelperMock.Object, _uid2AdapterMock.Object, _emailHelperMock.Object, _glupHelperMock.Object,
                 _codeGeneratorHelperMock.Object, _cookieHelperMock.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
@@ -75,11 +77,11 @@ namespace Criteo.IdController.UTest.Controllers
         }
 
         [Test]
-        public void ForbiddenWhenValidationNotEnabled()
+        public async Task ForbiddenWhenValidationNotEnabled()
         {
             _configurationHelperMock.Setup(c => c.EnableOtp).Returns(false);
             var request = new OtpController.ValidateRequest() { Email = "example@mail.com", Otp = "123456" };
-            var response = _otpController.ValidateOtp(_testUserAgent, request);
+            var response = await _otpController.ValidateOtp(_testUserAgent, request);
 
             Assert.IsAssignableFrom<NotFoundResult>(response);
         }
@@ -96,35 +98,35 @@ namespace Criteo.IdController.UTest.Controllers
         }
 
         [Test]
-        public void BadRequestWhenValidationEmailIsInvalid()
+        public async Task BadRequestWhenValidationEmailIsInvalid()
         {
             _emailHelperMock.Setup(e => e.IsValidEmail(It.IsAny<string>())).Returns(false);
 
             var request = new OtpController.ValidateRequest();
-            var response = _otpController.ValidateOtp(_testUserAgent, request);
+            var response = await _otpController.ValidateOtp(_testUserAgent, request);
 
             Assert.IsAssignableFrom<BadRequestResult>(response);
         }
 
         [Test]
-        public void BadRequestWhenValidationOtpIsInvalid()
+        public async Task BadRequestWhenValidationOtpIsInvalid()
         {
             _codeGeneratorHelperMock.Setup(c => c.IsValidCode(It.IsAny<string>())).Returns(false);
 
             var request = new OtpController.ValidateRequest();
-            var response = _otpController.ValidateOtp(_testUserAgent, request);
+            var response = await _otpController.ValidateOtp(_testUserAgent, request);
 
             Assert.IsAssignableFrom<BadRequestResult>(response);
         }
 
         [Test]
-        public void BadRequestWhenValidationEmailAndOtpAreInvalid()
+        public async Task BadRequestWhenValidationEmailAndOtpAreInvalid()
         {
             _emailHelperMock.Setup(e => e.IsValidEmail(It.IsAny<string>())).Returns(false);
             _codeGeneratorHelperMock.Setup(c => c.IsValidCode(It.IsAny<string>())).Returns(false);
 
             var request = new OtpController.ValidateRequest();
-            var response = _otpController.ValidateOtp(_testUserAgent, request);
+            var response = await _otpController.ValidateOtp(_testUserAgent, request);
 
             Assert.IsAssignableFrom<BadRequestResult>(response);
         }
@@ -140,23 +142,23 @@ namespace Criteo.IdController.UTest.Controllers
         }
 
         [Test]
-        public void ValidRequestValidation()
+        public async Task ValidRequestValidation()
         {
             object otp = "123456";
-            var identifier = Guid.NewGuid();
+            var returnedToken = "FreshUID2token";
             _memoryCache
                 .Setup(m => m.TryGetValue(It.IsAny<object>(), out otp))
                 .Returns(true);
-            _identifierGeneratorHelperMock.Setup(c => c.GenerateIdentifier()).Returns(identifier);
+            _uid2AdapterMock.Setup(c => c.GetId(It.IsAny<string>())).ReturnsAsync(returnedToken);
             var request = new OtpController.ValidateRequest() { Email = "example@mail.com", Otp = "123456" };
 
-            var response = _otpController.ValidateOtp(_testUserAgent, request);
+            var response = await _otpController.ValidateOtp(_testUserAgent, request);
 
             // token in JSON response
             Assert.IsAssignableFrom<OkObjectResult>(response);
             var responseData = GetResponseData(response);
             var token = (string) responseData.token;
-            Assert.AreEqual(identifier.ToString(), token);
+            Assert.AreEqual(returnedToken, token);
 
             // token in cookie
             _cookieHelperMock.Verify(c => c.SetIdentifierCookie(
@@ -184,7 +186,7 @@ namespace Criteo.IdController.UTest.Controllers
 
         [TestCase(null)]
         [TestCase("origin.com")]
-        public void ValidationGlupEmitted(string originHost)
+        public async Task ValidationGlupEmitted(string originHost)
         {
             object code = "123456";
             _memoryCache
@@ -192,7 +194,7 @@ namespace Criteo.IdController.UTest.Controllers
                 .Returns(true);
 
             var request = new OtpController.ValidateRequest() { Email = "example@mail.com", Otp = (string) code, OriginHost = originHost };
-            _otpController.ValidateOtp(_testUserAgent, request);
+            await _otpController.ValidateOtp(_testUserAgent, request);
 
             _glupHelperMock.Verify(g => g.EmitGlup(
                 It.Is<EventType>(e => e == EventType.EmailValidated),
@@ -227,14 +229,14 @@ namespace Criteo.IdController.UTest.Controllers
         }
 
         [Test]
-        public void OTPSuccessfulFullValidation()
+        public async Task OTPSuccessfulFullValidation()
         {
             var email = "example@mail.com";
             var code = "123456";
-            var identifier = Guid.NewGuid();
+            var returnedToken = "FreshUID2token";
 
             _codeGeneratorHelperMock.Setup(c => c.GenerateRandomCode()).Returns(code);
-            _identifierGeneratorHelperMock.Setup(c => c.GenerateIdentifier()).Returns(identifier);
+            _uid2AdapterMock.Setup(c => c.GetId(It.IsAny<string>())).ReturnsAsync(returnedToken);
 
             // Generate
             var requestGenerate = new OtpController.GenerateRequest() { Email = email };
@@ -247,12 +249,12 @@ namespace Criteo.IdController.UTest.Controllers
                 .Setup(m => m.TryGetValue(It.IsAny<object>(), out cacheCode))
                 .Returns(true);
             var requestValidate = new OtpController.ValidateRequest() { Email = email, Otp = (string) code };
-            response = _otpController.ValidateOtp(_testUserAgent, requestValidate);
+            response = await _otpController.ValidateOtp(_testUserAgent, requestValidate);
 
             Assert.IsAssignableFrom<OkObjectResult>(response);
             var responseData = GetResponseData(response);
             var token = (string) responseData.token;
-            Assert.AreEqual(identifier.ToString(), token);
+            Assert.AreEqual(returnedToken, token);
             // token in cookie
             _cookieHelperMock.Verify(c => c.SetIdentifierCookie(
                 It.IsAny<IResponseCookies>(),
@@ -260,7 +262,7 @@ namespace Criteo.IdController.UTest.Controllers
         }
 
         [Test]
-        public void OTPFailedFullValidation()
+        public async Task OTPFailedFullValidation()
         {
             var email = "example@mail.com";
             object code = "123456";
@@ -276,7 +278,7 @@ namespace Criteo.IdController.UTest.Controllers
                 .Setup(m => m.TryGetValue(It.IsAny<object>(), out code))
                 .Returns(true);
             var requestValidate = new OtpController.ValidateRequest() { Email = email, Otp = erroneousCode };
-            response = _otpController.ValidateOtp(_testUserAgent, requestValidate);
+            response = await _otpController.ValidateOtp(_testUserAgent, requestValidate);
             Assert.IsAssignableFrom<NotFoundResult>(response);
             _cookieHelperMock.Verify(c => c.SetIdentifierCookie(
                 It.IsAny<IResponseCookies>(), It.IsAny<string>()), Times.Never);

@@ -88,6 +88,9 @@ namespace Criteo.IdController
             // [Custom] Add cookie helper
             services.AddCookieHelper();
 
+            // [Custom] Add UID2 adapter
+            services.AddUid2Adapter();
+
             // Configure MVC
             services.AddMvc(options =>
             {

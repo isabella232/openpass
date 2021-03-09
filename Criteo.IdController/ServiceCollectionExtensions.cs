@@ -1,5 +1,6 @@
 using Criteo.ConfigAsCode;
 using Criteo.IdController.Helpers;
+using Criteo.IdController.Helpers.Adapters;
 using Criteo.Services.Glup;
 using Criteo.UserAgent.Provider;
 using Criteo.UserIdentification.Services;
@@ -109,6 +110,13 @@ namespace Criteo.IdController
         public static IServiceCollection AddCookieHelper(this IServiceCollection services)
         {
             services.AddSingleton<ICookieHelper, CookieHelper>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddUid2Adapter(this IServiceCollection services)
+        {
+            services.AddSingleton<IIdentifierAdapter, Uid2Adapter>();
 
             return services;
         }

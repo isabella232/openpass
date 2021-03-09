@@ -1,5 +1,7 @@
 using System;
+using System.Threading.Tasks;
 using Criteo.IdController.Helpers;
+using Criteo.IdController.Helpers.Adapters;
 using Microsoft.AspNetCore.Mvc;
 using Metrics;
 using Microsoft.AspNetCore.Hosting;
@@ -18,7 +20,7 @@ namespace Criteo.IdController.Controllers
         private readonly IMetricsRegistry _metricsRegistry;
         private readonly IMemoryCache _activeOtps; // Mapping: (email -> OTP)
         private readonly IConfigurationHelper _configurationHelper;
-        private readonly IIdentifierGeneratorHelper _identifierGeneratorHelper;
+        private readonly IIdentifierAdapter _uid2Adapter;
         private readonly IEmailHelper _emailHelper;
         private readonly IGlupHelper _glupHelper;
         private readonly ICodeGeneratorHelper _codeGeneratorHelper;
@@ -29,7 +31,7 @@ namespace Criteo.IdController.Controllers
             IMetricsRegistry metricRegistry,
             IMemoryCache memoryCache,
             IConfigurationHelper configurationHelper,
-            IIdentifierGeneratorHelper identifierGeneratorHelper,
+            IIdentifierAdapter uid2Adapter,
             IEmailHelper emailHelper,
             IGlupHelper glupHelper,
             ICodeGeneratorHelper codeGeneratorHelper,
@@ -39,7 +41,7 @@ namespace Criteo.IdController.Controllers
             _metricsRegistry = metricRegistry;
             _activeOtps = memoryCache;
             _configurationHelper = configurationHelper;
-            _identifierGeneratorHelper = identifierGeneratorHelper;
+            _uid2Adapter = uid2Adapter;
             _emailHelper = emailHelper;
             _glupHelper = glupHelper;
             _codeGeneratorHelper = codeGeneratorHelper;
@@ -101,7 +103,7 @@ namespace Criteo.IdController.Controllers
         }
 
         [HttpPost("validate")]
-        public IActionResult ValidateOtp(
+        public async Task<IActionResult> ValidateOtp(
             [FromHeader(Name = "User-Agent")] string userAgent,
             [FromBody] ValidateRequest request)
         {
@@ -130,8 +132,9 @@ namespace Criteo.IdController.Controllers
                 // Emit glup
                 _glupHelper.EmitGlup(EventType.EmailValidated, request.OriginHost, userAgent);
 
-                // Set cookie and send token back in payload
-                var token = _identifierGeneratorHelper.GenerateIdentifier().ToString();
+                // Retrieve UID2 token, set cookie and send token back in payload
+                var token = await _uid2Adapter.GetId(request.Email);
+                // TODO: Check token is not null, what do we do in that case?
                 _cookieHelper.SetIdentifierCookie(Response.Cookies, token);
 
                 return Ok(new { token });
