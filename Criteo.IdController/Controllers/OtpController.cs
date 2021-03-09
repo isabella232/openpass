@@ -1,10 +1,8 @@
 using System;
-using System.Linq;
 using Criteo.IdController.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Metrics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using static Criteo.Glup.IdController.Types;
 
