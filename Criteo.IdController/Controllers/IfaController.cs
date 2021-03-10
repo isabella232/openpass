@@ -1,5 +1,8 @@
+using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Criteo.IdController.Helpers;
+using Criteo.IdController.Helpers.Adapters;
 using Metrics;
 
 namespace Criteo.IdController.Controllers
@@ -9,38 +12,41 @@ namespace Criteo.IdController.Controllers
     {
         private static readonly string metricPrefix = "ifa.";
 
-        private readonly IIdentifierGeneratorHelper _identifierGeneratorHelper;
+        private readonly IIdentifierAdapter _uid2Adapter;
         private readonly IMetricsRegistry _metricsRegistry;
         private readonly ICookieHelper _cookieHelper;
 
-        public IfaController(IIdentifierGeneratorHelper identifierGeneratorHelper, IMetricsRegistry metricRegistry, ICookieHelper cookieHelper)
+        public IfaController(IIdentifierAdapter uid2Adapter, IMetricsRegistry metricRegistry, ICookieHelper cookieHelper)
         {
-            _identifierGeneratorHelper = identifierGeneratorHelper;
+            _uid2Adapter = uid2Adapter;
             _metricsRegistry = metricRegistry;
             _cookieHelper = cookieHelper;
         }
 
         [HttpGet]
         [HttpGet("get")]
-        public IActionResult GetOrCreateIfa()
+        public async Task<IActionResult> GetOrCreateIfa()
         {
-            string identifier;
+            string token;
 
-            if (_cookieHelper.TryGetIdentifierCookie(Request.Cookies, out var identifierCookie))
+            if (_cookieHelper.TryGetIdentifierCookie(Request.Cookies, out var tokenCookie))
             {
-                identifier = identifierCookie;
+                token = tokenCookie;
                 _metricsRegistry.GetOrRegister($"{metricPrefix}.get.reuse", () => new Counter(Granularity.CoarseGrain)).Increment();
             }
             else
             {
-                identifier = _identifierGeneratorHelper.GenerateIdentifier().ToString();
+                // Generate a random PII to generate an UID2 token for an anonymous user
+                var randomId = GenerateRandomIdentifier();
+                token = await _uid2Adapter.GetId(randomId);
+                // TODO: Check that token is not null and what to do in that case
                 _metricsRegistry.GetOrRegister($"{metricPrefix}.get.create", () => new Counter(Granularity.CoarseGrain)).Increment();
             }
 
             // Set cookie
-            _cookieHelper.SetIdentifierCookie(Response.Cookies, identifier);
+            _cookieHelper.SetIdentifierCookie(Response.Cookies, token);
 
-            return Ok(new { token = identifier });
+            return Ok(new { token });
         }
 
         [HttpGet("delete")]
@@ -51,5 +57,7 @@ namespace Criteo.IdController.Controllers
 
             return Ok();
         }
+
+        private string GenerateRandomIdentifier() => Guid.NewGuid().ToString();
     }
 }
