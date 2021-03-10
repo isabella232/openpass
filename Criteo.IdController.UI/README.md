@@ -1,18 +1,22 @@
-# IdControllerUi
+# OpenPass UI
 
 This app gives the ability for our customers to authorize their users.
-This app contains 2 projects:
+This app contains 3 projects:
 - Main app - ./projects/open-pass
-- Widget - ./projects/widget
+- Widget - ./projects/widget  
+- Widget launcher - ./projects/widget-launcher
 
 Widget - it is a Web Component that is run on customer website. Widget can set/read cookie and launch the window with Main app.
 Widget and Main app can communicate through [PostMessages API](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage).
+Widget launcher - it is a script that insert widget into partner website.
 
 ```
 Customer website
 +-----------------+               new browser window
-|                 |               +-------------+ 
-|                 | post-messages |   Main app  |  rest  
+|  <launcher/>    |               +-------------+ 
+|      |          |               |             |
+|   (inserts)     |               |             |
+|      |          | post-messages |   Main app  |  rest  
 |  [<Widget/> ]<----------------->|             |<------->[Criteo API]
 |                 |               +-------------+
 +-----------------+
@@ -44,11 +48,13 @@ Structure of build artifacts:
 dist
 |widget - directory of widget app
   |assets 
+    |widget.min.js - widget launcher
   |index.html
   |.....js
 |preprod 
   |widget - directory of widget app for preprod environment
     |assets 
+      |widget.min.js - widget launcher
     |index.html
     |.....js
 |assets - assets of Main app
@@ -60,7 +66,7 @@ The root url for dist folder is `/open-pass`. The server will respond with index
 
 ## TODO
 
-[ ] implement loading iframe instead of Web Component
+[] implement loading iframe instead of Web Component
 
 ## Running unit tests
 
