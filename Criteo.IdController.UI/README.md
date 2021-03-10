@@ -2,7 +2,7 @@
 
 This app gives the ability for our customers to authorize their users.
 This app contains 2 projects:
-- Main app - ./projects/id-controller-ui
+- Main app - ./projects/open-pass
 - Widget - ./projects/widget
 
 Widget - it is a Web Component that is run on customer website. Widget can set/read cookie and launch the window with Main app.

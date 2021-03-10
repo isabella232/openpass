@@ -3,7 +3,7 @@ configurations {
 }
 
 moabDependencies {
-    frontend ':identification:id-controller:id-controller-ui'
+    frontend ':identification:id-controller:Criteo.IdController.UI'
 }
 
 msbuildPackage {

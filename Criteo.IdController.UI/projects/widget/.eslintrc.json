@@ -1,5 +1,5 @@
 {
-  "extends": "../../projects/id-controller-ui/.eslintrc.json",
+  "extends": "../../projects/open-pass/.eslintrc.json",
   "ignorePatterns": [
     "!**/*"
   ],

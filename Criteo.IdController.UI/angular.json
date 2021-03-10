@@ -7,7 +7,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "id-controller-ui": {
+    "open-pass": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,8 +17,8 @@
           "strict": true
         }
       },
-      "root": "projects/id-controller-ui",
-      "sourceRoot": "projects/id-controller-ui/src",
+      "root": "projects/open-pass",
+      "sourceRoot": "projects/open-pass/src",
       "prefix": "usrf",
       "architect": {
         "build": {
@@ -27,24 +27,24 @@
             "baseHref": "/open-pass/",
             "deployUrl": "/open-pass/",
             "outputPath": "dist",
-            "index": "projects/id-controller-ui/src/index.html",
-            "main": "projects/id-controller-ui/src/main.ts",
-            "polyfills": "projects/id-controller-ui/src/polyfills.ts",
-            "tsConfig": "projects/id-controller-ui/tsconfig.app.json",
+            "index": "projects/open-pass/src/index.html",
+            "main": "projects/open-pass/src/main.ts",
+            "polyfills": "projects/open-pass/src/polyfills.ts",
+            "tsConfig": "projects/open-pass/tsconfig.app.json",
             "aot": true,
-            "assets": ["projects/id-controller-ui/src/assets", "projects/id-controller-ui/src/favicon.ico"],
-            "styles": ["projects/id-controller-ui/src/styles.scss"],
+            "assets": ["projects/open-pass/src/assets", "projects/open-pass/src/favicon.ico"],
+            "styles": ["projects/open-pass/src/styles.scss"],
             "scripts": [],
             "stylePreprocessorOptions": {
-              "includePaths": ["projects/id-controller-ui/src/styles"]
+              "includePaths": ["projects/open-pass/src/styles"]
             }
           },
           "configurations": {
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "projects/id-controller-ui/src/environments/environment.ts",
-                  "with": "projects/id-controller-ui/src/environments/environment.prod.ts"
+                  "replace": "projects/open-pass/src/environments/environment.ts",
+                  "with": "projects/open-pass/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -72,32 +72,32 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "id-controller-ui:build"
+            "browserTarget": "open-pass:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "id-controller-ui:build:production"
+              "browserTarget": "open-pass:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "id-controller-ui:build"
+            "browserTarget": "open-pass:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/id-controller-ui/src/test.ts",
-            "polyfills": "projects/id-controller-ui/src/polyfills.ts",
-            "tsConfig": "projects/id-controller-ui/tsconfig.spec.json",
-            "karmaConfig": "projects/id-controller-ui/karma.conf.js",
-            "assets": ["projects/id-controller-ui/src/favicon.ico", "projects/id-controller-ui/src/assets"],
+            "main": "projects/open-pass/src/test.ts",
+            "polyfills": "projects/open-pass/src/polyfills.ts",
+            "tsConfig": "projects/open-pass/tsconfig.spec.json",
+            "karmaConfig": "projects/open-pass/karma.conf.js",
+            "assets": ["projects/open-pass/src/favicon.ico", "projects/open-pass/src/assets"],
             "styles": [],
             "scripts": [],
             "stylePreprocessorOptions": {
-              "includePaths": ["projects/id-controller-ui/src/styles"]
+              "includePaths": ["projects/open-pass/src/styles"]
             }
           }
         },
@@ -105,8 +105,8 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
-              "projects/id-controller-ui/src/**/*.ts",
-              "projects/id-controller-ui/src/**/*.html",
+              "projects/open-pass/src/**/*.ts",
+              "projects/open-pass/src/**/*.html",
               "cypress/**/*.ts"
             ]
           }
@@ -225,5 +225,5 @@
       }
     }
   },
-  "defaultProject": "id-controller-ui"
+  "defaultProject": "open-pass"
 }

@@ -1,5 +1,5 @@
 import SetCookieOptions = Cypress.SetCookieOptions;
-import { environment } from '../../projects/id-controller-ui/src/environments/environment';
+import { environment } from '../../projects/open-pass/src/environments/environment';
 
 export class CookiesHelper {
   static setCookie(name: string, value: string, options?: Partial<SetCookieOptions>) {
