@@ -30,6 +30,7 @@ if [ "$1" = "end" ]; then
     if [ $UI_CHANGE_COUNT -ne 0 ]; then
         executelogandtime 'npm run lint' 'Angular app lint'
         executelogandtime 'npm run test' 'Angular app test'
+        executelogandtime 'npm run cypress:run-tests' 'Cypress test'
     else
         echo "No change in UI source code, integration tests will not be triggered."
     fi
