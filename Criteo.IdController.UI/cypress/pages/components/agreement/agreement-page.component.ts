@@ -9,14 +9,6 @@ export class AgreementPageComponent extends BaseComponent {
     return this.getElement('page-title');
   }
 
-  getSummary() {
-    return this.getElement('summary');
-  }
-
-  getUnifiedContent() {
-    return this.getElement('unified-options');
-  }
-
   getActionBtn() {
     return this.getElement('action-btn');
   }

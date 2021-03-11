@@ -1,11 +1,13 @@
 import { AuthPage } from '../../pages/auth.page';
 import { LocalStorageHelper } from '../../helpers/local-storage-helper';
+import { AuthHelper } from '../../helpers/interceptors/auth-helper';
 
 context('Auth Page', () => {
-  let page = new AuthPage();
+  let page: AuthPage;
 
   context('with token', () => {
     before(() => {
+      page = new AuthPage();
       LocalStorageHelper.setFakeToken();
       page.goToPage();
     });
@@ -17,6 +19,7 @@ context('Auth Page', () => {
 
   context('without token', () => {
     before(() => {
+      page = new AuthPage();
       LocalStorageHelper.clearLocalStorageItem('USRF');
       page.goToPage();
     });
@@ -33,9 +36,9 @@ context('Auth Page', () => {
 
     it('should display content for 2 step', () => {
       page.pageComponent.getEmailInput().type('valid@email.com');
-      cy.intercept('POST', '**/otp/generate', {}).as('generateCode');
+      const waitingToken = AuthHelper.mockGenerateCode();
       page.pageComponent.getActionBtn().click();
-      cy.waitFor('@generateCode');
+      cy.waitFor(waitingToken);
 
       page.pageComponent.getPageTitle().should('contain.text', 'Thanks!');
       page.pageComponent.getEmailInput().should('exist');
@@ -49,10 +52,10 @@ context('Auth Page', () => {
       });
 
       it('should do not send request if there is no email', () => {
-        cy.intercept('POST', '**/otp/generate', {}).as('generateCode');
+        const waitingToken = AuthHelper.mockGenerateCode();
         page.pageComponent.getActionBtn().click();
 
-        cy.get('@generateCode').should('not.exist');
+        cy.get(waitingToken).should('not.exist');
       });
 
       it('should show error if email is invalid', () => {
@@ -68,10 +71,10 @@ context('Auth Page', () => {
       });
 
       it('should show error if backend respond with error', () => {
-        cy.intercept('POST', '**/otp/generate', { statusCode: 422 }).as('generateCode');
+        const waitingToken = AuthHelper.mockGenerateCode({ statusCode: 422 });
         page.pageComponent.getEmailInput().type('invalid@email.com');
         page.pageComponent.getActionBtn().click();
-        cy.waitFor('@generateCode');
+        cy.waitFor(waitingToken);
 
         page.pageComponent.getEmailInput().should('have.class', 'invalid');
         page.pageComponent.getEmailWarning().should('be.visible');
@@ -81,10 +84,10 @@ context('Auth Page', () => {
     context('Code validation', () => {
       beforeEach(() => {
         cy.reload();
-        cy.intercept('POST', '**/otp/generate', { statusCode: 200 }).as('generateCode');
+        const waitingToken = AuthHelper.mockGenerateCode({ statusCode: 200 });
         page.pageComponent.getEmailInput().type('valid@email.com');
         page.pageComponent.getActionBtn().click();
-        cy.waitFor('@generateCode');
+        cy.waitFor(waitingToken);
       });
 
       it('should allow only to type numbers', () => {
@@ -93,18 +96,18 @@ context('Auth Page', () => {
       });
 
       it("should display error if code isn't valid", () => {
-        cy.intercept('POST', '**/otp/validate', { statusCode: 400 }).as('validateCode');
+        const waitingToken = AuthHelper.mockValidateCode({ statusCode: 400 });
         page.pageComponent.getCodeInput().type('123456');
         page.pageComponent.getActionBtn().click();
-        cy.waitFor('@validateCode');
+        cy.waitFor(waitingToken);
         page.pageComponent.getCodeWarning().should('be.visible');
       });
 
       it('should redirect if code is valid', () => {
-        cy.intercept('POST', '**/otp/validate', { statusCode: 200, body: { token: 'fake_token' } }).as('validateCode');
+        const waitingToken = AuthHelper.mockValidateCode({ statusCode: 200, body: { token: 'fake_token' } });
         page.pageComponent.getCodeInput().type('123456');
         page.pageComponent.getActionBtn().click();
-        cy.waitFor('@validateCode');
+        cy.waitFor(waitingToken);
         cy.location('pathname').should('be.eq', '/open-pass/agreement');
       });
     });

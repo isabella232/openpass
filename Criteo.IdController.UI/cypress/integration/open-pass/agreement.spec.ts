@@ -13,11 +13,11 @@ context('Agreement', () => {
   });
 
   it('should toggle details', () => {
-    page.pageComponent.getUnifiedContent().should('not.be.visible');
-    page.pageComponent.getSummary().click();
-    page.pageComponent.getUnifiedContent().should('be.visible');
-    page.pageComponent.getSummary().click();
-    page.pageComponent.getUnifiedContent().should('not.be.visible');
+    page.detailsComponent.getUnifiedContent().should('not.be.visible');
+    page.detailsComponent.getSummary().click();
+    page.detailsComponent.getUnifiedContent().should('be.visible');
+    page.detailsComponent.getSummary().click();
+    page.detailsComponent.getUnifiedContent().should('not.be.visible');
   });
 
   it('should redirect to /success', () => {
