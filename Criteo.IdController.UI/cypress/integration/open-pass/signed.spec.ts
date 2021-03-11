@@ -1,5 +1,5 @@
 import { SignedPage } from '../../pages/signed.page';
-import { CookiesHelper } from '../../helpers/cookies-helper';
+import { LocalStorageHelper } from '../../helpers/local-storage-helper';
 
 context('Signed', () => {
   let page: SignedPage;
@@ -11,7 +11,7 @@ context('Signed', () => {
 
   context('without token', () => {
     before(() => {
-      CookiesHelper.removeAppToken();
+      LocalStorageHelper.clearLocalStorageItem('USRF');
       page.goToPage();
     });
 
@@ -22,8 +22,8 @@ context('Signed', () => {
 
   context('with token', () => {
     before(() => {
-      CookiesHelper.setAppToken();
-      window.localStorage.setItem('USRF.openpass.email', fakeEmail);
+      LocalStorageHelper.setFakeToken();
+      LocalStorageHelper.patchLocalStorage({ openpass: { email: fakeEmail } });
       page.goToPage();
     });
 
@@ -44,7 +44,7 @@ context('Signed', () => {
       cy.location('pathname').should('be.eq', '/open-pass/auth');
 
       // reset state
-      CookiesHelper.setAppToken();
+      LocalStorageHelper.setFakeToken();
     });
   });
 });

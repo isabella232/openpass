@@ -1,5 +1,5 @@
 import { MainPage } from '../../pages/main.page';
-import { CookiesHelper } from '../../helpers/cookies-helper';
+import { LocalStorageHelper } from '../../helpers/local-storage-helper';
 
 context('Main page', () => {
   let page: MainPage;
@@ -26,14 +26,14 @@ context('Main page', () => {
     cy.go('back');
   });
 
-  it('should redirect to /signed if cookie is present', () => {
-    CookiesHelper.setAppToken();
+  it('should redirect to /signed if token is present', () => {
+    LocalStorageHelper.setFakeToken();
     page.pageComponent.getActionBtn().click();
 
     cy.location('pathname').should('be.eq', '/open-pass/signed');
 
     // reset state
     cy.go('back');
-    CookiesHelper.removeAppToken();
+    LocalStorageHelper.clearLocalStorageItem('USRF');
   });
 });

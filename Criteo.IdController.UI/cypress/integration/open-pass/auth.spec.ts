@@ -1,12 +1,12 @@
 import { AuthPage } from '../../pages/auth.page';
-import { CookiesHelper } from '../../helpers/cookies-helper';
+import { LocalStorageHelper } from '../../helpers/local-storage-helper';
 
 context('Auth Page', () => {
   let page = new AuthPage();
 
   context('with token', () => {
     before(() => {
-      CookiesHelper.setAppToken();
+      LocalStorageHelper.setFakeToken();
       page.goToPage();
     });
 
@@ -17,7 +17,7 @@ context('Auth Page', () => {
 
   context('without token', () => {
     before(() => {
-      CookiesHelper.removeAppToken();
+      LocalStorageHelper.clearLocalStorageItem('USRF');
       page.goToPage();
     });
 
@@ -101,7 +101,7 @@ context('Auth Page', () => {
       });
 
       it('should redirect if code is valid', () => {
-        cy.intercept('POST', '**/otp/validate', { statusCode: 200 }).as('validateCode');
+        cy.intercept('POST', '**/otp/validate', { statusCode: 200, body: { token: 'fake_token' } }).as('validateCode');
         page.pageComponent.getCodeInput().type('123456');
         page.pageComponent.getActionBtn().click();
         cy.waitFor('@validateCode');
