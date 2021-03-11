@@ -73,13 +73,6 @@ namespace Criteo.IdController
             return services;
         }
 
-        public static IServiceCollection AddIdentifierGeneratorHelper(this IServiceCollection services)
-        {
-            services.AddSingleton<IIdentifierGeneratorHelper, IdentifierGeneratorHelper>();
-
-            return services;
-        }
-
         public static IServiceCollection AddViewRenderHelper(this IServiceCollection services)
         {
             services.AddSingleton<IViewRenderHelper, ViewRenderHelper>();
