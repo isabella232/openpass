@@ -17,6 +17,17 @@ context('Main page', () => {
     page.pageComponent.getActionBtn().should('be.visible');
   });
 
+  it('should load images', () => {
+    [
+      page.pageComponent.getImage('logo'),
+      page.pageComponent.getImage('info'),
+      page.pageComponent.getImage('lock'),
+      page.pageComponent.getImage('safe'),
+    ].forEach((cyImage) => {
+      cyImage.should('be.visible').and((imgs) => expect(imgs[0]['naturalWidth']).to.be.greaterThan(0));
+    });
+  });
+
   it('should redirect to /auth', () => {
     page.pageComponent.getActionBtn().click();
 

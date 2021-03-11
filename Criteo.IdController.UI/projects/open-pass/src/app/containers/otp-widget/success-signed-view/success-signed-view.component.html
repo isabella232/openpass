@@ -1,7 +1,12 @@
 <div class="animation-container">
   <div class="align-center my-4 message">
-    <img src="assets/images/open-pass-logo-sm.png" class="logo-sm" alt="OpenPass logo" />
-    <img src="assets/images/o-logo.png" class="logo-o" alt="OpenPass logo" />
+    <img
+      src="assets/images/open-pass-logo-sm.png"
+      class="logo-sm"
+      alt="OpenPass logo"
+      data-test="success-img-full-logo"
+    />
+    <img src="assets/images/o-logo.png" class="logo-o" alt="OpenPass logo" data-test="success-img-small-logo" />
     <span
       class="ml-2 message-text text-small"
       [innerHTML]="'SUCCESS.MESSAGE' | translate: { secureEmail: secureEmail }"

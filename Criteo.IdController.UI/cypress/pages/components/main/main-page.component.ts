@@ -12,4 +12,8 @@ export class MainPageComponent extends BaseComponent {
   getProsItem() {
     return this.getElement('pros-item');
   }
+
+  getImage(name: string) {
+    return this.getElement('img-' + name);
+  }
 }
