@@ -23,8 +23,12 @@ Customer website
 ```
 To add the app to customer website, customer should include script 
 `<script src="//my-advertising-experience.crto.in/open-pass/widget-app"></script>`and html tag 
-`<wdgt-identification></wdgt-identification>` in any place on the page. 
-To activate the modal mode, the customer can add an attribute `mode="modal"` to html-tag. 
+`<wdgt-identification></wdgt-identification>` in any place on the page.  
+`wdgt-identification` tag has next attributes:
+- session = "authenticated" | "unauthenticated";
+- variant = "dialog" | "in-site";
+- view = "inline" | "modal";  
+
 The script is located in /projects/widget/assets/widget.js. This script only includes the necessary files for Web Component.
 There are different scripts for each environment. They are replaced during building.
 
@@ -34,6 +38,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Development server
 Run `npm run start` - it runs both apps in development mode. Widget will serve on port 4300 and Main app on port 4200.
 Also, there are available option `:preprod` and `:backendless` to redirect the api calls.
+
+To run the entire application locally, you have to serve your own app/website. Add the script `<script src="http://localhost:4300/assets/widget.js"></script>`
+and the html tag `<wdgt-identification session="{session}" view="{view}" variant="{variant}">` to your website.
 
 ## Code scaffolding
 
