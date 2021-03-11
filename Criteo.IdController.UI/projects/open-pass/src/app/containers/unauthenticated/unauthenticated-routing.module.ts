@@ -17,7 +17,6 @@ const routes: Routes = [
       {
         path: 'agreement',
         loadChildren: () => import('./agreement-view/agreement-view.module').then((m) => m.AgreementViewModule),
-        canActivate: [RecognizedGuard],
       },
       {
         path: 'recognized',
