@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { OtpWidgetComponent } from './otp-widget.component';
 import { AuthenticatedGuard } from '../../guards/authenticated.guard';
 import { GuestGuard } from '../../guards/guest.guard';
+import { GetScriptsResolver } from '../../resolvers/get-scripts.resolver';
 
 const routes: Routes = [
   {
@@ -18,6 +19,14 @@ const routes: Routes = [
         path: 'auth',
         loadChildren: () => import('./auth-view/auth-view.module').then((m) => m.AuthViewModule),
         canActivate: [GuestGuard],
+      },
+      {
+        path: 'sso',
+        loadChildren: () => import('./sso-view/sso-view.module').then((m) => m.SsoViewModule),
+        resolve: [GetScriptsResolver],
+        data: {
+          preloadScripts: ['https://apis.google.com/js/platform.js'],
+        },
       },
       {
         path: 'agreement',
