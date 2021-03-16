@@ -10,7 +10,7 @@ namespace Criteo.IdController.Controllers
     [Route("api/[controller]")]
     public class UnAuthenticatedController : Controller
     {
-        private static readonly string metricPrefix = "ifa.";
+        private static readonly string metricPrefix = "unauthenticated";
 
         private readonly IIdentifierAdapter _uid2Adapter;
         private readonly IMetricsRegistry _metricsRegistry;

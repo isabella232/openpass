@@ -14,7 +14,7 @@ namespace Criteo.IdController.Controllers
     public class AuthenticatedController : Controller
     {
         private const int _otpCodeLifetimeMinutes = 15;
-        private const string _metricPrefix = "otp";
+        private const string _metricPrefix = "authenticated";
 
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IMetricsRegistry _metricsRegistry;
@@ -70,7 +70,7 @@ namespace Criteo.IdController.Controllers
             [FromHeader(Name = "User-Agent")] string userAgent,
             [FromBody] GenerateRequest request)
         {
-            var prefix = $"{_metricPrefix}.generate";
+            var prefix = $"{_metricPrefix}.otp.generate";
 
             if (!_configurationHelper.EnableOtp)
             {
@@ -99,6 +99,9 @@ namespace Criteo.IdController.Controllers
             // 3. Emit glup
             _glupHelper.EmitGlup(EventType.EmailEntered, request.OriginHost, userAgent);
 
+            // Metrics
+            SendMetric($"{prefix}.ok");
+
             // Status code 204 -> resource created but not content returned
             return NoContent();
         }
@@ -108,7 +111,7 @@ namespace Criteo.IdController.Controllers
             [FromHeader(Name = "User-Agent")] string userAgent,
             [FromBody] ValidateRequest request)
         {
-            var prefix = $"{_metricPrefix}.validate";
+            var prefix = $"{_metricPrefix}.otp.validate";
 
             if (!_configurationHelper.EnableOtp)
             {
@@ -169,6 +172,9 @@ namespace Criteo.IdController.Controllers
             var token = await _uid2Adapter.GetId(request.Email);
             // TODO: Check token is not null, what do we do in that case?
             _cookieHelper.SetIdentifierCookie(Response.Cookies, token);
+
+            // Metrics
+            SendMetric($"{prefix}.ok");
 
             return Ok(new { token });
         }
