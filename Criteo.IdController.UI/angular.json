@@ -30,7 +30,7 @@
             "index": "projects/open-pass/src/index.html",
             "main": "projects/open-pass/src/main.ts",
             "polyfills": "projects/open-pass/src/polyfills.ts",
-            "tsConfig": "projects/open-pass/tsconfig.app.json",
+            "tsConfig": "projects/open-pass/tsconfig.json",
             "aot": true,
             "assets": ["projects/open-pass/src/assets", "projects/open-pass/src/favicon.ico"],
             "styles": ["projects/open-pass/src/styles.scss"],
@@ -132,14 +132,11 @@
             "index": "projects/widget/src/index.html",
             "main": "projects/widget/src/main.ts",
             "polyfills": "projects/widget/src/polyfills.ts",
-            "tsConfig": "projects/widget/tsconfig.app.json",
+            "tsConfig": "projects/widget/tsconfig.json",
             "aot": true,
             "styles": ["projects/widget/src/styles.scss"],
             "scripts": [],
-            "assets": [
-              "projects/widget/src/favicon.ico",
-              "projects/widget/src/assets"
-            ]
+            "assets": ["projects/widget/src/favicon.ico", "projects/widget/src/assets"]
           },
           "configurations": {
             "production": {

@@ -48,3 +48,4 @@ Thumbs.db
 ./cypress/screenshots
 /projects/widget/src/assets/widget.js
 /projects/widget/src/assets/widget.min.js
+/build/package-lock-criteo.json
