@@ -147,6 +147,33 @@ namespace Criteo.IdController.Controllers
         }
         #endregion
 
+        #region External SSO services
+        [HttpGet("sso")]
+        public async Task<IActionResult> GenerateEmailToken(
+            [FromHeader(Name = "User-Agent")] string userAgent,
+            [FromBody] GenerateRequest request)
+        {
+            var prefix = $"{_metricPrefix}.sso.generate";
+
+            if (!_emailHelper.IsValidEmail(request.Email))
+            {
+                SendMetric($"{prefix}.bad_request");
+                return BadRequest();
+            }
+
+            // 1. Emit glup
+            // TODO: Create a new event type for SSO (even per SSO service)
+            _glupHelper.EmitGlup(EventType.EmailValidated, request.OriginHost, userAgent);
+
+            // 2. Retrieve UID2 token, set cookie and send token back in payload
+            var token = await _uid2Adapter.GetId(request.Email);
+            // TODO: Check token is not null, what do we do in that case?
+            _cookieHelper.SetIdentifierCookie(Response.Cookies, token);
+
+            return Ok(new { token });
+        }
+        #endregion
+
         #region Helpers
         private void SendMetric(string metric)
         {

@@ -285,6 +285,40 @@ namespace Criteo.IdController.UTest.Controllers
         }
         #endregion
 
+        #region External SSO services
+        [Test]
+        public async Task BadRequestWhenSSOEmailIsInvalid()
+        {
+            _emailHelperMock.Setup(e => e.IsValidEmail(It.IsAny<string>())).Returns(false);
+
+            var request = new AuthenticatedController.GenerateRequest();
+            var response = await _authenticatedController.GenerateEmailToken(_testUserAgent, request);
+
+            Assert.IsAssignableFrom<BadRequestResult>(response);
+        }
+
+        [Test]
+        public async Task ValidSSOTokenGeneration()
+        {
+            const string returnedToken = "FreshUID2token";
+            _uid2AdapterMock.Setup(c => c.GetId(It.IsAny<string>())).ReturnsAsync(returnedToken);
+            var request = new AuthenticatedController.GenerateRequest() { Email = "example@gmail.com" };
+
+            var response = await _authenticatedController.GenerateEmailToken(_testUserAgent, request);
+
+            // token in JSON response
+            Assert.IsAssignableFrom<OkObjectResult>(response);
+            var responseData = GetResponseData(response);
+            var token = (string) responseData.token;
+            Assert.AreEqual(returnedToken, token);
+
+            // token in cookie
+            _cookieHelperMock.Verify(c => c.SetIdentifierCookie(
+                It.IsAny<IResponseCookies>(),
+                It.Is<string>(t => t == token)));
+        }
+        #endregion
+
         #region Helpers
         private dynamic GetResponseData(IActionResult response)
         {
