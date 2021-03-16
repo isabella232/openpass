@@ -22,6 +22,6 @@ export class OtpService {
   }
 
   getIfa(): Observable<TokenDto> {
-    return this.http.get<TokenDto>(this.namespace + '/ifa');
+    return this.http.get<TokenDto>(this.namespace + '/unauthenticated');
   }
 }

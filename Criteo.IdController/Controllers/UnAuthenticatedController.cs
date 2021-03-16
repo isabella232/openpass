@@ -8,7 +8,7 @@ using Metrics;
 namespace Criteo.IdController.Controllers
 {
     [Route("api/[controller]")]
-    public class IfaController : Controller
+    public class UnAuthenticatedController : Controller
     {
         private static readonly string metricPrefix = "ifa.";
 
@@ -16,7 +16,7 @@ namespace Criteo.IdController.Controllers
         private readonly IMetricsRegistry _metricsRegistry;
         private readonly ICookieHelper _cookieHelper;
 
-        public IfaController(IIdentifierAdapter uid2Adapter, IMetricsRegistry metricRegistry, ICookieHelper cookieHelper)
+        public UnAuthenticatedController(IIdentifierAdapter uid2Adapter, IMetricsRegistry metricRegistry, ICookieHelper cookieHelper)
         {
             _uid2Adapter = uid2Adapter;
             _metricsRegistry = metricRegistry;

@@ -12,12 +12,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace Criteo.IdController.UTest.Controllers
 {
     [TestFixture]
-    public class IfaControllerTests
+    public class UnAuthenticatedControllerTests
     {
         private Mock<IIdentifierAdapter> _uid2AdapterMock;
         private Mock<IMetricsRegistry> _metricRegistryMock;
         private Mock<ICookieHelper> _cookieHelperMock;
-        private IfaController _ifaController;
+        private UnAuthenticatedController _unauthenticatedController;
 
         [SetUp]
         public void Setup()
@@ -27,7 +27,7 @@ namespace Criteo.IdController.UTest.Controllers
             _metricRegistryMock.Setup(mr => mr.GetOrRegister(It.IsAny<string>(), It.IsAny<Func<Counter>>())).Returns(new Counter(Granularity.CoarseGrain));
             _cookieHelperMock = new Mock<ICookieHelper>();
 
-            _ifaController = new IfaController(_uid2AdapterMock.Object, _metricRegistryMock.Object, _cookieHelperMock.Object)
+            _unauthenticatedController = new UnAuthenticatedController(_uid2AdapterMock.Object, _metricRegistryMock.Object, _cookieHelperMock.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
@@ -41,7 +41,7 @@ namespace Criteo.IdController.UTest.Controllers
             _cookieHelperMock.Setup(c => c.TryGetIdentifierCookie(It.IsAny<IRequestCookieCollection>(), out placeholder)).Returns(false);
             _uid2AdapterMock.Setup(c => c.GetId(It.IsAny<string>())).ReturnsAsync(returnedToken);
 
-            var response = await _ifaController.GetOrCreateIfa();
+            var response = await _unauthenticatedController.GetOrCreateIfa();
 
             // Returned identifier
             var data = GetResponseData(response);
@@ -65,7 +65,7 @@ namespace Criteo.IdController.UTest.Controllers
             _cookieHelperMock.Setup(c => c.TryGetIdentifierCookie(It.IsAny<IRequestCookieCollection>(), out placeholder)).Returns(false);
             _uid2AdapterMock.Setup(c => c.GetId(It.IsAny<string>())).ReturnsAsync(returnedToken);
 
-            var response = await _ifaController.GetOrCreateIfa();
+            var response = await _unauthenticatedController.GetOrCreateIfa();
 
             // Not found -> adapter not available
             Assert.IsAssignableFrom<NotFoundResult>(response);
@@ -82,7 +82,7 @@ namespace Criteo.IdController.UTest.Controllers
             var idUserSide = Guid.NewGuid().ToString();
             _cookieHelperMock.Setup(c => c.TryGetIdentifierCookie(It.IsAny<IRequestCookieCollection>(), out idUserSide)).Returns(true);
 
-            var response = await _ifaController.GetOrCreateIfa();
+            var response = await _unauthenticatedController.GetOrCreateIfa();
 
             // Returned IFA
             var data = GetResponseData(response);
@@ -98,7 +98,7 @@ namespace Criteo.IdController.UTest.Controllers
         [Test]
         public void TestDeleteIfa()
         {
-            var response = _ifaController.DeleteIfa();
+            var response = _unauthenticatedController.DeleteIfa();
 
             // Returned IFA
             var data = GetResponseData(response);

@@ -18,7 +18,8 @@ export class AuthHelper {
   }
 
   static mockGetIfa(response: { [p: string]: any } = {}) {
-    cy.intercept('GET', '**/ifa', response).as(AuthMocks.getIfa);
+    // specify /api to avoid conflicts with front-end routes
+    cy.intercept('GET', '**/api/unauthenticated', response).as(AuthMocks.getIfa);
 
     return '@' + AuthMocks.getIfa;
   }
