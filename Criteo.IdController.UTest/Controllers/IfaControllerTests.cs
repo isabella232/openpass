@@ -58,6 +58,25 @@ namespace Criteo.IdController.UTest.Controllers
         }
 
         [Test]
+        public async Task TestAdapterError()
+        {
+            const string returnedToken = null;
+            string placeholder;
+            _cookieHelperMock.Setup(c => c.TryGetIdentifierCookie(It.IsAny<IRequestCookieCollection>(), out placeholder)).Returns(false);
+            _uid2AdapterMock.Setup(c => c.GetId(It.IsAny<string>())).ReturnsAsync(returnedToken);
+
+            var response = await _ifaController.GetOrCreateIfa();
+
+            // Not found -> adapter not available
+            Assert.IsAssignableFrom<NotFoundResult>(response);
+
+            // Cookie is set set
+            _cookieHelperMock.Verify(c => c.SetIdentifierCookie(
+                It.IsAny<IResponseCookies>(),
+                It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
         public async Task TestGetIdentifierFromCookie()
         {
             var idUserSide = Guid.NewGuid().ToString();

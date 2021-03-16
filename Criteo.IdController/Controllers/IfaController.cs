@@ -24,7 +24,6 @@ namespace Criteo.IdController.Controllers
         }
 
         [HttpGet]
-        [HttpGet("get")]
         public async Task<IActionResult> GetOrCreateIfa()
         {
             string token;
@@ -32,15 +31,21 @@ namespace Criteo.IdController.Controllers
             if (_cookieHelper.TryGetIdentifierCookie(Request.Cookies, out var tokenCookie))
             {
                 token = tokenCookie;
-                _metricsRegistry.GetOrRegister($"{metricPrefix}.get.reuse", () => new Counter(Granularity.CoarseGrain)).Increment();
+                _metricsRegistry.GetOrRegister($"{metricPrefix}.get.create.reuse", () => new Counter(Granularity.CoarseGrain)).Increment();
             }
             else
             {
-                // Generate a random PII to generate an UID2 token for an anonymous user
-                var randomId = GenerateRandomIdentifier();
+                // Generate a random email to generate an UID2 token for an anonymous user
+                var randomId = GenerateRandomEmail();
                 token = await _uid2Adapter.GetId(randomId);
-                // TODO: Check that token is not null and what to do in that case
-                _metricsRegistry.GetOrRegister($"{metricPrefix}.get.create", () => new Counter(Granularity.CoarseGrain)).Increment();
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    _metricsRegistry.GetOrRegister($"{metricPrefix}.get.create.error.no_token", () => new Counter(Granularity.CoarseGrain)).Increment();
+                    return NotFound();
+                }
+
+                _metricsRegistry.GetOrRegister($"{metricPrefix}.get.create.ok", () => new Counter(Granularity.CoarseGrain)).Increment();
             }
 
             // Set cookie
@@ -58,6 +63,6 @@ namespace Criteo.IdController.Controllers
             return Ok();
         }
 
-        private string GenerateRandomIdentifier() => Guid.NewGuid().ToString();
+        private string GenerateRandomEmail() => $"{Guid.NewGuid()}@openpass.com";
     }
 }
