@@ -14,11 +14,11 @@ export class OtpService {
   constructor(private http: HttpClient) {}
 
   generateOtp(otp: OtpDto): Observable<void> {
-    return this.http.post<void>(this.namespace + '/otp/generate', otp);
+    return this.http.post<void>(this.namespace + '/authenticated/otp/generate', otp);
   }
 
   validateOtp(otp: OtpDto): Observable<TokenDto> {
-    return this.http.post<TokenDto>(this.namespace + '/otp/validate', otp);
+    return this.http.post<TokenDto>(this.namespace + '/authenticated/otp/validate', otp);
   }
 
   getIfa(): Observable<TokenDto> {

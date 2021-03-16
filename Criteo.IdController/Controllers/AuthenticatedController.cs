@@ -11,7 +11,7 @@ using static Criteo.Glup.IdController.Types;
 namespace Criteo.IdController.Controllers
 {
     [Route("api/[controller]")]
-    public class OtpController : Controller
+    public class AuthenticatedController : Controller
     {
         private const int _otpCodeLifetimeMinutes = 15;
         private const string _metricPrefix = "otp";
@@ -26,7 +26,7 @@ namespace Criteo.IdController.Controllers
         private readonly ICodeGeneratorHelper _codeGeneratorHelper;
         private readonly ICookieHelper _cookieHelper;
 
-        public OtpController(
+        public AuthenticatedController(
             IHostingEnvironment hostingEnvironment,
             IMetricsRegistry metricRegistry,
             IMemoryCache memoryCache,
@@ -64,7 +64,8 @@ namespace Criteo.IdController.Controllers
         }
         #endregion
 
-        [HttpPost("generate")]
+        #region One-time password (OTP)
+        [HttpPost("otp/generate")]
         public IActionResult GenerateOtp(
             [FromHeader(Name = "User-Agent")] string userAgent,
             [FromBody] GenerateRequest request)
@@ -102,7 +103,7 @@ namespace Criteo.IdController.Controllers
             return NoContent();
         }
 
-        [HttpPost("validate")]
+        [HttpPost("otp/validate")]
         public async Task<IActionResult> ValidateOtp(
             [FromHeader(Name = "User-Agent")] string userAgent,
             [FromBody] ValidateRequest request)
@@ -144,6 +145,7 @@ namespace Criteo.IdController.Controllers
 
             return NotFound(); // TODO: Discuss what to return here
         }
+        #endregion
 
         #region Helpers
         private void SendMetric(string metric)
