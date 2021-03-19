@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { PostMessagePayload } from '@shared/types/post-message-payload';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
 import { PostMessagesService } from '@services/post-messages.service';
-import { environment } from '@env';
 import { localStorage } from '@shared/utils/storage-decorator';
 
 @Injectable({
@@ -15,8 +14,6 @@ export class AuthService {
   private storageUserEmail: string;
   @localStorage('openpass.share-email')
   private storageUserShareEmail: boolean;
-
-  cookieName = environment.cookieName;
 
   get isAuthenticated(): boolean {
     return !!this.storageUserToken;

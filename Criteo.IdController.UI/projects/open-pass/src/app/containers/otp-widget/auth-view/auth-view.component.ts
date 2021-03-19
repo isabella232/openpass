@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Actions, ofActionDispatched, Select, Store } from '@ngxs/store';
 import { OpenerState } from '@store/otp-widget/opener.state';
 import { Observable, Subscription } from 'rxjs';
@@ -13,6 +12,10 @@ import {
   ValidateCode,
   ValidateCodeSuccess,
 } from '@store/otp-widget/auth.actions';
+import { EventTypes } from '@enums/event-types.enum';
+import { AuthService } from '@services/auth.service';
+import { DialogWindowService } from '@services/dialog-window.service';
+import { EventsTrackingService } from '@services/events-tracking.service';
 
 @Component({
   selector: 'usrf-auth-view',
@@ -25,7 +28,13 @@ export class AuthViewComponent implements OnInit, OnDestroy {
 
   private authSubscriptions: Subscription;
 
-  constructor(private router: Router, private actions$: Actions, private store: Store) {}
+  constructor(
+    private store: Store,
+    private actions$: Actions,
+    private authService: AuthService,
+    private dialogWindowService: DialogWindowService,
+    private eventsTrackingService: EventsTrackingService
+  ) {}
 
   @Dispatch()
   submitForm() {
@@ -51,10 +60,16 @@ export class AuthViewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.authSubscriptions = this.actions$
       .pipe(ofActionDispatched(ValidateCodeSuccess))
-      .subscribe(() => this.router.navigate(['agreement']));
+      .subscribe(() => this.saveTokenAndClose());
   }
 
   ngOnDestroy() {
     this.authSubscriptions?.unsubscribe?.();
+  }
+
+  private saveTokenAndClose() {
+    this.authService.setTokenToOpener();
+    this.eventsTrackingService.trackEvent(EventTypes.consentGranted);
+    this.dialogWindowService.closeDialogWindow();
   }
 }

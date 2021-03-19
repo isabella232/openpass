@@ -3,6 +3,7 @@ import { localStorage } from '@shared/utils/storage-decorator';
 import { AuthService } from '@services/auth.service';
 import { Router } from '@angular/router';
 import { WINDOW } from '@utils/injection-tokens';
+import { DialogWindowService } from '@services/dialog-window.service';
 
 @Component({
   selector: 'usrf-already-signed-view',
@@ -15,7 +16,12 @@ export class AlreadySignedViewComponent implements OnInit {
 
   userEmail: string;
 
-  constructor(private authService: AuthService, @Inject(WINDOW) private window: Window, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    @Inject(WINDOW) private window: Window,
+    private router: Router,
+    private dialogWindowService: DialogWindowService
+  ) {}
 
   ngOnInit() {
     this.userEmail = this.storageUserEmail;
@@ -25,7 +31,8 @@ export class AlreadySignedViewComponent implements OnInit {
     if (this.userEmail !== this.storageUserEmail) {
       this.storageUserEmail = this.userEmail;
     }
-    this.router.navigate(['success']);
+    this.authService.setTokenToOpener();
+    this.dialogWindowService.closeDialogWindow();
   }
 
   resetState() {

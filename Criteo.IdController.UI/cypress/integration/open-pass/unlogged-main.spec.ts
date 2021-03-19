@@ -1,6 +1,5 @@
 import { UnloggedMainPage } from '../../pages/unlogged-main.page';
 import { LocalStorageHelper } from '../../helpers/local-storage-helper';
-import { AuthHelper } from '../../helpers/interceptors/auth-helper';
 
 context('Unlogged:Main page', () => {
   let page: UnloggedMainPage;
@@ -29,18 +28,9 @@ context('Unlogged:Main page', () => {
     });
   });
 
-  it('should request token', () => {
-    const waitingToken = AuthHelper.mockGetIfa({ body: { token: 'fake_token' } });
-    page.pageComponent.getActionBtn().click();
-    cy.waitFor(waitingToken);
-    cy.location('pathname').should('be.eq', '/open-pass/unauthenticated/agreement');
-
-    // reset state
-    page.goToPage();
-  });
-
   it('should redirect to /unauthenticated/recognized if token is present', () => {
     LocalStorageHelper.setFakeToken();
+    page.goToPage();
 
     cy.location('pathname').should('be.eq', '/open-pass/unauthenticated/recognized');
 

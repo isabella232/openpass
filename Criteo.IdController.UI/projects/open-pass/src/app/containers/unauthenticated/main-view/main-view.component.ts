@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Actions, ofActionDispatched, Select } from '@ngxs/store';
+import { Actions, ofActionDispatched, Select, Store } from '@ngxs/store';
 import { OpenerState } from '@store/otp-widget/opener.state';
 import { Observable, Subject } from 'rxjs';
-import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Dispatch } from '@ngxs-labs/dispatch-decorator';
 import { GetIfa, GetIfaSuccess } from '@store/ifa/ifa.actions';
 import { IfaState } from '@store/ifa/ifa.state';
+import { AuthService } from '@services/auth.service';
+import { DialogWindowService } from '@services/dialog-window.service';
 
 @Component({
   selector: 'usrf-main-view',
@@ -21,7 +22,12 @@ export class MainViewComponent implements OnInit, OnDestroy {
 
   isDestroyed = new Subject();
 
-  constructor(private router: Router, private actions$: Actions) {}
+  constructor(
+    private store: Store,
+    private actions$: Actions,
+    private authService: AuthService,
+    private dialogWindowService: DialogWindowService
+  ) {}
 
   @Dispatch()
   fetchIfaAndProceed() {
@@ -29,12 +35,15 @@ export class MainViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.actions$
-      .pipe(ofActionDispatched(GetIfaSuccess), takeUntil(this.isDestroyed))
-      .subscribe(() => this.router.navigate(['unauthenticated', 'agreement']));
+    this.actions$.pipe(ofActionDispatched(GetIfaSuccess), takeUntil(this.isDestroyed)).subscribe(() => this.confirm());
   }
 
   ngOnDestroy() {
     this.isDestroyed.next();
+  }
+
+  private confirm() {
+    this.authService.setTokenToOpener();
+    this.dialogWindowService.closeDialogWindow();
   }
 }

@@ -36,6 +36,7 @@ context('Auth Page', () => {
 
     it('should display content for 2 step', () => {
       page.pageComponent.getEmailInput().type('valid@email.com');
+      page.pageComponent.checkCheckbox();
       const waitingToken = AuthHelper.mockGenerateCode();
       page.pageComponent.getActionBtn().click();
       cy.waitFor(waitingToken);
@@ -53,6 +54,7 @@ context('Auth Page', () => {
 
       it('should do not send request if there is no email', () => {
         const waitingToken = AuthHelper.mockGenerateCode();
+        page.pageComponent.checkCheckbox();
         page.pageComponent.getActionBtn().click();
 
         cy.get(waitingToken).should('not.exist');
@@ -73,6 +75,7 @@ context('Auth Page', () => {
       it('should show error if backend respond with error', () => {
         const waitingToken = AuthHelper.mockGenerateCode({ statusCode: 422 });
         page.pageComponent.getEmailInput().type('invalid@email.com');
+        page.pageComponent.checkCheckbox();
         page.pageComponent.getActionBtn().click();
         cy.waitFor(waitingToken);
 
@@ -86,6 +89,7 @@ context('Auth Page', () => {
         cy.reload();
         const waitingToken = AuthHelper.mockGenerateCode({ statusCode: 200 });
         page.pageComponent.getEmailInput().type('valid@email.com');
+        page.pageComponent.checkCheckbox();
         page.pageComponent.getActionBtn().click();
         cy.waitFor(waitingToken);
       });
@@ -98,17 +102,10 @@ context('Auth Page', () => {
       it("should display error if code isn't valid", () => {
         const waitingToken = AuthHelper.mockValidateCode({ statusCode: 400 });
         page.pageComponent.getCodeInput().type('123456');
+        page.pageComponent.checkCheckbox();
         page.pageComponent.getActionBtn().click();
         cy.waitFor(waitingToken);
         page.pageComponent.getCodeWarning().should('be.visible');
-      });
-
-      it('should redirect if code is valid', () => {
-        const waitingToken = AuthHelper.mockValidateCode({ statusCode: 200, body: { token: 'fake_token' } });
-        page.pageComponent.getCodeInput().type('123456');
-        page.pageComponent.getActionBtn().click();
-        cy.waitFor(waitingToken);
-        cy.location('pathname').should('be.eq', '/open-pass/agreement');
       });
     });
   });

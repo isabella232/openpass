@@ -6,6 +6,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgxsModule } from '@ngxs/store';
 import { AuthState } from '@store/otp-widget/auth.state';
 import { TranslateModule } from '@ngx-translate/core';
+import { AuthService } from '@services/auth.service';
+import { DialogWindowService } from '@services/dialog-window.service';
 
 describe('AuthViewComponent', () => {
   let component: AuthViewComponent;
@@ -18,6 +20,16 @@ describe('AuthViewComponent', () => {
         HttpClientTestingModule,
         NgxsModule.forRoot([AuthState]),
         TranslateModule.forRoot(),
+      ],
+      providers: [
+        {
+          provide: AuthService,
+          useFactory: () => {},
+        },
+        {
+          provide: DialogWindowService,
+          useFactory: () => {},
+        },
       ],
       declarations: [AuthViewComponent],
     }).compileComponents();

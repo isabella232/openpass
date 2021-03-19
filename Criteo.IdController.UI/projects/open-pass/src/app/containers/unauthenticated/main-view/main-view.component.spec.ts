@@ -4,6 +4,9 @@ import { MainViewComponent } from './main-view.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxsModule } from '@ngxs/store';
 import { TranslateModule } from '@ngx-translate/core';
+import { AuthService } from '@services/auth.service';
+import { PostMessagesService } from '@services/post-messages.service';
+import { DialogWindowService } from '@services/dialog-window.service';
 
 describe('MainViewComponent', () => {
   let component: MainViewComponent;
@@ -12,6 +15,16 @@ describe('MainViewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, NgxsModule.forRoot(), TranslateModule.forRoot()],
+      providers: [
+        {
+          provide: AuthService,
+          useFactory: () => {},
+        },
+        {
+          provide: DialogWindowService,
+          useFactory: () => {},
+        },
+      ],
       declarations: [MainViewComponent],
     }).compileComponents();
   });

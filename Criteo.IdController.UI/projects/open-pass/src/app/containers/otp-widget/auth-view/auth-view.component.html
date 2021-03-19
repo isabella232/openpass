@@ -44,6 +44,8 @@
         class="form-control mr-2"
         name="share email"
         type="checkbox"
+        required
+        data-test="auth-agreement"
         [value]="authState.shareEmail"
         (change)="patchShareEmail($event)"
       />
