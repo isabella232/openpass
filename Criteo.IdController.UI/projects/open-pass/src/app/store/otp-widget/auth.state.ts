@@ -60,7 +60,6 @@ export class AuthState {
 
   @Selector()
   static fullState(state: LocalStateModel): IAuthState {
-    console.log(state);
     return state;
   }
 

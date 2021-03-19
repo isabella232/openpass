@@ -39,7 +39,7 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
   get openerConfigs(): string {
     const { innerHeight, innerWidth, screenX, screenY } = this.window;
     const width = 400;
-    const height = 485;
+    const height = 520;
     const config = {
       width,
       height,
