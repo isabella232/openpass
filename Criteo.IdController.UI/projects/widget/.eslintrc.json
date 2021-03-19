@@ -5,7 +5,7 @@
     {
       "files": ["*.ts"],
       "parserOptions": {
-        "project": ["projects/widget/tsconfig.json", "projects/widget/tsconfig.spec.json"],
+        "project": ["tsconfig.json", "tsconfig.spec.json"],
         "createDefaultProgram": true
       },
       "rules": {

@@ -1,3 +1,14 @@
 {
-  "HELLO": "Get Access With"
+  "HELLO": "Get Access With",
+  "AGREEMENT": {
+    "SUMMARY": {
+      "TITLE": "How does OpenPass work?",
+      "OPEN_PASS_POWERED": "OpenPass is powered by <a href=\"\">Unified ID</a>, which is an improvement over third-party cookies that offers more privacy control. It can:",
+      "REDUCE": "Reduce how often you have to consent to annoying cookie banners",
+      "SHOW": "Show you more relevant and fewer repeat ads",
+      "SUPPORT": "Support free content on the open internet",
+      "MENAGE_SETTINGS": "Manage your settings in the <a>privacy portal</a>.",
+      "TERMS_LINK": "<a href=\"\">View terms and conditions</a>"
+    }
+  }
 }

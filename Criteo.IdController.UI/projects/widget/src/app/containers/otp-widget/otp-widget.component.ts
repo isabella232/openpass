@@ -12,6 +12,7 @@ import { PublicApiService } from '../../services/public-api.service';
 import { CommonModule } from '@angular/common';
 import { PipesModule } from '../../pipes/pipes.module';
 import { WINDOW } from '../../utils/injection-tokens';
+import { OpenPassDetailsModule } from '../../components/open-pass-details/open-pass-details.module';
 
 @Component({
   selector: 'wdgt-otp-widget',
@@ -26,21 +27,24 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
     return this.view === WidgetModes.modal && this.isOpen;
   }
 
+  get websiteName() {
+    return this.window.location.host;
+  }
+
   isOpen = true;
   widgetMods = WidgetModes;
-  websiteName = 'Website Name';
   openPassWindow: Window;
   postSubscription: Subscription;
 
   get openerConfigs(): string {
-    const { innerHeight, innerWidth } = this.window;
+    const { innerHeight, innerWidth, screenX, screenY } = this.window;
     const width = 400;
-    const height = 500;
+    const height = 485;
     const config = {
       width,
       height,
-      left: (innerWidth - width) / 2,
-      top: (innerHeight - height) / 2,
+      left: (innerWidth - width) / 2 + screenX,
+      top: (innerHeight - height) / 2 + screenY,
       location: environment.production ? 'no' : 'yes',
       toolbar: environment.production ? 'no' : 'yes',
     };
@@ -70,7 +74,7 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
 
   launchIdController() {
     const queryParams = new URLSearchParams({ origin: this.window.location.origin });
-    const url = `${environment.idControllerAppUrl}?${queryParams}`;
+    const url = `${environment.idControllerAppUrl}/auth?${queryParams}`;
     this.openPassWindow = this.window.open(url, '_blank', this.openerConfigs);
     if (this.openPassWindow) {
       this.messageSubscriptionService.initTokenListener(this.openPassWindow);
@@ -96,6 +100,6 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
 
 @NgModule({
   declarations: [OtpWidgetComponent],
-  imports: [CommonModule, PipesModule, TranslateModule],
+  imports: [CommonModule, PipesModule, TranslateModule, OpenPassDetailsModule],
 })
 class OtpWidgetModule {}

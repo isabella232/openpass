@@ -33,14 +33,14 @@ export class UnloggedComponent implements OnInit, OnDestroy {
   }
 
   get openerConfigs(): string {
-    const { innerHeight, innerWidth } = this.window;
+    const { innerHeight, innerWidth, screenX, screenY } = this.window;
     const width = 400;
-    const height = 500;
+    const height = 490;
     const config = {
       width,
       height,
-      left: (innerWidth - width) / 2,
-      top: (innerHeight - height) / 2,
+      left: (innerWidth - width) / 2 + screenX,
+      top: (innerHeight - height) / 2 + screenY,
       location: environment.production ? 'no' : 'yes',
       toolbar: environment.production ? 'no' : 'yes',
     };

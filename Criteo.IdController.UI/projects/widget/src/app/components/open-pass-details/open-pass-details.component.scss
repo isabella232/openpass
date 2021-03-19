@@ -1,0 +1,57 @@
+@import '~projects/open-pass/src/styles/variables';
+@import '~projects/open-pass/src/styles/base';
+@import '~projects/open-pass/src/styles/buttons';
+@import '~projects/open-pass/src/styles/typography';
+@import '~projects/open-pass/src/styles/grid';
+
+details {
+  padding: 0 2rem;
+  margin: 0 -2rem;
+}
+
+summary::-webkit-details-marker {
+  position: absolute;
+  right: 1rem;
+  top: calc(50% - 6px);
+  width: 12px;
+  height: 12px;
+  transform: rotate(90deg);
+  color: $primary-dark;
+}
+
+summary {
+  position: relative;
+  line-height: 50px;
+  outline: none;
+  cursor: pointer;
+  background: #eee;
+  margin: 0 -2rem;
+  padding: 0 0.5rem;
+
+  &::after {
+    content: '';
+    background: $primary-light;
+    position: absolute;
+    bottom: 0;
+    height: 4px;
+    width: 0;
+    left: 50%;
+    right: 0;
+    transition: width 0.15s, left 0.15s;
+  }
+}
+
+details[open] {
+  padding-bottom: 1rem;
+
+  summary {
+    &::after {
+      left: 0;
+      width: 100%;
+    }
+
+    &::-webkit-details-marker {
+      transform: rotate(180deg);
+    }
+  }
+}
