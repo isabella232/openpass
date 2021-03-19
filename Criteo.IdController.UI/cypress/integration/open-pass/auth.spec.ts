@@ -36,13 +36,13 @@ context('Auth Page', () => {
 
     it('should display content for 2 step', () => {
       page.pageComponent.getEmailInput().type('valid@email.com');
-      page.pageComponent.checkCheckbox();
       const waitingToken = AuthHelper.mockGenerateCode();
       page.pageComponent.getActionBtn().click();
       cy.waitFor(waitingToken);
 
       page.pageComponent.getPageTitle().should('contain.text', 'Thanks!');
       page.pageComponent.getEmailInput().should('exist');
+      page.pageComponent.getAgreementCheckbox().should('exist');
       page.pageComponent.getCodeInput().should('exist');
       cy.reload();
     });
@@ -54,7 +54,6 @@ context('Auth Page', () => {
 
       it('should do not send request if there is no email', () => {
         const waitingToken = AuthHelper.mockGenerateCode();
-        page.pageComponent.checkCheckbox();
         page.pageComponent.getActionBtn().click();
 
         cy.get(waitingToken).should('not.exist');
@@ -75,7 +74,6 @@ context('Auth Page', () => {
       it('should show error if backend respond with error', () => {
         const waitingToken = AuthHelper.mockGenerateCode({ statusCode: 422 });
         page.pageComponent.getEmailInput().type('invalid@email.com');
-        page.pageComponent.checkCheckbox();
         page.pageComponent.getActionBtn().click();
         cy.waitFor(waitingToken);
 
@@ -89,7 +87,6 @@ context('Auth Page', () => {
         cy.reload();
         const waitingToken = AuthHelper.mockGenerateCode({ statusCode: 200 });
         page.pageComponent.getEmailInput().type('valid@email.com');
-        page.pageComponent.checkCheckbox();
         page.pageComponent.getActionBtn().click();
         cy.waitFor(waitingToken);
       });

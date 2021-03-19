@@ -72,9 +72,9 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
     this.postSubscription?.unsubscribe?.();
   }
 
-  launchIdController() {
+  launchIdController(path = '') {
     const queryParams = new URLSearchParams({ origin: this.window.location.origin });
-    const url = `${environment.idControllerAppUrl}/auth?${queryParams}`;
+    const url = `${environment.idControllerAppUrl}${path}?${queryParams}`;
     this.openPassWindow = this.window.open(url, '_blank', this.openerConfigs);
     if (this.openPassWindow) {
       this.messageSubscriptionService.initTokenListener(this.openPassWindow);

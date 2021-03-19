@@ -42,6 +42,7 @@
   }
 
   &[type='checkbox'] {
+    flex-shrink: 0;
     cursor: pointer;
     appearance: none;
     display: inline-block;

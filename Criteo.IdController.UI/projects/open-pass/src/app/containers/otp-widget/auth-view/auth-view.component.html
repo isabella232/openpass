@@ -38,7 +38,7 @@
     />
     <div class="hint" data-test="auth-code-warning" translate>SHARED.FORM.CODE_ERROR</div>
   </div>
-  <div class="form-group">
+  <div *ngIf="authState.isEmailVerified" class="form-group">
     <label class="pl-3 align-center" translate [translateParams]="{ websiteName: websiteName$ | async }">
       <input
         class="form-control mr-2"
@@ -46,7 +46,7 @@
         type="checkbox"
         required
         data-test="auth-agreement"
-        [value]="authState.shareEmail"
+        [checked]="authState.shareEmail"
         (change)="patchShareEmail($event)"
       />
       SHARED.FORM.SHARE_LABEL
@@ -55,7 +55,22 @@
 
   <div *ngIf="!authState.isEmailVerified" class="py-3"></div>
   <div class="pt-3">
-    <button data-test="auth-action-btn" type="submit" class="btn btn-primary btn-wide" translate>AUTH.ACTION</button>
+    <button
+      *ngIf="!authState.isEmailVerified"
+      data-test="auth-action-btn"
+      type="submit"
+      class="btn btn-primary btn-wide"
+    >
+      {{ 'AUTH.ACTION' | translate }}
+    </button>
+    <button
+      *ngIf="authState.isEmailVerified"
+      data-test="auth-action-btn"
+      type="submit"
+      class="btn btn-primary btn-wide"
+    >
+      {{ 'AUTH.ACTION_PROCEED' | translate }}
+    </button>
   </div>
 </form>
 <div class="text-center p-3">

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'wdgt-open-pass-details',
@@ -6,6 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./open-pass-details.component.scss'],
 })
 export class OpenPassDetailsComponent {
+  @Input()
+  name: string;
+
   handleDetailsToggle({ target }: Event) {
     if ((target as HTMLDetailsElement).open) {
       // TODO: run only for modal?

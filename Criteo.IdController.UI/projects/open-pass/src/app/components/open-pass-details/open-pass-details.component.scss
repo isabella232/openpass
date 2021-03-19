@@ -3,9 +3,11 @@
 details {
   padding: 0 3rem;
   margin: 0 -3rem;
+  background: #eee;
 }
 
-summary::-webkit-details-marker {
+summary::-webkit-details-marker,
+summary::marker {
   position: absolute;
   right: 1rem;
   top: calc(50% - 6px);
@@ -20,7 +22,6 @@ summary {
   line-height: 50px;
   outline: none;
   cursor: pointer;
-  background: #eee;
   margin: 0 -3rem;
   padding: 0 0.5rem;
 

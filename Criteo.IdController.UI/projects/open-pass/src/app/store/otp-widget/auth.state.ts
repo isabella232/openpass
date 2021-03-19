@@ -34,7 +34,7 @@ const defaults: IAuthState = {
   email: '',
   code: '',
   token: '',
-  shareEmail: false,
+  shareEmail: true,
   isFetching: false,
   isCodeValid: true,
   isEmailValid: true,
@@ -60,6 +60,7 @@ export class AuthState {
 
   @Selector()
   static fullState(state: LocalStateModel): IAuthState {
+    console.log(state);
     return state;
   }
 

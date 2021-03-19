@@ -4,6 +4,7 @@ import { OtpWidgetComponent } from './otp-widget.component';
 import { windowFactory } from '../../utils/window-factory';
 import { DEPLOY_URL, WINDOW } from '../../utils/injection-tokens';
 import { PipesModule } from '../../pipes/pipes.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('OtpWidgetComponent', () => {
   let component: OtpWidgetComponent;
@@ -12,7 +13,7 @@ describe('OtpWidgetComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [OtpWidgetComponent],
-      imports: [PipesModule],
+      imports: [PipesModule, TranslateModule.forRoot()],
       providers: [
         { provide: WINDOW, useFactory: windowFactory },
         { provide: DEPLOY_URL, useFactory: () => {} },

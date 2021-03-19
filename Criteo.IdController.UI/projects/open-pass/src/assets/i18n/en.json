@@ -1,11 +1,16 @@
 {
   "WELCOME": {
     "HEADING": "Get Access With",
-    "DESCRIPTION": "You're about to access <b>{{websiteName}}</b> for free! OpenPass enables <b>{{websiteName}}</b> to show you more relevant ads, wish supports their business and keeps the content free.",
+    "DESCRIPTION": "You're about to access <b>{{websiteName}}</b> for free! OpenPass allows you to enjoy and support your favorite sites, by helping brands show ads more relevant to your interests.",
+    "WITH": "With OpenPass:",
     "OPEN_PASS_PROS": {
-      "INFORMATION": "Your information will never be shared with anyone without your permission.",
-      "ACCESS": "Unlock access to a large network of websites for free.",
-      "CONTROL": "Control your privacy with just <a href='https://criteo.com/privacy'>one link</a>."
+      "INFORMATION": "Support independent small businesses and websites as you browse a large network of sites for free",
+      "ACCESS": "Manage and change your privacy preferences at any time at <a href=\"https://transparentadvertising.com\" target=\"+_blank\">transparentadvertising.com</a>",
+      "CONTROL": "OpenPass will never share your email  address without your permission"
+    },
+    "SUMMARY": {
+      "TITLE": "How does OpenPass work?",
+      "DESCRIPTION": "With your permission. OpenPass converts your email address into a pseudonymous identifier. This identifier is shared with <b>trusted advertising partners</b> who use it to show you advertisement that they think are relevant to you. <a target=\"_blank\" href=\"https://criteo.com\">Learn more</a>"
     },
     "ACTION": "Sign up with OpenPass"
   },
@@ -17,7 +22,7 @@
       "EMAIL_ERROR": "Email address is not valid",
       "CODE_PLACEHOLDER": "Enter verification code",
       "CODE_ERROR": "Code is not valid. Check the code and try one more time",
-      "SHARE_LABEL": "Share my email with {{ websiteName }}"
+      "SHARE_LABEL": "By continuing on this site I agree to the terms and conditions"
     }
   },
   "AUTH": {
@@ -25,9 +30,10 @@
     "HEADING_2": "Thanks!",
     "SUB_HEADING_1": "Welcome to OpenPass.",
     "SUB_HEADING_2": "Check your email...",
-    "DESCRIPTION_1": "Please enter your email address. <br /> You will only need to do this once for all OpenPass sites. <b>Your email address will not be shared without your permission.</b>",
+    "DESCRIPTION_1": "Please enter your email address. You will only need to do this once for all OpenPass sites. <b>Your email and all related preferences or data will never be shared without your permission</b>",
     "DESCRIPTION_2": "Please enter the verification code that was sent to your email address.",
-    "ACTION": "Continue"
+    "ACTION": "Continue",
+    "ACTION_PROCEED": "Continue to site"
   },
   "AGREEMENT": {
     "HEADING": "Awesome!",
@@ -56,13 +62,18 @@
   },
   "NON_AUTH": {
     "HEADING": "Get Access With",
-    "DESCRIPTION": "You’re about to access Website Name for free! OpenPass enables Website Name to show you more relevant ads, which supports their business and keeps the content free.",
+    "DESCRIPTION": "You're about to access <b>{{ websiteName }}</b> for free! <br/> OpenPass allows you to enjoy and support your favorite sites, by helping brands show ads more relevant to your interests.",
+    "WITH": "With OpenPass:",
     "OPEN_PASS_PROS": {
-      "INFORMATION": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem modi necessitatibus nemo rem",
-      "ACCESS": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem",
-      "CONTROL": "Lorem ipsum dolor sit amet, Lorem ipsum elit. Exercitationem elit. Exercitationem"
+      "INFORMATION": "Support independent small businesses and websites as you browse a large network of sites for free",
+      "ACCESS": "Manage and change your privacy preferences at any time at <a href=\"https://transparentadvertising.com\" target=\"+_blank\">transparentadvertising.com</a>",
+      "CONTROL": "OpenPass will never share your information without your permission"
     },
-    "ACTION": "ACCESS WITH OPENPASS"
+    "SUMMARY": {
+      "TITLE": "How does OpenPass work?",
+      "DESCRIPTION": "With your permission. OpenPass shares pseudonymous (non directly identifying) identifiers with <b>trusted advertising partners</b> who use it to show you advertisement that they think are relevant to you. <a target=\"_blank\" href=\"https://criteo.com\">Learn more</a>"
+    },
+    "ACTION": "I agree & access with OpenPass"
   },
   "RECOGNIZED": {
     "HEADING": "Hi there!",

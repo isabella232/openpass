@@ -3,7 +3,8 @@
   <img src="assets/images/open-pass-logo.png" alt="OpenPass" data-test="main-img-logo" />
 </div>
 <p [innerHTML]="'WELCOME.DESCRIPTION' | translate: { websiteName: (websiteName$ | async) || '' }"></p>
-<div class="my-3">
+<p translate>WELCOME.WITH</p>
+<div class="mt-3 pb-4">
   <div class="spec-list-option" data-test="main-pros-item">
     <div class="spec-list-icon">
       <img src="assets/images/email-sec.png" alt="info" data-test="main-img-info" />
@@ -14,7 +15,7 @@
     <div class="spec-list-icon">
       <img src="assets/images/ntwrk.png" alt="lock" data-test="main-img-lock" />
     </div>
-    <div translate>WELCOME.OPEN_PASS_PROS.ACCESS</div>
+    <div [innerHTML]="'WELCOME.OPEN_PASS_PROS.ACCESS' | translate"></div>
   </div>
   <div class="spec-list-option" data-test="main-pros-item">
     <div class="spec-list-icon">
@@ -36,4 +37,6 @@
 <div class="text-center p-3">
   <a routerLink="sso" translate>SHARED.OTHER_WAY</a>
 </div>
-<usrf-open-pass-details class="pt-3 d-block"></usrf-open-pass-details>
+<usrf-open-pass-details class="pt-3 d-block" [name]="'WELCOME.SUMMARY.TITLE' | translate">
+  <p [innerHTML]="'WELCOME.SUMMARY.DESCRIPTION' | translate"></p>
+</usrf-open-pass-details>

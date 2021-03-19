@@ -1,14 +1,20 @@
 {
-  "HELLO": "Get Access With",
-  "AGREEMENT": {
+  "WELCOME": {
+    "HEADING": "Get Access With",
+    "DESCRIPTION": "You're about to access <b>{{websiteName}}</b> for free! OpenPass allows you to enjoy and support your favorite sites, by helping brands show ads more relevant to your interests.",
+    "WITH": "With OpenPass:",
+    "OPEN_PASS_PROS": {
+      "INFORMATION": "Support independent small businesses and websites as you browse a large network of sites for free",
+      "ACCESS": "Manage and change your privacy preferences at any time at <a href=\"https://transparentadvertising.com\" target=\"+_blank\">transparentadvertising.com</a>",
+      "CONTROL": "OpenPass will never share your email  address without your permission"
+    },
     "SUMMARY": {
       "TITLE": "How does OpenPass work?",
-      "OPEN_PASS_POWERED": "OpenPass is powered by <a href=\"\">Unified ID</a>, which is an improvement over third-party cookies that offers more privacy control. It can:",
-      "REDUCE": "Reduce how often you have to consent to annoying cookie banners",
-      "SHOW": "Show you more relevant and fewer repeat ads",
-      "SUPPORT": "Support free content on the open internet",
-      "MENAGE_SETTINGS": "Manage your settings in the <a>privacy portal</a>.",
-      "TERMS_LINK": "<a href=\"\">View terms and conditions</a>"
-    }
+      "DESCRIPTION": "With your permission. OpenPass converts your email address into a pseudonymous identifier. This identifier is shared with <b>trusted advertising partners</b> who use it to show you advertisement that they think are relevant to you. <a target=\"_blank\" href=\"https://criteo.com\">Learn more</a>"
+    },
+    "ACTION": "Sign up with OpenPass"
+  },
+  "SHARED": {
+    "OTHER_WAY": "Other options to access this site"
   }
 }
