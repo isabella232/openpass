@@ -5,4 +5,10 @@ import { Component } from '@angular/core';
   templateUrl: './open-pass-details.component.html',
   styleUrls: ['./open-pass-details.component.scss'],
 })
-export class OpenPassDetailsComponent {}
+export class OpenPassDetailsComponent {
+  handleDetailsToggle({ target }: Event) {
+    if ((target as HTMLDetailsElement).open) {
+      (target as HTMLDetailsElement).scrollIntoView?.({ behavior: 'smooth', block: 'end' });
+    }
+  }
+}

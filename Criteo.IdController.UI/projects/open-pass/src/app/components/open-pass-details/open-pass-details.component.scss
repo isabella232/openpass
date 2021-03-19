@@ -1,5 +1,10 @@
 @import 'variables';
 
+details {
+  padding: 0 3rem;
+  margin: 0 -3rem;
+}
+
 summary::-webkit-details-marker {
   position: absolute;
   right: 1rem;
@@ -16,6 +21,7 @@ summary {
   outline: none;
   cursor: pointer;
   background: #eee;
+  margin: 0 -3rem;
   padding: 0 0.5rem;
 
   &::after {
@@ -32,6 +38,8 @@ summary {
 }
 
 details[open] {
+  padding-bottom: 1rem;
+
   summary {
     &::after {
       left: 0;
