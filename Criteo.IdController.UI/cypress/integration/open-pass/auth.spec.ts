@@ -42,7 +42,6 @@ context('Auth Page', () => {
 
       page.pageComponent.getPageTitle().should('contain.text', 'Thanks!');
       page.pageComponent.getEmailInput().should('exist');
-      page.pageComponent.getAgreementCheckbox().should('exist');
       page.pageComponent.getCodeInput().should('exist');
       cy.reload();
     });
@@ -99,7 +98,6 @@ context('Auth Page', () => {
       it("should display error if code isn't valid", () => {
         const waitingToken = AuthHelper.mockValidateCode({ statusCode: 400 });
         page.pageComponent.getCodeInput().type('123456');
-        page.pageComponent.checkCheckbox();
         page.pageComponent.getActionBtn().click();
         cy.waitFor(waitingToken);
         page.pageComponent.getCodeWarning().should('be.visible');

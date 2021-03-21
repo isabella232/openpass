@@ -12,6 +12,10 @@ import { WINDOW } from '@utils/injection-tokens';
   styleUrls: ['./otp-widget.component.scss'],
 })
 export class OtpWidgetComponent {
+  get isIframe() {
+    return !this.window.opener?.postMessage;
+  }
+
   constructor(
     @Inject(DOCUMENT) private document: Document,
     @Inject(WINDOW) private window: Window,

@@ -8,7 +8,6 @@ import {
   GenerateCodeSuccess,
   SetCode,
   SetEmail,
-  SetShareEmailValue,
   SetToken,
   ValidateCode,
   ValidateCodeFail,
@@ -20,7 +19,6 @@ export interface IAuthState {
   email: string;
   code: string;
   token: string;
-  shareEmail: boolean;
   isFetching: boolean;
   isCodeValid: boolean;
   isEmailValid: boolean;
@@ -34,7 +32,6 @@ const defaults: IAuthState = {
   email: '',
   code: '',
   token: '',
-  shareEmail: true,
   isFetching: false,
   isCodeValid: true,
   isEmailValid: true,
@@ -53,9 +50,6 @@ export class AuthState {
   @localStorage('openpass.email')
   private storageUserEmail: string;
 
-  @localStorage('openpass.share-email')
-  private storageUserShareEmail: boolean;
-
   constructor(private otpService: OtpService) {}
 
   @Selector()
@@ -66,11 +60,6 @@ export class AuthState {
   @Action(SetEmail)
   setEmail(ctx: LocalStateContext, { email }: SetEmail) {
     ctx.patchState({ email });
-  }
-
-  @Action(SetShareEmailValue)
-  setShareEmail(ctx: LocalStateContext, { shareEmail }: SetShareEmailValue) {
-    ctx.patchState({ shareEmail });
   }
 
   @Action(SetCode)
@@ -119,10 +108,9 @@ export class AuthState {
 
   @Action(ValidateCodeSuccess)
   validateCodeSuccess(ctx: LocalStateContext, { token }: ValidateCodeSuccess) {
-    const { email, shareEmail } = ctx.getState();
+    const { email } = ctx.getState();
     this.storageUserToken = token;
     this.storageUserEmail = email;
-    this.storageUserShareEmail = shareEmail;
     ctx.patchState({ token });
   }
 

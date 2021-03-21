@@ -8,12 +8,6 @@ export class SetEmail {
   constructor(public readonly email: string) {}
 }
 
-export class SetShareEmailValue {
-  static readonly type = `${scope} Set Email Sharing`;
-
-  constructor(public readonly shareEmail: boolean) {}
-}
-
 export class SetCode {
   static readonly type = `${scope} Set code`;
 

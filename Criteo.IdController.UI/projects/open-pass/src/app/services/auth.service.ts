@@ -12,8 +12,6 @@ export class AuthService {
   private storageUserToken: string;
   @localStorage('openpass.email')
   private storageUserEmail: string;
-  @localStorage('openpass.share-email')
-  private storageUserShareEmail: boolean;
 
   get isAuthenticated(): boolean {
     return !!this.storageUserToken;
@@ -25,7 +23,6 @@ export class AuthService {
     const message: PostMessagePayload = {
       action: PostMessageActions.setToken,
       token: this.storageUserToken,
-      email: this.storageUserShareEmail ? this.storageUserEmail : undefined,
     };
     this.postMessagesService.sendMessage(message);
   }

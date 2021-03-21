@@ -16,5 +16,9 @@
   },
   "SHARED": {
     "OTHER_WAY": "Other options to access this site"
+  },
+  "UNLOGGED": {
+    "HEADING": "Get Personalized Advertising with",
+    "ACTION": "Access with OpenPass"
   }
 }

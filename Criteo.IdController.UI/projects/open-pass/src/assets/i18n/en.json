@@ -73,6 +73,7 @@
       "TITLE": "How does OpenPass work?",
       "DESCRIPTION": "With your permission. OpenPass shares pseudonymous (non directly identifying) identifiers with <b>trusted advertising partners</b> who use it to show you advertisement that they think are relevant to you. <a target=\"_blank\" href=\"https://criteo.com\">Learn more</a>"
     },
+    "PREFERENCES": "Click here to manage your privacy settings and learn more about OpenPass",
     "ACTION": "I agree & access with OpenPass"
   },
   "RECOGNIZED": {
