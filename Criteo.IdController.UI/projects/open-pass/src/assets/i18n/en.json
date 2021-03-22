@@ -24,7 +24,7 @@
       "CODE_ERROR": "Code is not valid. Check the code and try one more time",
       "SHARE_LABEL": "By continuing on this site I agree to the terms and conditions"
     },
-    "AGREEMENT": "By continuing on this website I agree to terms and conditions"
+    "AGREEMENT": "By continuing on this website I agree to <a href=\"#\" target=\"_blank\">terms and conditions</a>"
   },
   "AUTH": {
     "HEADING_1": "Hi there!",
@@ -74,7 +74,7 @@
       "TITLE": "How does OpenPass work?",
       "DESCRIPTION": "With your permission. OpenPass shares pseudonymous (non directly identifying) identifiers with <b>trusted advertising partners</b> who use it to show you advertisement that they think are relevant to you. <a target=\"_blank\" href=\"https://criteo.com\">Learn more</a>"
     },
-    "PREFERENCES": "Click here to manage your privacy settings and learn more about OpenPass",
+    "PREFERENCES": "<a href=\"#\" target=\"_blank\">Click here</a> to manage your privacy settings and learn more about OpenPass",
     "ACTION": "I agree & access with OpenPass"
   },
   "RECOGNIZED": {

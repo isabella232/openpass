@@ -3,7 +3,7 @@
   <img src="./assets/images/open-pass-logo.png" alt="OpenPass" data-test="non-auth-img-logo" />
 </div>
 <p [innerHTML]="'NON_AUTH.DESCRIPTION' | translate: { websiteName: (websiteName$ | async) || '' }"></p>
-<div class="py-2" translate>SHARED.AGREEMENT</div>
+<div class="py-2" [innerHTML]="'SHARED.AGREEMENT' | translate"></div>
 <button
   type="button"
   class="btn btn-wide btn-primary my-4"
@@ -13,9 +13,7 @@
 >
   NON_AUTH.ACTION
 </button>
-<div class="text-center">
-  <a href="#" translate target="_blank">NON_AUTH.PREFERENCES</a>
-</div>
+<div [innerHTML]="'NON_AUTH.PREFERENCES' | translate"></div>
 <usrf-open-pass-details [name]="'NON_AUTH.SUMMARY.TITLE' | translate">
   <p [innerHTML]="'NON_AUTH.SUMMARY.DESCRIPTION' | translate"></p>
 </usrf-open-pass-details>
