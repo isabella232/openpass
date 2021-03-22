@@ -23,7 +23,8 @@
       "CODE_PLACEHOLDER": "Enter verification code",
       "CODE_ERROR": "Code is not valid. Check the code and try one more time",
       "SHARE_LABEL": "By continuing on this site I agree to the terms and conditions"
-    }
+    },
+    "AGREEMENT": "By continuing on this website I agree to terms and conditions"
   },
   "AUTH": {
     "HEADING_1": "Hi there!",

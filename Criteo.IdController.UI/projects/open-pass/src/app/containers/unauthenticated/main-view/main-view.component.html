@@ -3,6 +3,7 @@
   <img src="./assets/images/open-pass-logo.png" alt="OpenPass" data-test="non-auth-img-logo" />
 </div>
 <p [innerHTML]="'NON_AUTH.DESCRIPTION' | translate: { websiteName: (websiteName$ | async) || '' }"></p>
+<div class="py-2" translate>SHARED.AGREEMENT</div>
 <button
   type="button"
   class="btn btn-wide btn-primary my-4"
