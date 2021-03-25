@@ -14,7 +14,7 @@ describe('SsoViewComponent', () => {
         { provide: WINDOW, useFactory: () => ({ gapi: {} }) },
         {
           provide: GapiService,
-          useFactory: () => ({ load: () => {}, renderButton: () => {} }),
+          useFactory: () => ({ load: () => new Promise(() => {}), renderButton: () => {} }),
         },
       ],
       declarations: [SsoViewComponent],
