@@ -1,7 +1,7 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import { catchError, finalize, switchMap } from 'rxjs/operators';
-import { OtpService } from '@rest/otp/otp.service';
+import { AuthenticatedService } from '@rest/authenticated/authenticated.service';
 import {
   GenerateCode,
   GenerateCodeFail,
@@ -50,7 +50,7 @@ export class AuthState {
   @localStorage('openpass.email')
   private storageUserEmail: string;
 
-  constructor(private otpService: OtpService) {}
+  constructor(private authenticatedService: AuthenticatedService) {}
 
   @Selector()
   static fullState(state: LocalStateModel): IAuthState {
@@ -77,7 +77,7 @@ export class AuthState {
     ctx.patchState({ isFetching: true, isEmailValid: true });
     const { email } = ctx.getState();
 
-    return this.otpService.generateOtp({ email }).pipe(
+    return this.authenticatedService.generateOtp({ email }).pipe(
       switchMap(() => ctx.dispatch(new GenerateCodeSuccess())),
       catchError((error) => ctx.dispatch(new GenerateCodeFail(error))),
       finalize(() => ctx.patchState({ isFetching: false }))
@@ -99,7 +99,7 @@ export class AuthState {
     ctx.patchState({ isFetching: true, isCodeValid: true });
     const { email, code: otp } = ctx.getState();
 
-    return this.otpService.validateOtp({ email, otp }).pipe(
+    return this.authenticatedService.validateOtp({ email, otp }).pipe(
       switchMap(({ token }) => ctx.dispatch(new ValidateCodeSuccess(token))),
       catchError(() => ctx.dispatch(new ValidateCodeFail())),
       finalize(() => ctx.patchState({ isFetching: false }))

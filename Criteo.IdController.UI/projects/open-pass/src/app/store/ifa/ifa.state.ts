@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { GetIfa, GetIfaFailure, GetIfaSuccess } from './ifa.actions';
 import { catchError, finalize, switchMap } from 'rxjs/operators';
 import { localStorage } from '@shared/utils/storage-decorator';
-import { OtpService } from '@rest/otp/otp.service';
+import { UnauthenticatedService } from '@rest/unauthenticated/unauthenticated.service';
 
 export interface IIfaState {
   token: string;
@@ -27,7 +27,7 @@ export class IfaState {
   @localStorage('openpass.token')
   private storageUserToken: string;
 
-  constructor(private otpService: OtpService) {}
+  constructor(private unauthenticatedService: UnauthenticatedService) {}
 
   @Selector()
   static isFetching({ isFetching }: LocalModel) {
@@ -42,7 +42,7 @@ export class IfaState {
   @Action(GetIfa)
   getIfa(ctx: LocalStateContext) {
     ctx.patchState({ isFetching: true });
-    return this.otpService.getIfa().pipe(
+    return this.unauthenticatedService.getIfa().pipe(
       switchMap((ifaDto) => ctx.dispatch(new GetIfaSuccess(ifaDto.token))),
       catchError(() => ctx.dispatch(new GetIfaFailure())),
       finalize(() => ctx.patchState({ isFetching: false }))

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { OtpDto } from './otp.dto';
-import { Observable } from 'rxjs';
 import { environment } from '@env';
-import { TokenDto } from './token.dto';
+import { HttpClient } from '@angular/common/http';
+import { OtpDto } from '../otp/otp.dto';
+import { Observable } from 'rxjs';
+import { TokenDto } from '../otp/token.dto';
 
 @Injectable({
   providedIn: 'root',
 })
-export class OtpService {
+export class AuthenticatedService {
   private readonly namespace = environment.namespace;
 
   constructor(private http: HttpClient) {}
@@ -21,7 +21,7 @@ export class OtpService {
     return this.http.post<TokenDto>(this.namespace + '/authenticated/otp/validate', otp);
   }
 
-  getIfa(): Observable<TokenDto> {
-    return this.http.get<TokenDto>(this.namespace + '/unauthenticated');
+  getTokenByEmail(email: string): Observable<TokenDto> {
+    return this.http.post<TokenDto>(this.namespace + '/authenticated/sso', { email });
   }
 }
