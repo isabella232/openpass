@@ -151,7 +151,7 @@ namespace Criteo.IdController.Controllers
         #endregion
 
         #region External SSO services
-        [HttpGet("sso")]
+        [HttpPost("sso")]
         public async Task<IActionResult> GenerateEmailToken(
             [FromHeader(Name = "User-Agent")] string userAgent,
             [FromBody] GenerateRequest request)
