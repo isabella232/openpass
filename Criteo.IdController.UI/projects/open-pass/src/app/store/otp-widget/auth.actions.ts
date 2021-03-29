@@ -47,3 +47,21 @@ export class ValidateCodeSuccess {
 export class ValidateCodeFail {
   static readonly type = `${scope} Validate code. Fail`;
 }
+
+export class GetTokenByEmail {
+  static readonly type = `${scope} Get Token By Email`;
+
+  constructor(public readonly email: string) {}
+}
+
+export class GetTokenByEmailSuccess {
+  static readonly type = `${scope} Get Token By Email. Success`;
+
+  constructor(public readonly token: string) {}
+}
+
+export class GetTokenByEmailFailed {
+  static readonly type = `${scope} Get Token By Email. Fail`;
+
+  constructor(public readonly error: HttpErrorResponse) {}
+}

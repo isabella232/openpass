@@ -1,4 +1,4 @@
-import { Inject, Injectable, NgZone } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { WINDOW } from '@utils/injection-tokens';
 import { environment } from '@env';
 

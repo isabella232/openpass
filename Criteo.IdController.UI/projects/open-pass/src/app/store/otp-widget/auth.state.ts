@@ -6,6 +6,9 @@ import {
   GenerateCode,
   GenerateCodeFail,
   GenerateCodeSuccess,
+  GetTokenByEmail,
+  GetTokenByEmailFailed,
+  GetTokenByEmailSuccess,
   SetCode,
   SetEmail,
   SetToken,
@@ -117,5 +120,21 @@ export class AuthState {
   @Action(ValidateCodeFail)
   validateCodeFail(ctx: LocalStateContext) {
     ctx.patchState({ isCodeValid: false });
+  }
+
+  @Action(GetTokenByEmail)
+  getTokenByEmail(ctx: LocalStateContext, { email }: GetTokenByEmail) {
+    ctx.patchState({ isFetching: true });
+
+    return this.authenticatedService.getTokenByEmail(email).pipe(
+      switchMap(({ token }) => ctx.dispatch(new GetTokenByEmailSuccess(token))),
+      catchError((error) => ctx.dispatch(new GetTokenByEmailFailed(error))),
+      finalize(() => ctx.patchState({ isFetching: false }))
+    );
+  }
+
+  @Action(GetTokenByEmailSuccess)
+  getTokenByEmailSuccess(ctx: LocalStateContext, { token }: GetTokenByEmailSuccess) {
+    ctx.patchState({ token });
   }
 }
