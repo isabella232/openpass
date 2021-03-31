@@ -25,7 +25,7 @@ const routes: Routes = [
         loadChildren: () => import('./sso-view/sso-view.module').then((m) => m.SsoViewModule),
         resolve: [GetScriptsResolver],
         data: {
-          preloadScripts: ['https://apis.google.com/js/platform.js'],
+          preloadScripts: ['https://apis.google.com/js/platform.js', 'https://connect.facebook.net/en_US/sdk.js'],
         },
       },
       {

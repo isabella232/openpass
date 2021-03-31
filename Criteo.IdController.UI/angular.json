@@ -72,7 +72,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "open-pass:build"
+            "browserTarget": "open-pass:build",
+            "ssl": true
           },
           "configurations": {
             "production": {

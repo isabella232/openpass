@@ -21,7 +21,7 @@
     "lint:prettier": "prettier --list-different \"./{projects,cypress}/**/*.{ts,component.html}\"",
     "prettier": "prettier --write \"./{projects,cypress}/**/*.{ts,component.html}\" --loglevel silent",
     "cypress:open": "cypress open",
-    "cypress:wait-and-run": "wait-on http://localhost:4200/open-pass && cypress run --browser chrome",
+    "cypress:wait-and-run": "wait-on https://localhost:4200/open-pass && cypress run --browser chrome",
     "cypress:run-tests": "run-p -r start cypress:wait-and-run"
   },
   "husky": {

@@ -36,6 +36,7 @@ There are different scripts for each environment. They are replaced during build
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.1.
 
 ## Development server
+Activate the flag: `chrome://flags/#allow-insecure-localhost`  
 Run `npm run start` - it runs both apps in development mode. Widget will serve on port 4300 and Main app on port 4200.
 Also, there are available option `:preprod` and `:backendless` to redirect the api calls.
 
