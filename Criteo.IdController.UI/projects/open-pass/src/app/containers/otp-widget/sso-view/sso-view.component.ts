@@ -6,8 +6,9 @@ import { EventTypes } from '@enums/event-types.enum';
 import { AuthService } from '@services/auth.service';
 import { DialogWindowService } from '@services/dialog-window.service';
 import { EventsTrackingService } from '@services/events-tracking.service';
-import { GetTokenByEmail, GetTokenByEmailSuccess } from '@store/otp-widget/auth.actions';
+import { GetTokenByEmail, ReceiveToken } from '@store/otp-widget/auth.actions';
 import { Dispatch } from '@ngxs-labs/dispatch-decorator';
+import { AuthState, IAuthState } from '@store/otp-widget/auth.state';
 
 @Component({
   selector: 'usrf-sso-view',
@@ -17,6 +18,8 @@ import { Dispatch } from '@ngxs-labs/dispatch-decorator';
 export class SsoViewComponent implements OnInit, OnDestroy {
   @Select(SsoState.isFetching)
   isFetching$: Observable<boolean>;
+  @Select(AuthState.fullState)
+  authState$: Observable<IAuthState>;
 
   private authSubscriptions: Subscription;
 
@@ -34,7 +37,7 @@ export class SsoViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.authSubscriptions = this.actions$
-      .pipe(ofActionDispatched(GetTokenByEmailSuccess))
+      .pipe(ofActionDispatched(ReceiveToken))
       .subscribe(() => this.saveTokenAndClose());
   }
 

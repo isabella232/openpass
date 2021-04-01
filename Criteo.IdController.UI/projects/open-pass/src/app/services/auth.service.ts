@@ -17,6 +17,10 @@ export class AuthService {
     return !!this.storageUserToken;
   }
 
+  get isEmailUsed(): boolean {
+    return !!this.storageUserEmail;
+  }
+
   constructor(private postMessagesService: PostMessagesService) {}
 
   setTokenToOpener() {

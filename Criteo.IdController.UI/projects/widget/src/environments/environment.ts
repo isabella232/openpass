@@ -7,7 +7,7 @@ import { defaultEnv } from './default';
 export const environment = {
   ...defaultEnv,
   production: false,
-  idControllerAppUrl: 'http://localhost:4200/open-pass',
+  idControllerAppUrl: 'https://localhost:4200/open-pass',
 };
 
 /*

@@ -5,6 +5,12 @@ export class LocalStorageHelper {
     LocalStorageHelper.setItem('USRF', JSON.stringify(patched));
   }
 
+  static setFakeEmail() {
+    const current = JSON.parse(window.localStorage.getItem('USRF'));
+    const patched = mergeDeep(current ?? {}, { openpass: { email: 'fake@user.mail' } });
+    LocalStorageHelper.setItem('USRF', JSON.stringify(patched));
+  }
+
   static patchLocalStorage(rewrite: { [p: string]: any }) {
     const current = JSON.parse(window.localStorage.getItem('USRF'));
     const patched = mergeDeep(current ?? {}, rewrite);

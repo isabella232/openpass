@@ -4,4 +4,4 @@
 <usrf-google-auth-button (proceed)="getToken($event)"></usrf-google-auth-button>
 <div class="or-divider">or</div>
 <usrf-facebook-auth-button (proceed)="getToken($event)"></usrf-facebook-auth-button>
-<div *ngIf="isFetching$ | async" class="loader"></div>
+<div *ngIf="(isFetching$ | async) || (authState$ | async)?.isFetching" class="loader"></div>

@@ -9,6 +9,7 @@ context('Auth Page', () => {
     before(() => {
       page = new AuthPage();
       LocalStorageHelper.setFakeToken();
+      LocalStorageHelper.setFakeEmail();
       page.goToPage();
     });
 

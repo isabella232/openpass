@@ -4,7 +4,7 @@ import { OpenerState } from '@store/otp-widget/opener.state';
 import { Observable, Subscription } from 'rxjs';
 import { Dispatch } from '@ngxs-labs/dispatch-decorator';
 import { AuthState, IAuthState } from '@store/otp-widget/auth.state';
-import { GenerateCode, SetCode, SetEmail, ValidateCode, ValidateCodeSuccess } from '@store/otp-widget/auth.actions';
+import { GenerateCode, SetCode, SetEmail, ValidateCode, ReceiveToken } from '@store/otp-widget/auth.actions';
 import { EventTypes } from '@enums/event-types.enum';
 import { AuthService } from '@services/auth.service';
 import { DialogWindowService } from '@services/dialog-window.service';
@@ -47,7 +47,7 @@ export class AuthViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.authSubscriptions = this.actions$
-      .pipe(ofActionDispatched(ValidateCodeSuccess))
+      .pipe(ofActionDispatched(ReceiveToken))
       .subscribe(() => this.saveTokenAndClose());
   }
 

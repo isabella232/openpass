@@ -39,6 +39,7 @@ context('Main page', () => {
 
   it('should redirect to /signed if token is present', () => {
     LocalStorageHelper.setFakeToken();
+    LocalStorageHelper.setFakeEmail();
     page.pageComponent.getActionBtn().click();
 
     cy.location('pathname').should('be.eq', '/open-pass/signed');

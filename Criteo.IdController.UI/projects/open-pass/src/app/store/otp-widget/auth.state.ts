@@ -8,13 +8,12 @@ import {
   GenerateCodeSuccess,
   GetTokenByEmail,
   GetTokenByEmailFailed,
-  GetTokenByEmailSuccess,
   SetCode,
   SetEmail,
   SetToken,
   ValidateCode,
   ValidateCodeFail,
-  ValidateCodeSuccess,
+  ReceiveToken,
 } from './auth.actions';
 import { localStorage } from '@shared/utils/storage-decorator';
 
@@ -103,14 +102,14 @@ export class AuthState {
     const { email, code: otp } = ctx.getState();
 
     return this.authenticatedService.validateOtp({ email, otp }).pipe(
-      switchMap(({ token }) => ctx.dispatch(new ValidateCodeSuccess(token))),
+      switchMap(({ token }) => ctx.dispatch(new ReceiveToken(token))),
       catchError(() => ctx.dispatch(new ValidateCodeFail())),
       finalize(() => ctx.patchState({ isFetching: false }))
     );
   }
 
-  @Action(ValidateCodeSuccess)
-  validateCodeSuccess(ctx: LocalStateContext, { token }: ValidateCodeSuccess) {
+  @Action(ReceiveToken)
+  validateCodeSuccess(ctx: LocalStateContext, { token }: ReceiveToken) {
     const { email } = ctx.getState();
     this.storageUserToken = token;
     this.storageUserEmail = email;
@@ -124,17 +123,15 @@ export class AuthState {
 
   @Action(GetTokenByEmail)
   getTokenByEmail(ctx: LocalStateContext, { email }: GetTokenByEmail) {
-    ctx.patchState({ isFetching: true });
+    ctx.patchState({
+      isFetching: true,
+      email,
+    });
 
     return this.authenticatedService.getTokenByEmail(email).pipe(
-      switchMap(({ token }) => ctx.dispatch(new GetTokenByEmailSuccess(token))),
+      switchMap(({ token }) => ctx.dispatch(new ReceiveToken(token))),
       catchError((error) => ctx.dispatch(new GetTokenByEmailFailed(error))),
       finalize(() => ctx.patchState({ isFetching: false }))
     );
-  }
-
-  @Action(GetTokenByEmailSuccess)
-  getTokenByEmailSuccess(ctx: LocalStateContext, { token }: GetTokenByEmailSuccess) {
-    ctx.patchState({ token });
   }
 }
