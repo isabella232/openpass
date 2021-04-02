@@ -25,9 +25,11 @@
         <path fill="none" d="M0 0h48v48H0z"></path>
       </g>
     </svg>
-    Continue as {{ userEmail$ | async }}
+    {{ 'SSO.GOOGLE.CONTINUE_AS' | translate: { email: userEmail$ | async } }}
   </button>
-  <button class="btn btn-wide sign-out-btn mt-1 abcRioButton" type="button" (click)="signOut()">Sign Out</button>
+  <button class="btn btn-wide sign-out-btn mt-1 abcRioButton" type="button" (click)="signOut()" translate>
+    SSO.GOOGLE.SIGN_OUT
+  </button>
 </div>
 <div
   *ngIf="(isSignedIn$ | async) === false"

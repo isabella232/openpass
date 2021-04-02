@@ -24,7 +24,8 @@
       "CODE_ERROR": "Code is not valid. Check the code and try one more time",
       "SHARE_LABEL": "By continuing on this site I agree to the terms and conditions"
     },
-    "AGREEMENT": "By continuing on this website I agree to <a href=\"#\" target=\"_blank\">terms and conditions</a>"
+    "AGREEMENT": "By continuing on this website I agree to <a href=\"#\" target=\"_blank\">terms and conditions</a>",
+    "OR": "or"
   },
   "AUTH": {
     "HEADING_1": "Hi there!",
@@ -81,5 +82,13 @@
     "HEADING": "Hi there!",
     "SUB_HEADING": "Welcome back to OpenPass.",
     "ACTION": "Continue to site"
+  },
+  "SSO": {
+    "HEADING": "Other options to access this site",
+    "DESCRIPTION": "Login or create your account in one click with",
+    "GOOGLE": {
+      "CONTINUE_AS": "Continue as {{email}}",
+      "SIGN_OUT": "Sign Out"
+    }
   }
 }

@@ -1,7 +1,7 @@
-<h1 data-test="sso-page-title">Other options to access this site</h1>
-<p class="mt-2">Login or create your account in one click with</p>
+<h1 data-test="sso-page-title" translate>SSO.HEADING</h1>
+<p class="mt-2" translate>SSO.DESCRIPTION</p>
 
 <usrf-google-auth-button (proceed)="getToken($event)"></usrf-google-auth-button>
-<div class="or-divider">or</div>
+<div class="or-divider" translate>SHARED.OR</div>
 <usrf-facebook-auth-button (proceed)="getToken($event)"></usrf-facebook-auth-button>
 <div *ngIf="(isFetching$ | async) || (authState$ | async)?.isFetching" class="loader"></div>
