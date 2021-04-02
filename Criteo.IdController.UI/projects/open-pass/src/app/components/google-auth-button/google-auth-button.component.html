@@ -1,5 +1,9 @@
 <div *ngIf="isSignedIn$ | async">
-  <button class="btn btn-wide mb-1 gapi-continue-btn abcRioButton abcRioButtonLightBlue" (click)="continueWith()">
+  <button
+    class="btn btn-wide mb-1 gapi-continue-btn abcRioButton abcRioButtonLightBlue"
+    data-test="g-button-continue"
+    (click)="continueWith()"
+  >
     <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 48 48" class="abcRioButtonSvg">
       <g>
         <path
@@ -25,4 +29,9 @@
   </button>
   <button class="btn btn-wide sign-out-btn mt-1 abcRioButton" type="button" (click)="signOut()">Sign Out</button>
 </div>
-<div *ngIf="(isSignedIn$ | async) === false" [hidden]="isFetching$ | async" #googleButton></div>
+<div
+  *ngIf="(isSignedIn$ | async) === false"
+  [hidden]="isFetching$ | async"
+  #googleButton
+  data-test="g-button-sign-in"
+></div>
