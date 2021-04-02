@@ -109,7 +109,7 @@ namespace Criteo.IdController.UTest.Helpers
             // Mock IdentityMapping library call
             var identityMapping = GetIdentityMappingResult();
             _identityMapperMock.Setup(i =>
-                    i.GetOrCreateInternalIdentity(It.IsAny<UserIdentity>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                    i.GetOrCreateInternalIdentity(It.IsAny<UserIdentity>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<IdentityMappingContext>()))
                 .Returns(Task.FromResult(identityMapping));
 
             return new InternalMappingHelper(_cacServiceMock, _identityMapperMock.Object);
