@@ -12,6 +12,7 @@ import { environment } from '../../../environments/environment';
 import { filter } from 'rxjs/operators';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
 import { PipesModule } from '../../pipes/pipes.module';
+import { OpenPassDetailsModule } from '../../components/open-pass-details/open-pass-details.module';
 
 @Component({
   selector: 'wdgt-unlogged',
@@ -91,6 +92,6 @@ export class UnloggedComponent implements OnInit, OnDestroy {
 
 @NgModule({
   declarations: [UnloggedComponent],
-  imports: [CommonModule, PipesModule, TranslateModule],
+  imports: [CommonModule, PipesModule, TranslateModule, OpenPassDetailsModule],
 })
 class UnloggedModule {}

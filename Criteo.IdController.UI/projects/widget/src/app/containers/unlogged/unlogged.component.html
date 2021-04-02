@@ -29,5 +29,8 @@
     <button translate type="button" class="btn btn-wide btn-primary my-3" (click)="launchOpenPassApp()">
       UNLOGGED.ACTION
     </button>
+    <wdgt-open-pass-details class="pt-3 d-block" [name]="'WELCOME.SUMMARY.TITLE' | translate">
+      <p [innerHTML]="'WELCOME.SUMMARY.DESCRIPTION' | translate"></p>
+    </wdgt-open-pass-details>
   </div>
 </div>
