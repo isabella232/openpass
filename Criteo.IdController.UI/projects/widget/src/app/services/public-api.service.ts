@@ -8,7 +8,6 @@ import { Subject } from 'rxjs';
 })
 export class PublicApiService {
   @localStorage('widget.token') token: string;
-  @localStorage('widget.email') email: string;
   @localStorage('widget.isDeclined') isDeclined: boolean;
 
   private userData = new Subject<UserData>();
@@ -17,15 +16,14 @@ export class PublicApiService {
     return this.userData.asObservable();
   }
 
-  setUserData({ token, email, isDeclined }: UserData) {
+  setUserData({ token, isDeclined }: UserData) {
     this.token = token;
-    this.email = email;
     this.isDeclined = isDeclined;
-    this.userData.next({ token, email, isDeclined });
+    this.userData.next({ token, isDeclined });
   }
 
   getUserData(): UserData {
-    const { token, email, isDeclined = false } = this;
-    return { token, email, isDeclined };
+    const { token, isDeclined = false } = this;
+    return { token, isDeclined };
   }
 }

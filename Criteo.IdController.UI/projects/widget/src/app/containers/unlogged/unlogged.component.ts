@@ -69,7 +69,7 @@ export class UnloggedComponent implements OnInit, OnDestroy {
 
   backdropClick() {
     this.isOpen = false;
-    this.publicApiService.setUserData({ token: null, email: null, isDeclined: true });
+    this.publicApiService.setUserData({ token: null, isDeclined: true });
   }
 
   launchOpenPassApp() {
