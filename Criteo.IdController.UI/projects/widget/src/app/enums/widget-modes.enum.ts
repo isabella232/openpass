@@ -1,4 +1,4 @@
 export enum WidgetModes {
-  inline = 'inline',
+  native = 'native',
   modal = 'modal',
 }

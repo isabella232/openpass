@@ -27,7 +27,7 @@ To add the app to customer website, customer should include script
 `wdgt-identification` tag has next attributes:
 - session = "authenticated" | "unauthenticated";
 - variant = "dialog" | "in-site";
-- view = "inline" | "modal";  
+- view = "native" | "modal";  
 
 The script is located in /projects/widget/assets/widget.js. This script only includes the necessary files for Web Component.
 There are different scripts for each environment. They are replaced during building.

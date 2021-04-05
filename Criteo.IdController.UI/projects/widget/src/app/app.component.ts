@@ -43,18 +43,17 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   set view(val) {
-    if (val === WidgetModes.inline || val === WidgetModes.modal) {
+    if (val === WidgetModes.native || val === WidgetModes.modal) {
       this.widgetMode = val;
     } else {
-      this.widgetMode = WidgetModes.inline;
+      this.widgetMode = WidgetModes.native;
       // eslint-disable-next-line no-console
-      console.info('usrf-identification mode can only be "inline" or "modal". Using "inline" by default.');
+      console.info('usrf-identification mode can only be "native" or "modal". Using "native" by default.');
     }
   }
 
-  variantsList = Variants;
   userDataSubscription: Subscription;
-  private widgetMode = WidgetModes.inline;
+  private widgetMode = WidgetModes.native;
 
   constructor(
     private elementRef: ElementRef,
