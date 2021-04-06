@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { WINDOW } from '@utils/injection-tokens';
 import { environment } from '@env';
+import { ReplaySubject } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 type WindowWithGapi = Window & { gapi: any };
 
@@ -8,6 +10,8 @@ type WindowWithGapi = Window & { gapi: any };
   providedIn: 'root',
 })
 export class GapiService {
+  private gapiStateLoaded = new ReplaySubject<boolean>();
+
   private get authInstance() {
     return this.window.gapi.auth2.getAuthInstance();
   }
@@ -25,11 +29,13 @@ export class GapiService {
   async load() {
     await new Promise((resolve) => this.window.gapi.load('auth2', resolve));
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    return this.window.gapi.auth2.init({ client_id: environment.googleClientId });
+    const auth = await this.window.gapi.auth2.init({ client_id: environment.googleClientId });
+    this.gapiStateLoaded.next(true);
+    return auth;
   }
 
   renderButton(element: HTMLElement) {
-    this.window.gapi.signin2.render(element, { width: 'auto' });
+    this.gapiStateLoaded.pipe(take(1)).subscribe(() => this.window.gapi.signin2.render(element, { width: 'auto' }));
   }
 
   subscribeToSignInEvent(callback: (isSignedIn: boolean) => void): { remove: () => void } {
