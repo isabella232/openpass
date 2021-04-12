@@ -22,7 +22,7 @@ Customer website
 +-----------------+
 ```
 To add the app to customer website, customer should include script 
-`<script src="//my-advertising-experience.crto.in/open-pass/widget-app"></script>`and html tag 
+`<script src="//openpass.criteo.com/open-pass/widget-app"></script>`and html tag 
 `<wdgt-identification></wdgt-identification>` in any place on the page.  
 `wdgt-identification` tag has next attributes:
 - session = "authenticated" | "unauthenticated";

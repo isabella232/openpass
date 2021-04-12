@@ -1,7 +1,7 @@
 module.exports = [
   {
     context: ['/api'],
-    target: 'https://my-advertising-experience.preprod.crto.in',
+    target: 'https://openpass.preprod.criteo.com',
     changeOrigin: true,
     secure: true,
   },

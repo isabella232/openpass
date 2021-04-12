@@ -154,7 +154,7 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "deployUrl": "https://my-advertising-experience.crto.in/open-pass/widget/",
+              "deployUrl": "https://openpass.criteo.com/open-pass/widget/",
               "budgets": [
                 {
                   "type": "initial",
@@ -177,7 +177,7 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "deployUrl": "https://my-advertising-experience.preprod.crto.in/open-pass/preprod/widget/",
+              "deployUrl": "https://openpass.preprod.criteo.com/open-pass/preprod/widget/",
               "fileReplacements": [
                 {
                   "replace": "projects/widget/src/environments/environment.ts",

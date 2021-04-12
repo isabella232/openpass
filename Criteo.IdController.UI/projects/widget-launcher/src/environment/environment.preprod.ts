@@ -1,5 +1,5 @@
 export let environment = {
   isDevelopment: false,
-  APP_PATH: 'https://my-advertising-experience.preprod.crto.in/open-pass/preprod/widget',
+  APP_PATH: 'https://openpass.preprod.criteo.com/open-pass/preprod/widget',
   scriptNames: ['polyfills', 'main'],
 };

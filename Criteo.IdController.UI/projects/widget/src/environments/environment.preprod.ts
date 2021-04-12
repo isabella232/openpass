@@ -1,6 +1,6 @@
 import { defaultEnv } from './default';
 
-const appHost = 'https://my-advertising-experience.preprod.crto.in';
+const appHost = 'https://openpass.preprod.criteo.com';
 
 export const environment = {
   ...defaultEnv,
