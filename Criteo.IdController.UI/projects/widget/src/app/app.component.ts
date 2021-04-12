@@ -20,6 +20,7 @@ import { Subscription } from 'rxjs';
 import { Sessions } from './enums/sessions.enum';
 import { ViewContainerDirective } from './directives/view-container.directive';
 import { TranslateService } from '@ngx-translate/core';
+import { Providers } from './enums/providers.enum';
 
 @Component({
   selector: 'wdgt-identification',
@@ -37,6 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   @Input() variant = Variants.dialog;
   @Input() session = Sessions.authenticated;
+  @Input() provider = Providers.advertiser;
 
   @Input()
   get view(): WidgetModes {
@@ -68,6 +70,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.view = this.elementRef.nativeElement.getAttribute('view') ?? this.view;
       this.variant = this.elementRef.nativeElement.getAttribute('variant') ?? this.variant;
       this.session = this.elementRef.nativeElement.getAttribute('session') ?? this.session;
+      this.provider = this.elementRef.nativeElement.getAttribute('provider') ?? this.provider;
     }
     this.elementRef.nativeElement.getUserData = this.getUserData.bind(this);
   }
@@ -104,6 +107,7 @@ export class AppComponent implements OnInit, OnDestroy {
     const componentRef = this.viewElement.viewContainerRef.createComponent<any>(componentFactory);
 
     componentRef.instance.view = this.view;
+    componentRef.instance.provider = this.provider;
   }
 
   private async getComponentClass() {
