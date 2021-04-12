@@ -11,6 +11,10 @@ const routes: Routes = [
     loadChildren: () =>
       import('./containers/unauthenticated/unauthenticated.module').then((m) => m.UnauthenticatedModule),
   },
+  {
+    path: 'reset',
+    loadChildren: () => import('./containers/reset/reset.module').then((m) => m.ResetModule),
+  },
 ];
 
 @NgModule({
