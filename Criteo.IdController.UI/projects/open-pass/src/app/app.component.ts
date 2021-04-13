@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
   }
 
   private applyLanguage() {
-    const supportedLanguages = ['en'];
+    const supportedLanguages = ['en', 'ja'];
     const userLanguage = this.translateService.getBrowserLang();
     if (supportedLanguages.includes(userLanguage) && userLanguage !== this.translateService.getDefaultLang()) {
       this.translateService.use(userLanguage);

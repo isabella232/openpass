@@ -1,0 +1,94 @@
+{
+  "WELCOME": {
+    "HEADING": "Get Access With",
+    "DESCRIPTION": "無料で<b>{{websiteName}}</b>にアクセスします。OpenPassは、Webサイト閲覧をお楽しみいただけるよう、よりお客様の興味に関連した広告の配信を提供し、お客様のお気に入りのWebサイトを支援しています。",
+    "WITH": "OpenPassと共に",
+    "OPEN_PASS_PROS": {
+      "INFORMATION": "大規模なサイトネットワークを無料で閲覧しながら、独立した中小企業やWebサイトをサポートします。",
+      "ACCESS": "いつでも<a href=\"https://transparentadvertising.com\" target=\"+_blank\">transparentadvertising.com</a>からプライバシー設定を変更、管理することができます。",
+      "CONTROL": "OpenPassはお客様のメールアドレスを許可なく共有することはありません。"
+    },
+    "SUMMARY": {
+      "TITLE": "OpenPassとは、どの様な仕組みですか？",
+      "DESCRIPTION": "OpenPassはお客様の同意のもと、個人を特定することのできない識別子を<b>信頼できる広告パートナー</b>に共有し、お客様により適切な広告を提供します。<a target=\"_blank\" href=\"https://criteo.com\">詳細はこちら</a>"
+    },
+    "ACTION": "OpenPassでサインアップ"
+  },
+  "SHARED": {
+    "OTHER_WAY": "このWebサイトにアクセスするためのその他の方法",
+    "COPY": "Provided by",
+    "FORM": {
+      "EMAIL_PLACEHOLDER": "メールアドレスを入力してください。",
+      "EMAIL_ERROR": "メールアドレスが無効です。",
+      "CODE_PLACEHOLDER": "認証コードを入力してください。",
+      "CODE_ERROR": "コードが無効です。コードをお確かめの上、もう一度入力してください。",
+      "SHARE_LABEL": "当Webサイトの利用を続けることにより、利用規約に同意します。"
+    },
+    "AGREEMENT": "当Webサイトの利用を続けることにより、 <a href=\"#\" target=\"_blank\">利用規約</a>に同意します。",
+    "OR": "または"
+  },
+  "AUTH": {
+    "HEADING_1": "こんにちは！",
+    "HEADING_2": "ありがとうございます！",
+    "SUB_HEADING_1": "OpenPassへようこそ",
+    "SUB_HEADING_2": "メールをチェックしてください…",
+    "DESCRIPTION_1": "１回のご入力で全てのOpenPassサイトで有効になります。お客様のメールアドレスと全ての関連データは、お客様の許可無しに共有されることはありません。",
+    "DESCRIPTION_2": "お客様のメールアドレスに送信された認証コードをご入力ください。",
+    "ACTION": "続ける",
+    "ACTION_PROCEED": "Webサイトの利用を続ける"
+  },
+  "AGREEMENT": {
+    "HEADING": "素晴らしい！",
+    "SUB_HEADING": "最後にもう一つ。",
+    "DESCRIPTION": "お客様のプライバシーを維持しながら<b>{{ websiteName }}</b>や多くのWebサイトに無料でアクセスするために「同意する＆サイトを見る」をクリックし、OpenPassの利用規約に同意してください。",
+    "SUMMARY": {
+      "TITLE": "OpenPassとは、どの様な仕組みですか？",
+      "OPEN_PASS_POWERED": "OpenPassは、サードパーティCookieよりも、よりプライバシーのコントロールを提供する<a href=\"\">Unified ID</a>を利用しています。",
+      "REDUCE": "Cookieバナーへの承諾回数を減らします。",
+      "SHOW": "より関連性の高い広告を表示します。",
+      "SUPPORT": "オープンなインターネット環境で無料コンテンツを提供します。",
+      "MENAGE_SETTINGS": "<a>プライバシーポータル</a>でお客様の設定を管理する。",
+      "TERMS_LINK": "<a href=\"\">利用規約を見る</a>"
+    },
+    "ACTION": "同意する＆Webサイトを見る"
+  },
+  "SUCCESS": {
+    "MESSAGE": "{{ secureEmail }}としてOpenPassで安全にサインインする。<a>privacy portal</a>でお客様の設定を管理する。"
+  },
+  "SIGNED": {
+    "HEADING": "こんにちは！",
+    "SUB_HEADING": "OpenPassへようこそ",
+    "DESCRIPTION": "お客様はすでにOpenPassアカウントをお持ちです。",
+    "NOT_YOU": "お間違い無いですか？",
+    "ACTION": "Webサイトの利用を続ける"
+  },
+  "NON_AUTH": {
+    "HEADING": "Get Access With",
+    "DESCRIPTION": "無料で<b>{{websiteName}}</b>にアクセスします。<br/> OpenPassは、Webサイト閲覧をお楽しみいただけるよう、よりお客様の興味に関連した広告の配信を提供し、お客様のお気に入りのWebサイトを支援しています。",
+    "WITH": "Open Passと共に:",
+    "OPEN_PASS_PROS": {
+      "INFORMATION": "大規模なサイトネットワークを無料で閲覧しながら、独立した中小企業やWebサイトをサポートします。",
+      "ACCESS": "いつでも<a href=\"https://transparentadvertising.com\" target=\"_blank\">transparentadvertising.com</a>からプライバシー設定を変更、管理することができます。",
+      "CONTROL": "OpenPassはお客様のメールアドレスを許可なく共有することはありません。"
+    },
+    "SUMMARY": {
+      "TITLE": "OpenPassとは、どの様な仕組みですか？",
+      "DESCRIPTION": "OpenPassはお客様の同意のもと、個人を特定することのできない識別子を<b>信頼できる広告パートナー</b>に共有し、お客様により適切な広告を提供します。 <a target=\"_blank\" href=\"https://criteo.com\">詳細はこちら</a>"
+    },
+    "PREFERENCES": "OpenPassの詳細についての確認とプライバシー設定を管理するために<a href=\"#\" target=\"_blank\">ここをクリックする</a>",
+    "ACTION": "同意し、OpenPassを利用してアクセスする。"
+  },
+  "RECOGNIZED": {
+    "HEADING": "こんにちは！",
+    "SUB_HEADING": "OpenPassへようこそ",
+    "ACTION": "Webサイトの利用を続ける"
+  },
+  "SSO": {
+    "HEADING": "Other options to access this site",
+    "DESCRIPTION": "Login or create your account in one click with",
+    "GOOGLE": {
+      "CONTINUE_AS": "Continue as {{email}}",
+      "SIGN_OUT": "Sign Out"
+    }
+  }
+}

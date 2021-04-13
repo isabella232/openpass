@@ -19,6 +19,7 @@ import { PublicApiService } from './services/public-api.service';
 import { Subscription } from 'rxjs';
 import { Sessions } from './enums/sessions.enum';
 import { ViewContainerDirective } from './directives/view-container.directive';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'wdgt-identification',
@@ -59,7 +60,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private elementRef: ElementRef,
     private publicApiService: PublicApiService,
     private injector: Injector,
-    private componentFactoryResolver: ComponentFactoryResolver
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private translateService: TranslateService
   ) {
     if (!environment.production) {
       // in webcomponent mode we can read prop assigned to app component.
@@ -71,6 +73,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.applyLanguage();
     this.loadComponent();
     const isDev = !environment.production;
     this.userDataSubscription = this.publicApiService.getSubscription().subscribe((userData) => {
@@ -118,5 +121,13 @@ export class AppComponent implements OnInit, OnDestroy {
         return OtpWidgetComponent;
     }
     /* eslint-enable @typescript-eslint/naming-convention */
+  }
+
+  private applyLanguage() {
+    const supportedLanguages = ['en', 'ja'];
+    const userLanguage = this.translateService.getBrowserLang();
+    if (supportedLanguages.includes(userLanguage) && userLanguage !== this.translateService.getDefaultLang()) {
+      this.translateService.use(userLanguage);
+    }
   }
 }
