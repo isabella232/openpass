@@ -1,4 +1,4 @@
 export const defaultEnv = {
-  cookieName: 'openpass_token',
+  cookieName: '__uid2_advertising_token',
   cookieLifetimeDays: 390,
 };

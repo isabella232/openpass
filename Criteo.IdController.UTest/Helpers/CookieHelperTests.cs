@@ -10,7 +10,7 @@ namespace Criteo.IdController.UTest.Helpers
     public class CookieHelperTests
     {
         private const int _cookieLifetimeDays = 30;
-        private const string _identifierCookieName = "openpass_token";
+        private const string _identifierCookieName = "__uid2_advertising_token";
 
         private ICookieHelper _cookieHelper;
 
@@ -21,6 +21,7 @@ namespace Criteo.IdController.UTest.Helpers
         }
 
         #region Cookie-specific
+
         [Test]
         public void GetIdentifierCookieTest()
         {
@@ -55,6 +56,7 @@ namespace Criteo.IdController.UTest.Helpers
 
             cookieContainerMock.Verify(c => c.Delete(It.Is<string>(k => k == _identifierCookieName)), Times.Once);
         }
-        #endregion
+
+        #endregion Cookie-specific
     }
 }
