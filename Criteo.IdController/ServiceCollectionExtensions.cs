@@ -12,6 +12,7 @@ using Sdk.Interfaces.Hosting;
 using Sdk.Interfaces.KeyValueStore;
 using Sdk.Monitoring;
 using Sdk.ProductionResources.ConnectionStrings;
+using Sdk.Secrets;
 
 namespace Criteo.IdController
 {
@@ -36,8 +37,9 @@ namespace Criteo.IdController
                 var glupService = r.GetService<IGlupService>();
                 var cacService = r.GetService<IConfigAsCodeService>();
                 var graphiteHelper = r.GetService<IGraphiteHelper>();
+                var secretsResolver = r.GetService<ISecretsResolver>();
 
-                var identityMapper = new IdentityMapper(storageManager, glupService, cacService, graphiteHelper, UserIdentificationContext.UserCentricAdId);
+                var identityMapper = new IdentityMapper(storageManager, glupService, cacService, graphiteHelper, UserIdentificationContext.UserCentricAdId, secretsResolver);
 
                 return new InternalMappingHelper(cacService, identityMapper);
             });

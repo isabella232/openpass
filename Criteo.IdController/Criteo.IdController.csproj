@@ -34,6 +34,7 @@
     <Reference Include="Sdk.Interfaces.Hosting.netcore" />
     <Reference Include="Sdk.Monitoring.netcore" />
     <Reference Include="Sdk.ProductionResources.netcore" />
+    <Reference Include="Sdk.Secrets.netcore" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="[default]" />
