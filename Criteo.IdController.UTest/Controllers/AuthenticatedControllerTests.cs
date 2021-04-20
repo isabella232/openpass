@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -6,7 +5,6 @@ using Criteo.IdController.Controllers;
 using Criteo.IdController.Helpers;
 using Criteo.IdController.Helpers.Adapters;
 using Criteo.UserIdentification;
-using Metrics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +19,7 @@ namespace Criteo.IdController.UTest.Controllers
         private const string _testUserAgent = "TestUserAgent";
 
         private Mock<IHostingEnvironment> _hostingEnvironmentMock;
-        private Mock<IMetricsRegistry> _metricRegistryMock;
+        private Mock<IMetricHelper> _metricHelperMock;
         private Mock<IMemoryCache> _memoryCache;
         private Mock<IConfigurationHelper> _configurationHelperMock;
         private Mock<IIdentifierAdapter> _uid2AdapterMock;
@@ -38,8 +36,8 @@ namespace Criteo.IdController.UTest.Controllers
             _hostingEnvironmentMock = new Mock<IHostingEnvironment>();
             _configurationHelperMock = new Mock<IConfigurationHelper>();
             _configurationHelperMock.Setup(c => c.EnableOtp).Returns(true);
-            _metricRegistryMock = new Mock<IMetricsRegistry>();
-            _metricRegistryMock.Setup(mr => mr.GetOrRegister(It.IsAny<string>(), It.IsAny<Func<Counter>>())).Returns(new Counter(Granularity.CoarseGrain));
+            _metricHelperMock = new Mock<IMetricHelper>();
+            _metricHelperMock.Setup(mh => mh.SendCounterMetric(It.IsAny<string>()));
             _memoryCache = new Mock<IMemoryCache>();
             // We use the Set method but cannot mock it because it is an extension
             // then we mock the CreateEntry method that is the native one used under the hood
@@ -57,7 +55,7 @@ namespace Criteo.IdController.UTest.Controllers
             _uid2AdapterMock = new Mock<IIdentifierAdapter>();
             _cookieHelperMock = new Mock<ICookieHelper>();
 
-            _authenticatedController = new AuthenticatedController(_hostingEnvironmentMock.Object, _metricRegistryMock.Object,
+            _authenticatedController = new AuthenticatedController(_hostingEnvironmentMock.Object, _metricHelperMock.Object,
                 _memoryCache.Object, _configurationHelperMock.Object, _uid2AdapterMock.Object, _emailHelperMock.Object, _glupHelperMock.Object,
                 _codeGeneratorHelperMock.Object, _cookieHelperMock.Object)
             {
@@ -66,6 +64,7 @@ namespace Criteo.IdController.UTest.Controllers
         }
 
         #region One-time password (OTP)
+
         [Test]
         public void ForbiddenWhenGenerationNotEnabled()
         {
@@ -283,9 +282,11 @@ namespace Criteo.IdController.UTest.Controllers
             _cookieHelperMock.Verify(c => c.SetIdentifierCookie(
                 It.IsAny<IResponseCookies>(), It.IsAny<string>()), Times.Never);
         }
-        #endregion
+
+        #endregion One-time password (OTP)
 
         #region External SSO services
+
         [Test]
         public async Task BadRequestWhenSSOEmailIsInvalid()
         {
@@ -317,9 +318,11 @@ namespace Criteo.IdController.UTest.Controllers
                 It.IsAny<IResponseCookies>(),
                 It.Is<string>(t => t == token)));
         }
-        #endregion
+
+        #endregion External SSO services
 
         #region Helpers
+
         private dynamic GetResponseData(IActionResult response)
         {
             var responseContent = response as OkObjectResult;
@@ -327,6 +330,7 @@ namespace Criteo.IdController.UTest.Controllers
 
             return data;
         }
-        #endregion
+
+        #endregion Helpers
     }
 }

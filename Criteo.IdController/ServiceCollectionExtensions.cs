@@ -109,6 +109,13 @@ namespace Criteo.IdController
             return services;
         }
 
+        public static IServiceCollection AddMetricHelper(this IServiceCollection services)
+        {
+            services.AddSingleton<IMetricHelper, MetricHelper>();
+
+            return services;
+        }
+
         public static IServiceCollection AddUid2Adapter(this IServiceCollection services)
         {
             services.AddSingleton<IIdentifierAdapter, Uid2Adapter>();

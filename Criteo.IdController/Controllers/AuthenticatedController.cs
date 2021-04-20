@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Criteo.IdController.Helpers;
 using Criteo.IdController.Helpers.Adapters;
 using Microsoft.AspNetCore.Mvc;
-using Metrics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using static Criteo.Glup.IdController.Types;
@@ -17,7 +16,7 @@ namespace Criteo.IdController.Controllers
         private const string _metricPrefix = "authenticated";
 
         private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly IMetricsRegistry _metricsRegistry;
+        private readonly IMetricHelper _metricHelper;
         private readonly IMemoryCache _activeOtps; // Mapping: (email -> OTP)
         private readonly IConfigurationHelper _configurationHelper;
         private readonly IIdentifierAdapter _uid2Adapter;
@@ -28,7 +27,7 @@ namespace Criteo.IdController.Controllers
 
         public AuthenticatedController(
             IHostingEnvironment hostingEnvironment,
-            IMetricsRegistry metricRegistry,
+            IMetricHelper metricRegistry,
             IMemoryCache memoryCache,
             IConfigurationHelper configurationHelper,
             IIdentifierAdapter uid2Adapter,
@@ -38,7 +37,7 @@ namespace Criteo.IdController.Controllers
             ICookieHelper cookieHelper)
         {
             _hostingEnvironment = hostingEnvironment;
-            _metricsRegistry = metricRegistry;
+            _metricHelper = metricRegistry;
             _activeOtps = memoryCache;
             _configurationHelper = configurationHelper;
             _uid2Adapter = uid2Adapter;
@@ -49,6 +48,7 @@ namespace Criteo.IdController.Controllers
         }
 
         #region Request models
+
         public abstract class GenericRequest
         {
             public string Email { get; set; }
@@ -62,9 +62,11 @@ namespace Criteo.IdController.Controllers
         {
             public string Otp { get; set; }
         }
-        #endregion
+
+        #endregion Request models
 
         #region One-time password (OTP)
+
         [HttpPost("otp/generate")]
         public IActionResult GenerateOtp(
             [FromHeader(Name = "User-Agent")] string userAgent,
@@ -74,14 +76,14 @@ namespace Criteo.IdController.Controllers
 
             if (!_configurationHelper.EnableOtp)
             {
-                SendMetric($"{prefix}.forbidden");
+                _metricHelper.SendCounterMetric($"{prefix}.forbidden");
                 // Status code 404 -> resource not found (best way to say not available)
                 return NotFound();
             }
 
             if (!_emailHelper.IsValidEmail(request.Email))
             {
-                SendMetric($"{prefix}.bad_request");
+                _metricHelper.SendCounterMetric($"{prefix}.bad_request");
                 return BadRequest();
             }
 
@@ -100,7 +102,7 @@ namespace Criteo.IdController.Controllers
             _glupHelper.EmitGlup(EventType.EmailEntered, request.OriginHost, userAgent);
 
             // Metrics
-            SendMetric($"{prefix}.ok");
+            _metricHelper.SendCounterMetric($"{prefix}.ok");
 
             // Status code 204 -> resource created but not content returned
             return NoContent();
@@ -115,21 +117,21 @@ namespace Criteo.IdController.Controllers
 
             if (!_configurationHelper.EnableOtp)
             {
-                SendMetric($"{prefix}.forbidden");
+                _metricHelper.SendCounterMetric($"{prefix}.forbidden");
                 // Status code 404 -> resource not found (best way to say not available)
                 return NotFound();
             }
 
             if (!(_emailHelper.IsValidEmail(request.Email) && _codeGeneratorHelper.IsValidCode(request.Otp)))
             {
-                SendMetric($"{prefix}.bad_request");
+                _metricHelper.SendCounterMetric($"{prefix}.bad_request");
                 return BadRequest();
             }
 
             // Get code from cache and validate
             if (_activeOtps.TryGetValue(request.Email, out string validOtp) && (request.Otp == validOtp))
             {
-                SendMetric($"{prefix}.valid");
+                _metricHelper.SendCounterMetric($"{prefix}.valid");
 
                 // Remove code: OTP is valid only once
                 _activeOtps.Remove(request.Email);
@@ -144,13 +146,15 @@ namespace Criteo.IdController.Controllers
                 return Ok(new { token });
             }
 
-            SendMetric($"{prefix}.invalid");
+            _metricHelper.SendCounterMetric($"{prefix}.invalid");
 
             return NotFound(); // TODO: Discuss what to return here
         }
-        #endregion
+
+        #endregion One-time password (OTP)
 
         #region External SSO services
+
         [HttpPost("sso")]
         public async Task<IActionResult> GenerateEmailToken(
             [FromHeader(Name = "User-Agent")] string userAgent,
@@ -160,7 +164,7 @@ namespace Criteo.IdController.Controllers
 
             if (!_emailHelper.IsValidEmail(request.Email))
             {
-                SendMetric($"{prefix}.bad_request");
+                _metricHelper.SendCounterMetric($"{prefix}.bad_request");
                 return BadRequest();
             }
 
@@ -174,17 +178,11 @@ namespace Criteo.IdController.Controllers
             _cookieHelper.SetIdentifierCookie(Response.Cookies, token);
 
             // Metrics
-            SendMetric($"{prefix}.ok");
+            _metricHelper.SendCounterMetric($"{prefix}.ok");
 
             return Ok(new { token });
         }
-        #endregion
 
-        #region Helpers
-        private void SendMetric(string metric)
-        {
-            _metricsRegistry.GetOrRegister(metric, () => new Counter(Granularity.CoarseGrain)).Increment();
-        }
-        #endregion
+        #endregion External SSO services
     }
 }

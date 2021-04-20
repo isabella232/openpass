@@ -85,6 +85,9 @@ namespace Criteo.IdController
             // [Custom] Add cookie helper
             services.AddCookieHelper();
 
+            // Add metric helper
+            services.AddMetricHelper();
+
             // [Custom] Add UID2 adapter
             services.AddUid2Adapter();
 
