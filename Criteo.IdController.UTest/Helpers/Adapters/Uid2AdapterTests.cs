@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using Criteo.IdController.Helpers;
 using Criteo.IdController.Helpers.Adapters;
 using Moq;
 using Moq.Protected;
@@ -13,16 +14,18 @@ namespace Criteo.IdController.UTest.Helpers.Adapters
     [TestFixture]
     public class Uid2HelperTests
     {
+        private Mock<IMetricHelper> _metricHelperMock;
         private Mock<HttpMessageHandler> _messageHandlerMock;
         private Uid2Adapter _uid2Helper;
 
         [SetUp]
         public void SetUp()
         {
+            _metricHelperMock = new Mock<IMetricHelper>();
             _messageHandlerMock = new Mock<HttpMessageHandler>();
             var httpClient = new HttpClient(_messageHandlerMock.Object);
 
-            _uid2Helper = new Uid2Adapter(httpClient);
+            _uid2Helper = new Uid2Adapter(httpClient, _metricHelperMock.Object);
         }
 
         [TestCase(null)]
@@ -83,6 +86,7 @@ namespace Criteo.IdController.UTest.Helpers.Adapters
         }
 
         #region Helpers
+
         private void MockHttpResponse(HttpStatusCode statusCode, string token = "token")
         {
             var httpResponse = new HttpResponseMessage
@@ -96,6 +100,7 @@ namespace Criteo.IdController.UTest.Helpers.Adapters
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(httpResponse);
         }
-        #endregion
+
+        #endregion Helpers
     }
 }

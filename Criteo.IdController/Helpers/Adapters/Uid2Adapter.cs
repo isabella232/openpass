@@ -10,16 +10,19 @@ namespace Criteo.IdController.Helpers.Adapters
         private const string _criteoApiKey = "";
         private const string _uid2MappingEndpoint = "https://integ.uidapi.com/identity/map";
         private const string _uid2EmailParameterName = "email"; // Expected: email=email@example.com
+        private const string _prefix = "uid2adapter";
 
         private readonly HttpClient _httpClient;
+        private readonly IMetricHelper _metricHelper;
 
-        public Uid2Adapter(HttpClient httpClient)
+        public Uid2Adapter(HttpClient httpClient, IMetricHelper metricHelper)
         {
             _httpClient = httpClient;
+            _metricHelper = metricHelper;
         }
 
-        public Uid2Adapter()
-            : this(new HttpClient())
+        public Uid2Adapter(IMetricHelper metricHelper)
+            : this(new HttpClient(), metricHelper)
         {
             _httpClient.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", _criteoApiKey);
@@ -27,9 +30,10 @@ namespace Criteo.IdController.Helpers.Adapters
 
         public async Task<string> GetId(string pii)
         {
+            var prefix = $"{_prefix}.getid";
             if (string.IsNullOrEmpty(pii))
             {
-                // TODO: Emit metric
+                _metricHelper.SendCounterMetric($"{prefix}.invalid.pii");
                 return null;
             }
 
@@ -38,7 +42,7 @@ namespace Criteo.IdController.Helpers.Adapters
 
             if (!response.IsSuccessStatusCode)
             {
-                // TODO: Emit metric
+                _metricHelper.SendCounterMetric($"{prefix}.invalid.response");
                 return null;
             }
 
