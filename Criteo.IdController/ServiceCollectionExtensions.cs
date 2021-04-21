@@ -85,11 +85,11 @@ namespace Criteo.IdController
         {
             services.AddSingleton<IEmailHelper>(r =>
             {
-                var metricsRegistry = r.GetService<IMetricsRegistry>();
+                var metricHelper = r.GetService<IMetricHelper>();
                 var viewRender = r.GetService<IViewRenderHelper>();
                 var emailConfiguration = new EmailConfiguration(configuration);
 
-                return new EmailHelper(metricsRegistry, viewRender, emailConfiguration);
+                return new EmailHelper(metricHelper, viewRender, emailConfiguration);
             });
 
             return services;

@@ -1,11 +1,9 @@
-using System;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Criteo.IdController.Controllers;
 using Criteo.IdController.Helpers;
 using Criteo.UserIdentification;
-using Metrics;
 using static Criteo.Glup.IdController.Types;
 using CriteoId = Criteo.UserIdentification.CriteoId;
 
@@ -17,7 +15,7 @@ namespace Criteo.IdController.UTest.Controllers
         private EventController _eventController;
         private Mock<IConfigurationHelper> _configurationHelperMock;
         private Mock<IGlupHelper> _glupHelperMock;
-        private Mock<IMetricsRegistry> _metricRegistryMock;
+        private Mock<IMetricHelper> _metricHelperMock;
         private Mock<IInternalMappingHelper> _internalMappingHelperMock;
 
         private const string _testUserAgent = "TestUserAgent";
@@ -25,21 +23,20 @@ namespace Criteo.IdController.UTest.Controllers
         private const string _testingUid = "00000000-0000-0000-0000-000000000002";
         private const string _testingIfa = "00000000-0000-0000-0000-000000000003";
 
-
         [SetUp]
         public void Setup()
         {
             _configurationHelperMock = new Mock<IConfigurationHelper>();
             _configurationHelperMock.Setup(x => x.EmitGlupsRatio(It.IsAny<string>())).Returns(1.0); // activate glupping by default
             _glupHelperMock = new Mock<IGlupHelper>();
-            _metricRegistryMock = new Mock<IMetricsRegistry>();
-            _metricRegistryMock.Setup(mr => mr.GetOrRegister(It.IsAny<string>(), It.IsAny<Func<Counter>>())).Returns(new Counter(Granularity.CoarseGrain));
+            _metricHelperMock = new Mock<IMetricHelper>();
+            _metricHelperMock.Setup(mr => mr.SendCounterMetric(It.IsAny<string>()));
             _internalMappingHelperMock = new Mock<IInternalMappingHelper>();
             _internalMappingHelperMock.Setup(x => x.GetInternalCriteoId(It.IsAny<CriteoId?>())).ReturnsAsync((CriteoId? criteoId) => criteoId);
             _internalMappingHelperMock.Setup(x => x.GetInternalLocalWebId(It.IsAny<LocalWebId?>())).ReturnsAsync((LocalWebId? lwid) => lwid);
             _internalMappingHelperMock.Setup(x => x.GetInternalUserCentricAdId(It.IsAny<UserCentricAdId?>())).ReturnsAsync((UserCentricAdId? ucaid) => ucaid);
 
-            _eventController = new EventController(_configurationHelperMock.Object, _metricRegistryMock.Object, _internalMappingHelperMock.Object, _glupHelperMock.Object);
+            _eventController = new EventController(_configurationHelperMock.Object, _metricHelperMock.Object, _internalMappingHelperMock.Object, _glupHelperMock.Object);
         }
 
         [TestCase(EventType.BannerRequest, "originHost.com")]

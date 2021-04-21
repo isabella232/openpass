@@ -5,7 +5,6 @@ using NUnit.Framework;
 using Criteo.IdController.Controllers;
 using Criteo.IdController.Helpers;
 using Criteo.IdController.Helpers.Adapters;
-using Metrics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +14,7 @@ namespace Criteo.IdController.UTest.Controllers
     public class UnAuthenticatedControllerTests
     {
         private Mock<IIdentifierAdapter> _uid2AdapterMock;
-        private Mock<IMetricsRegistry> _metricRegistryMock;
+        private Mock<IMetricHelper> _metricHelperMock;
         private Mock<ICookieHelper> _cookieHelperMock;
         private UnAuthenticatedController _unauthenticatedController;
 
@@ -23,11 +22,11 @@ namespace Criteo.IdController.UTest.Controllers
         public void Setup()
         {
             _uid2AdapterMock = new Mock<IIdentifierAdapter>();
-            _metricRegistryMock = new Mock<IMetricsRegistry>();
-            _metricRegistryMock.Setup(mr => mr.GetOrRegister(It.IsAny<string>(), It.IsAny<Func<Counter>>())).Returns(new Counter(Granularity.CoarseGrain));
+            _metricHelperMock = new Mock<IMetricHelper>();
+            _metricHelperMock.Setup(mr => mr.SendCounterMetric(It.IsAny<string>()));
             _cookieHelperMock = new Mock<ICookieHelper>();
 
-            _unauthenticatedController = new UnAuthenticatedController(_uid2AdapterMock.Object, _metricRegistryMock.Object, _cookieHelperMock.Object)
+            _unauthenticatedController = new UnAuthenticatedController(_uid2AdapterMock.Object, _metricHelperMock.Object, _cookieHelperMock.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
@@ -109,6 +108,7 @@ namespace Criteo.IdController.UTest.Controllers
         }
 
         #region Helpers
+
         private static dynamic GetResponseData(IActionResult response)
         {
             var responseContent = response as OkObjectResult;
@@ -116,6 +116,7 @@ namespace Criteo.IdController.UTest.Controllers
 
             return data;
         }
-        #endregion
+
+        #endregion Helpers
     }
 }

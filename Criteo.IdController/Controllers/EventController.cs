@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Criteo.IdController.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Criteo.UserIdentification;
-using Metrics;
 using static Criteo.Glup.IdController.Types;
 
 namespace Criteo.IdController.Controllers
@@ -11,27 +10,29 @@ namespace Criteo.IdController.Controllers
     [Route("api/[controller]")]
     public class EventController : Controller
     {
-        private static readonly string metricPrefix = "event.";
+        private static readonly string _metricPrefix = "event.";
         private readonly IConfigurationHelper _configurationHelper;
-        private readonly IMetricsRegistry _metricsRegistry;
+        private readonly IMetricHelper _metricHelper;
         private readonly IInternalMappingHelper _internalMappingHelper;
+
         private readonly IGlupHelper _glupHelper;
         private readonly Random _randomGenerator;
 
         public EventController(
             IConfigurationHelper configurationHelper,
-            IMetricsRegistry metricRegistry,
+            IMetricHelper metricHelper,
             IInternalMappingHelper internalMappingHelper,
             IGlupHelper glupHelper)
         {
             _configurationHelper = configurationHelper;
-            _metricsRegistry = metricRegistry;
+            _metricHelper = metricHelper;
             _internalMappingHelper = internalMappingHelper;
             _glupHelper = glupHelper;
             _randomGenerator = new Random();
         }
 
         #region Request model
+
         public class EventRequest
         {
             public EventType EventType { get; set; }
@@ -40,20 +41,21 @@ namespace Criteo.IdController.Controllers
             public string Uid { get; set; }
             public string Ifa { get; set; }
         }
-        #endregion
+
+        #endregion Request model
 
         [HttpPost]
         public async Task<IActionResult> SaveEvent(
             [FromHeader(Name = "User-Agent")] string userAgent,
             [FromBody] EventRequest request)
         {
-            _metricsRegistry.GetOrRegister($"{metricPrefix}.save_event", () => new Counter(Granularity.CoarseGrain)).Increment();
+            _metricHelper.SendCounterMetric($"{_metricPrefix}.save_event");
 
             // the controller tries to parse the EventType from the integer received
             // EventType.Unknown is either unsuccessful or indeed a evenType = 0, invalid in both cases
             if (request.EventType == EventType.Unknown || string.IsNullOrEmpty(request.OriginHost))
             {
-                _metricsRegistry.GetOrRegister($"{metricPrefix}.save_event.bad_request", () => new Counter(Granularity.CoarseGrain)).Increment();
+                _metricHelper.SendCounterMetric($"{_metricPrefix}.save_event.bad_request");
                 return BadRequest();
             }
 
@@ -67,11 +69,11 @@ namespace Criteo.IdController.Controllers
             var samplingRatio = _configurationHelper.EmitGlupsRatio(request.OriginHost);
             if (_randomGenerator.NextDouble() > samplingRatio)
             {
-                _metricsRegistry.GetOrRegister($"{metricPrefix}.save_event.emit_glup.over_sampling_ratio", () => new Counter(Granularity.CoarseGrain)).Increment();
+                _metricHelper.SendCounterMetric($"{_metricPrefix}.save_event.emit_glup.over_sampling_ratio");
             }
             else
             {
-                _metricsRegistry.GetOrRegister($"{metricPrefix}.save_event.emit_glup", () => new Counter(Granularity.CoarseGrain)).Increment();
+                _metricHelper.SendCounterMetric($"{_metricPrefix}.save_event.emit_glup");
                 _glupHelper.EmitGlup(request.EventType, request.OriginHost, userAgent, internalLocalWebId, internalUid, internalUserCentricAdId);
             }
 

@@ -4,29 +4,29 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Criteo.Logging;
-using Metrics;
 
 namespace Criteo.IdController.Helpers
 {
     public interface IEmailHelper
     {
         Task SendOtpEmail(string recipient, string otp);
+
         bool IsValidEmail(string email);
     }
 
     public class EmailHelper : IEmailHelper
     {
-        private static readonly string metricPrefix = "email.";
+        private static readonly string _metricPrefix = "email.";
 
         private static readonly ILogger _logger = LogManager.GetLogger<EmailHelper>();
-        private readonly IMetricsRegistry _metricsRegistry;
+        private readonly IMetricHelper _metricsHelper;
         private readonly IViewRenderHelper _viewRenderHelper;
         private readonly IEmailConfiguration _config;
         private readonly SmtpClient _smtpClient;
 
-        public EmailHelper(IMetricsRegistry metricsRegistry, IViewRenderHelper viewRenderHelper, IEmailConfiguration emailConfiguration)
+        public EmailHelper(IMetricHelper metricsHelper, IViewRenderHelper viewRenderHelper, IEmailConfiguration emailConfiguration)
         {
-            _metricsRegistry = metricsRegistry;
+            _metricsHelper = metricsHelper;
             _viewRenderHelper = viewRenderHelper;
             _config = emailConfiguration;
 
@@ -93,21 +93,23 @@ namespace Criteo.IdController.Helpers
         }
 
         #region Callback
+
         // Using async method to avoid blocking the calling thread, this callback
         // will be called when the operation is completed
         private void SendCompletedCallback(object token, AsyncCompletedEventArgs e)
         {
-            var metric = $"{metricPrefix}.{token}";
+            var metric = $"{_metricPrefix}.{token}";
             if (e.Error != null)
             {
-                _metricsRegistry.GetOrRegister($"{metric}.error", () => new Counter(Granularity.CoarseGrain)).Increment();
+                _metricsHelper.SendCounterMetric($"{metric}.error");
                 _logger.Log(LogLevel.Error, "Error when sending email", e.Error);
             }
             else
             {
-                _metricsRegistry.GetOrRegister($"{metric}.success", () => new Counter(Granularity.CoarseGrain)).Increment();
+                _metricsHelper.SendCounterMetric($"{metric}.success");
             }
         }
-        #endregion
+
+        #endregion Callback
     }
 }

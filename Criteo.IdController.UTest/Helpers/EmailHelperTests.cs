@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Criteo.IdController.Helpers;
-using Metrics;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using NUnit.Framework;
@@ -16,7 +15,7 @@ namespace Criteo.IdController.UTest.Helpers
         public void Setup()
         {
             _emailHelper = new EmailHelper(
-                Mock.Of<IMetricsRegistry>(),
+                Mock.Of<IMetricHelper>(),
                 Mock.Of<IViewRenderHelper>(),
                 Mock.Of<IEmailConfiguration>());
         }
@@ -44,6 +43,7 @@ namespace Criteo.IdController.UTest.Helpers
         }
 
         #region Email configuration
+
         [Test]
         public void UserConfigurationTest()
         {
@@ -95,6 +95,7 @@ namespace Criteo.IdController.UTest.Helpers
                 Assert.AreEqual(emailConfig.AuthPassword, null);
             });
         }
-        #endregion
+
+        #endregion Email configuration
     }
 }

@@ -76,6 +76,9 @@ namespace Criteo.IdController
             // [Custom] Add view render helper
             services.AddViewRenderHelper();
 
+            // Add metric helper
+            services.AddMetricHelper();
+
             // [Custom] Add email helper
             services.AddEmailHelper(Configuration);
 
@@ -84,9 +87,6 @@ namespace Criteo.IdController
 
             // [Custom] Add cookie helper
             services.AddCookieHelper();
-
-            // Add metric helper
-            services.AddMetricHelper();
 
             // [Custom] Add UID2 adapter
             services.AddUid2Adapter();
