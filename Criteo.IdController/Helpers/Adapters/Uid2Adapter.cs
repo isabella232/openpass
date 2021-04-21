@@ -28,16 +28,16 @@ namespace Criteo.IdController.Helpers.Adapters
                     new AuthenticationHeaderValue("Bearer", _criteoApiKey);
         }
 
-        public async Task<string> GetId(string pii)
+        public async Task<string> GetId(string emailIdentifier)
         {
             var prefix = $"{_prefix}.getid";
-            if (string.IsNullOrEmpty(pii))
+            if (string.IsNullOrEmpty(emailIdentifier))
             {
-                _metricHelper.SendCounterMetric($"{prefix}.invalid.pii");
+                _metricHelper.SendCounterMetric($"{prefix}.invalid.emailIdentifier");
                 return null;
             }
 
-            var requestUri = GetRequestUri(pii);
+            var requestUri = GetRequestUri(emailIdentifier);
             var response = await _httpClient.GetAsync(requestUri);
 
             if (!response.IsSuccessStatusCode)

@@ -10,8 +10,13 @@ namespace Criteo.IdController.Controllers
     [Route("open-pass")]
     public class OpenPassController : Controller
     {
-
         private static readonly string metricPrefix = "open-pass.";
+        private static readonly string _distFolderName = "dist";
+        private static readonly string _widgetJsPath = "widget/assets/widget.js";
+        private static readonly string _widgetIndexHtmlPath = "dist/widget/index.html";
+        private static readonly string _distIndexHtmlPath = "dist/index.html";
+        private static readonly string _mediaTypeHeaderValue = "text/html";
+
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IMetricsRegistry _metricsRegistry;
 
@@ -26,9 +31,9 @@ namespace Criteo.IdController.Controllers
         {
             var scriptPath = Path.Combine(
                 _hostingEnvironment.ContentRootPath,
-                "dist",
-                 HostingEnvironmentHelper.GetEnvironment() == HostingEnvironment.PreProd ? "preprod" : "",
-                 "widget/assets/widget.js"
+                _distFolderName,
+                 HostingEnvironmentHelper.GetEnvironment() == HostingEnvironment.PreProd ? "preprod" : string.Empty,
+                 _widgetJsPath
              );
 
             if (isIframe?.Length > 0)
@@ -46,7 +51,7 @@ namespace Criteo.IdController.Controllers
         public IActionResult Iframe()
         {
             _metricsRegistry.GetOrRegister($"{metricPrefix}.widget-iframe", () => new Counter(Granularity.CoarseGrain)).Increment();
-            return new PhysicalFileResult(Path.Combine(_hostingEnvironment.ContentRootPath, "dist/widget/index.html"), new MediaTypeHeaderValue("text/html"));
+            return new PhysicalFileResult(Path.Combine(_hostingEnvironment.ContentRootPath, _widgetIndexHtmlPath), new MediaTypeHeaderValue(_mediaTypeHeaderValue));
         }
 
         [HttpGet("{*anything}")]
@@ -54,7 +59,7 @@ namespace Criteo.IdController.Controllers
         {
             _metricsRegistry.GetOrRegister($"{metricPrefix}.open-pass-SPA", () => new Counter(Granularity.CoarseGrain)).Increment();
             // "dist" is the directory containing the built UI application, that should be published alongside with it from your UI project.
-            return new PhysicalFileResult(Path.Combine(_hostingEnvironment.ContentRootPath, "dist/index.html"), new MediaTypeHeaderValue("text/html"));
+            return new PhysicalFileResult(Path.Combine(_hostingEnvironment.ContentRootPath, _distIndexHtmlPath), new MediaTypeHeaderValue(_mediaTypeHeaderValue));
         }
     }
 }
