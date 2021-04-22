@@ -123,15 +123,25 @@ namespace Criteo.IdController.Controllers
 
                 // Retrieve UID2 token, set cookie and send token back in payload
                 var token = await _uid2Adapter.GetId(request.Email);
-                // TODO: Check token is not null, what do we do in that case?
-                _cookieHelper.SetIdentifierCookie(Response.Cookies, token);
+                if (string.IsNullOrEmpty(token))
+                {
+                    _metricHelper.SendCounterMetric($"{prefix}.error.no_token");
+                }
+                else
+                {
+                    _metricHelper.SendCounterMetric($"{prefix}.ok");
 
-                return Ok(new { token });
+                    // Set cookie
+                    _cookieHelper.SetIdentifierCookie(Response.Cookies, token);
+                    return Ok(new { token });
+                }
+            }
+            else
+            {
+                _metricHelper.SendCounterMetric($"{prefix}.invalid");
             }
 
-            _metricHelper.SendCounterMetric($"{prefix}.invalid");
-
-            return NotFound(); // TODO: Discuss what to return here
+            return NotFound();
         }
 
         #endregion One-time password (OTP)
@@ -157,7 +167,13 @@ namespace Criteo.IdController.Controllers
 
             // 2. Retrieve UID2 token, set cookie and send token back in payload
             var token = await _uid2Adapter.GetId(request.Email);
-            // TODO: Check token is not null, what do we do in that case?
+
+            if (string.IsNullOrEmpty(token))
+            {
+                _metricHelper.SendCounterMetric($"{prefix}.error.no_token");
+                return NotFound();
+            }
+
             _cookieHelper.SetIdentifierCookie(Response.Cookies, token);
 
             // Metrics

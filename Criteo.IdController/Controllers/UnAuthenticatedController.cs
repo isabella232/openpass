@@ -26,11 +26,12 @@ namespace Criteo.IdController.Controllers
         public async Task<IActionResult> GetOrCreateIfa()
         {
             string token;
+            var prefix = $"{_metricPrefix}.get.create";
 
             if (_cookieHelper.TryGetIdentifierCookie(Request.Cookies, out var tokenCookie))
             {
                 token = tokenCookie;
-                _metricHelper.SendCounterMetric($"{_metricPrefix}.get.create.reuse");
+                _metricHelper.SendCounterMetric($"{prefix}.reuse");
             }
             else
             {
@@ -40,11 +41,11 @@ namespace Criteo.IdController.Controllers
 
                 if (string.IsNullOrEmpty(token))
                 {
-                    _metricHelper.SendCounterMetric($"{_metricPrefix}.get.create.error.no_token");
+                    _metricHelper.SendCounterMetric($"{prefix}.error.no_token");
                     return NotFound();
                 }
 
-                _metricHelper.SendCounterMetric($"{_metricPrefix}.get.create.ok");
+                _metricHelper.SendCounterMetric($"{prefix}.ok");
             }
 
             // Set cookie
