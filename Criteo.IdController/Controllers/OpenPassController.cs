@@ -12,7 +12,7 @@ namespace Criteo.IdController.Controllers
     {
         private static readonly string _metricPrefix = "open-pass.";
         private static readonly string _distFolderName = "dist";
-        private static readonly string _widgetJsPath = "widget/assets/widget.js";
+        private static readonly string _widgetJsPath = "widget/assets/widget.min.js";
         private static readonly string _widgetIndexHtmlPath = "dist/widget/index.html";
         private static readonly string _distIndexHtmlPath = "dist/index.html";
         private static readonly string _mediaTypeHeaderValue = "text/html";
