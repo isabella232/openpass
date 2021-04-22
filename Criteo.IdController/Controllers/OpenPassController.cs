@@ -27,8 +27,9 @@ namespace Criteo.IdController.Controllers
         }
 
         [HttpGet("widget-app")]
-        public IActionResult Widget([FromQuery(Name = "isIframe")] string isIframe, [FromQuery(Name = "iframeParent")] string iframeParent)
+        public IActionResult Widget()
         {
+            _metricHelper.SendCounterMetric($"{_metricPrefix}.widget-app");
             var scriptPath = Path.Combine(
                 _hostingEnvironment.ContentRootPath,
                 _distFolderName,
@@ -36,15 +37,7 @@ namespace Criteo.IdController.Controllers
                  _widgetJsPath
              );
 
-            if (isIframe?.Length > 0)
-            {
-                // TODO: implement iframe loading
-                return Ok(isIframe);
-            }
-            else
-            {
-                return new PhysicalFileResult(scriptPath, new MediaTypeHeaderValue("application/javascript"));
-            }
+            return new PhysicalFileResult(scriptPath, new MediaTypeHeaderValue("application/javascript"));
         }
 
         [HttpGet("iframe-app")]
