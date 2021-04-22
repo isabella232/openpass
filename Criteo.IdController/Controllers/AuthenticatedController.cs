@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Criteo.IdController.Helpers;
 using Criteo.IdController.Helpers.Adapters;
+using Criteo.IdController.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
@@ -46,24 +47,6 @@ namespace Criteo.IdController.Controllers
             _codeGeneratorHelper = codeGeneratorHelper;
             _cookieHelper = cookieHelper;
         }
-
-        #region Request models
-
-        public abstract class GenericRequest
-        {
-            public string Email { get; set; }
-            public string OriginHost { get; set; }
-        }
-
-        public class GenerateRequest : GenericRequest
-        { }
-
-        public class ValidateRequest : GenericRequest
-        {
-            public string Otp { get; set; }
-        }
-
-        #endregion Request models
 
         #region One-time password (OTP)
 

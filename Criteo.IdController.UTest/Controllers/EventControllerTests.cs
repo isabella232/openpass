@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
-using Moq;
-using NUnit.Framework;
 using Criteo.IdController.Controllers;
 using Criteo.IdController.Helpers;
+using Criteo.IdController.Models;
 using Criteo.UserIdentification;
+using Moq;
+using NUnit.Framework;
 using static Criteo.Glup.IdController.Types;
 using CriteoId = Criteo.UserIdentification.CriteoId;
 
@@ -42,7 +43,7 @@ namespace Criteo.IdController.UTest.Controllers
         [TestCase(EventType.BannerRequest, "originHost.com")]
         public async Task GlupEmittedWhenRequiredParametersArePresent(EventType eventType, string originHost)
         {
-            var request = new EventController.EventRequest()
+            var request = new EventRequest
             {
                 EventType = eventType,
                 OriginHost = originHost
@@ -65,7 +66,7 @@ namespace Criteo.IdController.UTest.Controllers
         [TestCase(EventType.BannerRequest, null)]
         public async Task GlupNotEmittedWhenRequiredParametersAreNotPresent(EventType eventType, string originHost)
         {
-            var request = new EventController.EventRequest()
+            var request = new EventRequest
             {
                 EventType = eventType,
                 OriginHost = originHost
@@ -90,7 +91,7 @@ namespace Criteo.IdController.UTest.Controllers
             // use edge cases to test ratio (regardless of the value of the randomly generated value)
             _configurationHelperMock.Setup(x => x.EmitGlupsRatio(It.IsAny<string>())).Returns(ratio);
 
-            var request = new EventController.EventRequest()
+            var request = new EventRequest
             {
                 EventType = EventType.BannerRequest,
                 OriginHost = "originHost.com"
@@ -133,7 +134,7 @@ namespace Criteo.IdController.UTest.Controllers
                 expectedIfa = revIfa.Value.ToString();
             }
 
-            var request = new EventController.EventRequest()
+            var request = new EventRequest
             {
                 EventType = EventType.BannerRequest,
                 OriginHost = host,

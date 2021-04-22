@@ -4,6 +4,7 @@ using Criteo.IdController.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Criteo.UserIdentification;
 using static Criteo.Glup.IdController.Types;
+using Criteo.IdController.Models;
 
 namespace Criteo.IdController.Controllers
 {
@@ -30,19 +31,6 @@ namespace Criteo.IdController.Controllers
             _glupHelper = glupHelper;
             _randomGenerator = new Random();
         }
-
-        #region Request model
-
-        public class EventRequest
-        {
-            public EventType EventType { get; set; }
-            public string OriginHost { get; set; }
-            public string LocalWebId { get; set; }
-            public string Uid { get; set; }
-            public string Ifa { get; set; }
-        }
-
-        #endregion Request model
 
         [HttpPost]
         public async Task<IActionResult> SaveEvent(
