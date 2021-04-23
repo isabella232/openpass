@@ -107,12 +107,16 @@ export class AppComponent implements OnInit, OnDestroy {
     const componentRef = this.viewElement.viewContainerRef.createComponent<any>(componentFactory);
 
     componentRef.instance.view = this.view;
+    componentRef.instance.session = this.session;
     componentRef.instance.provider = this.provider;
   }
 
   private async getComponentClass() {
     /* eslint-disable @typescript-eslint/naming-convention */
     switch (true) {
+      case this.variant === Variants.redirect:
+        const { RedirectComponent } = await import('./containers/redirect/redirect.component');
+        return RedirectComponent;
       case this.session === Sessions.unauthenticated:
         const { UnloggedComponent } = await import('./containers/unlogged/unlogged.component');
         return UnloggedComponent;
