@@ -73,9 +73,10 @@ export class UnloggedComponent implements OnInit, OnDestroy {
   }
 
   launchOpenPassApp() {
-    const queryParams = new URLSearchParams({ origin: this.window.location.origin });
-    const url = `${environment.idControllerAppUrl}/unauthenticated?${queryParams}`;
-    this.openPassWindow = this.window.open(url, '_blank', this.openerConfigs);
+    const appPath = new URL(environment.idControllerAppUrl);
+    appPath.pathname += environment.unloggedPath;
+    appPath.searchParams.set('origin', this.window.location.origin);
+    this.openPassWindow = this.window.open(appPath.toString(), '_blank', this.openerConfigs);
     if (this.openPassWindow) {
       this.messageSubscriptionService.initTokenListener(this.openPassWindow);
       this.listenForClosingRequest();
