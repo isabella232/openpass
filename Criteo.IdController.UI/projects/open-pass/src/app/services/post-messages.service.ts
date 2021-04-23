@@ -32,6 +32,10 @@ export class PostMessagesService {
   }
 
   sendMessage(payload: PostMessagePayload) {
+    const isRedirectFlow = !this.window.opener && this.window.parent === this.window;
+    if (isRedirectFlow) {
+      return;
+    }
     const data: PostMessageData = {
       type: PostMessageTypes.openPass,
       payload,

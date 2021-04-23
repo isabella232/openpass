@@ -17,6 +17,10 @@ export class AuthService {
     return !!this.storageUserToken;
   }
 
+  get token(): string {
+    return this.storageUserToken;
+  }
+
   get isEmailUsed(): boolean {
     return !!this.storageUserEmail;
   }
