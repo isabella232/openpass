@@ -25,21 +25,29 @@ namespace Criteo.IdController.UTest.Helpers
         [Test]
         public void GetIdentifierCookieTest()
         {
+            // Arrange
             string placeholder;
             var cookieContainerMock = new Mock<IRequestCookieCollection>();
 
+            // Act
             _cookieHelper.TryGetIdentifierCookie(cookieContainerMock.Object, out _);
 
+            // Assert
             cookieContainerMock.Verify(c => c.TryGetValue(It.Is<string>(k => k == _identifierCookieName), out placeholder), Times.Once);
         }
 
         [Test]
         public void SetIdentifierCookieTest()
         {
+            // Arrange
             var cookieContainerMock = new Mock<IResponseCookies>();
+
+            // Act
             _cookieHelper.SetIdentifierCookie(cookieContainerMock.Object, "value");
 
             var expectedExpire = DateTime.Today.AddDays(_cookieLifetimeDays);
+
+            // Assert
             cookieContainerMock.Verify(c =>
                 c.Append(
                     It.Is<string>(k => k == _identifierCookieName),
@@ -50,10 +58,13 @@ namespace Criteo.IdController.UTest.Helpers
         [Test]
         public void RemoveIdentifierCookieTest()
         {
+            // Arrange
             var cookieContainerMock = new Mock<IResponseCookies>();
 
+            // Act
             _cookieHelper.RemoveIdentifierCookie(cookieContainerMock.Object);
 
+            // Assert
             cookieContainerMock.Verify(c => c.Delete(It.Is<string>(k => k == _identifierCookieName)), Times.Once);
         }
 

@@ -43,13 +43,16 @@ namespace Criteo.IdController.UTest.Controllers
         [TestCase(EventType.BannerRequest, "originHost.com")]
         public async Task GlupEmittedWhenRequiredParametersArePresent(EventType eventType, string originHost)
         {
+            // Arrange
             var request = new EventRequest
             {
                 EventType = eventType,
                 OriginHost = originHost
             };
+            // Act
             await _eventController.SaveEvent(_testUserAgent, request);
 
+            // Assert
             _glupHelperMock.Verify(
                 x => x.EmitGlup(
                     It.Is<EventType>(e => e == eventType),
@@ -66,13 +69,16 @@ namespace Criteo.IdController.UTest.Controllers
         [TestCase(EventType.BannerRequest, null)]
         public async Task GlupNotEmittedWhenRequiredParametersAreNotPresent(EventType eventType, string originHost)
         {
+            // Arrange
             var request = new EventRequest
             {
                 EventType = eventType,
                 OriginHost = originHost
             };
+            // Act
             await _eventController.SaveEvent(_testUserAgent, request);
 
+            // Assert
             _glupHelperMock.Verify(
                 x => x.EmitGlup(
                     It.IsAny<EventType>(),
@@ -88,6 +94,7 @@ namespace Criteo.IdController.UTest.Controllers
         [TestCase(1.0, true)]
         public async Task GlupEmissionAppliesRatio(double ratio, bool expectGlup)
         {
+            // Arrange
             // use edge cases to test ratio (regardless of the value of the randomly generated value)
             _configurationHelperMock.Setup(x => x.EmitGlupsRatio(It.IsAny<string>())).Returns(ratio);
 
@@ -96,8 +103,10 @@ namespace Criteo.IdController.UTest.Controllers
                 EventType = EventType.BannerRequest,
                 OriginHost = "originHost.com"
             };
+            // Act
             await _eventController.SaveEvent(_testUserAgent, request);
 
+            // Assert
             _glupHelperMock.Verify(
                 x => x.EmitGlup(
                     It.IsAny<EventType>(),
@@ -112,6 +121,7 @@ namespace Criteo.IdController.UTest.Controllers
         [Theory]
         public async Task GlupSupportsRevocableId(bool revocable)
         {
+            // Arrange
             var host = "originHost.com";
             var expectedLwid = _testingLwid;
             var expectedUid = _testingUid;
@@ -142,8 +152,11 @@ namespace Criteo.IdController.UTest.Controllers
                 Uid = _testingUid,
                 Ifa = _testingIfa
             };
+
+            // Act
             await _eventController.SaveEvent(_testUserAgent, request);
 
+            // Assert
             _glupHelperMock.Verify(
                 x => x.EmitGlup(
                     It.IsAny<EventType>(),

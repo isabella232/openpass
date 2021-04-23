@@ -23,9 +23,13 @@ namespace Criteo.IdController.UTest.Helpers
         [Test]
         public void ValidEmailTest()
         {
+            // Arrange
             var validEmail = "hello@example.com";
+
+            // Act
             var validation = _emailHelper.IsValidEmail(validEmail);
 
+            // Assert
             Assert.IsTrue(validation);
         }
 
@@ -37,8 +41,10 @@ namespace Criteo.IdController.UTest.Helpers
         [TestCase("email@.com")]
         public void InvalidEmailTest(string email)
         {
+            // Arrange && Act
             var validation = _emailHelper.IsValidEmail(email);
 
+            // Assert
             Assert.IsFalse(validation);
         }
 
@@ -47,6 +53,7 @@ namespace Criteo.IdController.UTest.Helpers
         [Test]
         public void UserConfigurationTest()
         {
+            // Arrange
             var fakeSettings = new Dictionary<string, string> {
                 { "Email:Server:Host", "mail.example.com" },
                 { "Email:Server:Port", "25" },
@@ -61,8 +68,10 @@ namespace Criteo.IdController.UTest.Helpers
                 .AddInMemoryCollection(fakeSettings)
                 .Build();
 
+            // Act
             var emailConfig = new EmailConfiguration(configuration);
 
+            // Assert
             Assert.Multiple(() =>
             {
                 Assert.AreEqual(emailConfig.MailServer, "mail.example.com");
@@ -78,12 +87,15 @@ namespace Criteo.IdController.UTest.Helpers
         [Test]
         public void DefaultConfigurationTest()
         {
+            // Arrange
             IConfiguration configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(null)
                 .Build();
 
+            // Act
             var emailConfig = new EmailConfiguration(configuration);
 
+            // Assert
             Assert.Multiple(() =>
             {
                 Assert.AreEqual(emailConfig.MailServer, "mail-relay.service.consul");

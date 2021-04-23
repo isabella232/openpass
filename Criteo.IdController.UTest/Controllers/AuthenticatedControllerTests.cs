@@ -69,74 +69,102 @@ namespace Criteo.IdController.UTest.Controllers
         [Test]
         public void ForbiddenWhenGenerationNotEnabled()
         {
+            // Arrange
             _configurationHelperMock.Setup(c => c.EnableOtp).Returns(false);
             var request = new GenerateRequest { Email = "example@mail.com" };
+
+            // Act
             var response = _authenticatedController.GenerateOtp(_testUserAgent, request);
 
+            // Assert
             Assert.IsAssignableFrom<NotFoundResult>(response);
         }
 
         [Test]
         public async Task ForbiddenWhenValidationNotEnabled()
         {
+            // Arrange
             _configurationHelperMock.Setup(c => c.EnableOtp).Returns(false);
             var request = new ValidateRequest{ Email = "example@mail.com", Otp = "123456" };
+
+            // Act
             var response = await _authenticatedController.ValidateOtp(_testUserAgent, request);
 
+            // Assert
             Assert.IsAssignableFrom<NotFoundResult>(response);
         }
 
         [Test]
         public void BadRequestWhenGenerationEmailIsInvalid()
         {
+            // Arrange
             _emailHelperMock.Setup(e => e.IsValidEmail(It.IsAny<string>())).Returns(false);
 
             var request = new GenerateRequest();
+
+            // Act
             var response = _authenticatedController.GenerateOtp(_testUserAgent, request);
 
+            // Assert
             Assert.IsAssignableFrom<BadRequestResult>(response);
         }
 
         [Test]
         public async Task BadRequestWhenValidationEmailIsInvalid()
         {
+            // Arrange
             _emailHelperMock.Setup(e => e.IsValidEmail(It.IsAny<string>())).Returns(false);
 
             var request = new ValidateRequest();
+
+            // Act
             var response = await _authenticatedController.ValidateOtp(_testUserAgent, request);
 
+            // Assert
             Assert.IsAssignableFrom<BadRequestResult>(response);
         }
 
         [Test]
         public async Task BadRequestWhenValidationOtpIsInvalid()
         {
+            // Arrange
             _codeGeneratorHelperMock.Setup(c => c.IsValidCode(It.IsAny<string>())).Returns(false);
 
             var request = new ValidateRequest();
+
+            // Act
             var response = await _authenticatedController.ValidateOtp(_testUserAgent, request);
 
+            // Assert
             Assert.IsAssignableFrom<BadRequestResult>(response);
         }
 
         [Test]
         public async Task BadRequestWhenValidationEmailAndOtpAreInvalid()
         {
+            // Arrange
             _emailHelperMock.Setup(e => e.IsValidEmail(It.IsAny<string>())).Returns(false);
             _codeGeneratorHelperMock.Setup(c => c.IsValidCode(It.IsAny<string>())).Returns(false);
 
             var request = new ValidateRequest();
+
+            // Act
             var response = await _authenticatedController.ValidateOtp(_testUserAgent, request);
 
+            // Assert
             Assert.IsAssignableFrom<BadRequestResult>(response);
         }
 
         [Test]
         public void ValidRequestGeneration()
         {
+            // Arrange
             var request = new GenerateRequest();
+
+            // Act
             var response = _authenticatedController.GenerateOtp(_testUserAgent, request);
 
+            // Assert
             Assert.IsAssignableFrom<NoContentResult>(response);
             _codeGeneratorHelperMock.Verify(c => c.GenerateRandomCode(), Times.Once);
         }
@@ -171,9 +199,13 @@ namespace Criteo.IdController.UTest.Controllers
         [TestCase("origin.com")]
         public void GenerationGlupEmitted(string originHost)
         {
+            // Arrange
             var request = new GenerateRequest { Email = "example@mail.com", OriginHost = originHost };
+
+            // Act
             _authenticatedController.GenerateOtp(_testUserAgent, request);
 
+            // Assert
             _glupHelperMock.Verify(g => g.EmitGlup(
                     It.Is<EventType>(e => e == EventType.EmailEntered),
                     It.Is<string>(h => h == originHost),
@@ -188,14 +220,18 @@ namespace Criteo.IdController.UTest.Controllers
         [TestCase("origin.com")]
         public async Task ValidationGlupEmitted(string originHost)
         {
+            // Arrange
             object code = "123456";
             _memoryCache
                 .Setup(m => m.TryGetValue(It.IsAny<object>(), out code))
                 .Returns(true);
 
             var request = new ValidateRequest { Email = "example@mail.com", Otp = (string) code, OriginHost = originHost };
+
+            // Act
             await _authenticatedController.ValidateOtp(_testUserAgent, request);
 
+            // Assert
             _glupHelperMock.Verify(g => g.EmitGlup(
                 It.Is<EventType>(e => e == EventType.EmailValidated),
                 It.Is<string>(h => h == originHost),
@@ -209,22 +245,32 @@ namespace Criteo.IdController.UTest.Controllers
         [Test]
         public void GenerateOTPAndAddToCache()
         {
+            // Arrange
             var email = "example@mail.com";
             var request = new GenerateRequest { Email = email };
+
+            // Act
             _authenticatedController.GenerateOtp(_testUserAgent, request);
+
+            // Assert
             _memoryCache.Verify(m => m.CreateEntry(It.Is<string>(s => s == email)), Times.Once);
         }
 
         [Test]
         public void GenerateOTPAndSendEmail()
         {
+            // Arrange
             var email = "example@mail.com";
             var code = "123456";
 
             _codeGeneratorHelperMock.Setup(c => c.GenerateRandomCode()).Returns(code);
 
             var request = new GenerateRequest { Email = email };
+
+            // Act
             _authenticatedController.GenerateOtp(_testUserAgent, request);
+
+            // Assert
             _emailHelperMock.Verify(e => e.SendOtpEmail(It.Is<string>(s => s == email), It.Is<string>(c => c == code)), Times.Once);
         }
 
@@ -264,6 +310,7 @@ namespace Criteo.IdController.UTest.Controllers
         [Test]
         public async Task OTPFailedFullValidation()
         {
+            // Arrange
             var email = "example@mail.com";
             object code = "123456";
 

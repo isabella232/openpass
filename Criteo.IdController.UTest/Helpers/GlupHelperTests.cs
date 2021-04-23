@@ -1,12 +1,12 @@
+using System;
 using Criteo.IdController.Helpers;
 using Criteo.Services.Glup;
 using Criteo.UserAgent;
+using Criteo.UserIdentification;
 using Moq;
 using NUnit.Framework;
-using IdControllerGlup = Criteo.Glup.IdController;
 using static Criteo.Glup.IdController.Types;
-using System;
-using Criteo.UserIdentification;
+using IdControllerGlup = Criteo.Glup.IdController;
 
 namespace Criteo.IdController.UTest.Helpers
 {
@@ -32,9 +32,11 @@ namespace Criteo.IdController.UTest.Helpers
         [Test]
         public void TestGlupIsEmitted()
         {
+            // Arrange && Act
             _glupHelper.EmitGlup(EventType.Unknown, "origin.com", "userAgent");
 
-             _glupServiceMock.Verify(g => g.Emit(It.IsAny<IdControllerGlup>()), Times.Once);
+            // Assert
+            _glupServiceMock.Verify(g => g.Emit(It.IsAny<IdControllerGlup>()), Times.Once);
         }
 
         [TestCase(null, null, null, null)]
@@ -47,13 +49,17 @@ namespace Criteo.IdController.UTest.Helpers
         [TestCase(_testingLwid, _testingUid, _testingIfa, _testingIfa)]
         public void UserAgentParsingReceivesExpectedUid(string lwidString, string uidString, string ifaString, string expectedUid)
         {
+            // Arrange
             var lwid = LocalWebId.Parse(lwidString, "originHost.com");
             var uid = CriteoId.Parse(uidString);
             var ifa = UserCentricAdId.Parse(ifaString);
 
+            //  Act
             _glupHelper.EmitGlup(EventType.Unknown, "originHost.com", "userAgent", lwid, uid, ifa);
 
             var parsedExpectedUid = !string.IsNullOrEmpty(expectedUid) ? Guid.Parse(expectedUid) : (Guid?) null;
+
+            // Assert
             _agentSourceMock.Verify(
                 x => x.Get(It.IsAny<AgentKey>(), It.Is<Guid?>(g => g.Equals(parsedExpectedUid))),
                 Times.Once);

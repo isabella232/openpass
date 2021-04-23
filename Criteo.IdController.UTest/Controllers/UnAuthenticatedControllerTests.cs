@@ -45,6 +45,8 @@ namespace Criteo.IdController.UTest.Controllers
             // Returned identifier
             var data = GetResponseData(response);
             var token = (string) data.token;
+
+            // Assert
             Assert.AreEqual(returnedToken, token);
 
             // Identifier generated
@@ -59,13 +61,16 @@ namespace Criteo.IdController.UTest.Controllers
         [Test]
         public async Task TestAdapterError()
         {
+            // Arrange
             const string returnedToken = null;
             string placeholder;
             _cookieHelperMock.Setup(c => c.TryGetIdentifierCookie(It.IsAny<IRequestCookieCollection>(), out placeholder)).Returns(false);
             _uid2AdapterMock.Setup(c => c.GetId(It.IsAny<string>())).ReturnsAsync(returnedToken);
 
+            // Act
             var response = await _unauthenticatedController.GetOrCreateIfa();
 
+            // Assert
             // Not found -> adapter not available
             Assert.IsAssignableFrom<NotFoundResult>(response);
 
@@ -78,14 +83,18 @@ namespace Criteo.IdController.UTest.Controllers
         [Test]
         public async Task TestGetIdentifierFromCookie()
         {
+            // Arrange
             var idUserSide = Guid.NewGuid().ToString();
             _cookieHelperMock.Setup(c => c.TryGetIdentifierCookie(It.IsAny<IRequestCookieCollection>(), out idUserSide)).Returns(true);
 
+            // Act
             var response = await _unauthenticatedController.GetOrCreateIfa();
 
             // Returned IFA
             var data = GetResponseData(response);
             var token = data.token;
+
+            // Assert
             Assert.AreEqual(idUserSide, token);
 
             // Cookie is set set
@@ -97,13 +106,14 @@ namespace Criteo.IdController.UTest.Controllers
         [Test]
         public void TestDeleteIfa()
         {
+            // Arrange
             var response = _unauthenticatedController.DeleteIfa();
 
-            // Returned IFA
+            // Act
             var data = GetResponseData(response);
             Assert.IsNull(data);
 
-            // Cookie is removed
+            // Assert
             _cookieHelperMock.Verify(c => c.RemoveIdentifierCookie(It.IsAny<IResponseCookies>()), Times.Once);
         }
 

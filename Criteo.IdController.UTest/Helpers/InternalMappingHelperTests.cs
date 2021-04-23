@@ -28,10 +28,12 @@ namespace Criteo.IdController.UTest.Helpers
         [Theory]
         public async Task TestGetInternalCriteoId(bool revocable, bool isNull)
         {
+            // Arrange && Act
             var criteoId = isNull ? (CriteoId?)null : CriteoId.New();
             var identityMappingHelper = GetMockedIdentificationBundleMappingHelper(revocable);
             var internalCriteoId = await identityMappingHelper.GetInternalCriteoId(criteoId);
 
+            // Assert
             if (!revocable)
             {
                 Assert.AreEqual(criteoId, internalCriteoId);
@@ -53,10 +55,12 @@ namespace Criteo.IdController.UTest.Helpers
         [Theory]
         public async Task TestGetInternalLocalWebId(bool revocable, bool isNull)
         {
+            // Arrange && Act
             var localWebId = isNull ? (LocalWebId?)null : LocalWebId.CreateNew("testdomain.com");
             var identityMappingHelper = GetMockedIdentificationBundleMappingHelper(revocable);
             var internalLocalWebId = await identityMappingHelper.GetInternalLocalWebId(localWebId);
 
+            // Assert
             if (!revocable)
             {
                 Assert.AreEqual(localWebId, internalLocalWebId);
@@ -78,10 +82,12 @@ namespace Criteo.IdController.UTest.Helpers
         [Theory]
         public async Task TestGetInternalUserCentricAdId(bool revocable, bool isNull)
         {
+            // Arrange && Act
             var userCentricAdId = isNull ? (UserCentricAdId?)null : UserCentricAdId.New();
             var identityMappingHelper = GetMockedIdentificationBundleMappingHelper(revocable);
             var internalDnaId = await identityMappingHelper.GetInternalUserCentricAdId(userCentricAdId);
 
+            // Assert
             if (!revocable)
             {
                 Assert.AreEqual(userCentricAdId, internalDnaId);
@@ -101,6 +107,7 @@ namespace Criteo.IdController.UTest.Helpers
         }
 
         #region Helpers
+
         private IInternalMappingHelper GetMockedIdentificationBundleMappingHelper(bool revocable = true)
         {
             // Set revocableId CaC value (default active for these tests)
@@ -128,6 +135,7 @@ namespace Criteo.IdController.UTest.Helpers
 
             return identityMappingResult;
         }
-        #endregion
+
+        #endregion Helpers
     }
 }

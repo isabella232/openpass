@@ -5,7 +5,6 @@ using Criteo.Services.Glup;
 using Criteo.UserAgent.Provider;
 using Criteo.UserIdentification.Services;
 using Criteo.UserIdentification.Services.IdentityMapping;
-using Metrics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sdk.Interfaces.Hosting;

@@ -32,8 +32,10 @@ namespace Criteo.IdController.UTest.Helpers.Adapters
         [TestCase("")]
         public async Task TestInvalidEmail(string email)
         {
+            // Arrange & Act
             var token = await _uid2Helper.GetId(email);
 
+            // Assert
             Assert.IsNull(token);
             _messageHandlerMock.Protected().Verify(
                 "SendAsync",
@@ -46,12 +48,15 @@ namespace Criteo.IdController.UTest.Helpers.Adapters
         [Test]
         public async Task TestHttpRequestPerformed()
         {
+            // Arrange
             var email = "email@example.com";
             var encodedEmail = HttpUtility.UrlEncode(email);
             MockHttpResponse(HttpStatusCode.OK);
 
+            // Act
             await _uid2Helper.GetId(email);
 
+            // Assert
             _messageHandlerMock.Protected().Verify(
                 "SendAsync",
                 Times.Once(),
@@ -64,12 +69,15 @@ namespace Criteo.IdController.UTest.Helpers.Adapters
         [Test]
         public async Task TestSuccessfulCreation()
         {
+            // Arrange
             var email = "email@example.com";
             var expectedToken = "FreshUID2token";
             MockHttpResponse(HttpStatusCode.OK, expectedToken);
 
+            // Act
             var token = await _uid2Helper.GetId(email);
 
+            // Assert
             Assert.AreEqual(expectedToken, token);
         }
 
@@ -78,10 +86,13 @@ namespace Criteo.IdController.UTest.Helpers.Adapters
         [TestCase(HttpStatusCode.InternalServerError)]
         public async Task TestServiceUnavailable(HttpStatusCode statusCode)
         {
+            // Arrange
             MockHttpResponse(statusCode);
 
+            // Act
             var token = await _uid2Helper.GetId("email@example.com");
 
+            // Assert
             Assert.IsNull(token);
         }
 
@@ -95,7 +106,6 @@ namespace Criteo.IdController.UTest.Helpers.Adapters
                 Content = new StringContent(token)
             };
 
-            Mock<HttpMessageHandler> mockHandler = new Mock<HttpMessageHandler>();
             _messageHandlerMock.Protected()
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(httpResponse);
