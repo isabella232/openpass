@@ -74,7 +74,6 @@ namespace Criteo.IdController.Controllers
             var otp = _codeGeneratorHelper.GenerateRandomCode();
             _activeOtps.Set(request.Email, otp, TimeSpan.FromMinutes(_otpCodeLifetimeMinutes));
 
-            // TODO: Check how to properly do this quick fix for OTP validation testing when doing development
             if (_hostingEnvironment.IsDevelopment())
                 Console.Out.WriteLine($"New OTP code generated (valid for {_otpCodeLifetimeMinutes} minutes): {request.Email} -> {otp}");
 
@@ -162,8 +161,7 @@ namespace Criteo.IdController.Controllers
             }
 
             // 1. Emit glup
-            // TODO: Create a new event type for SSO (even per SSO service)
-            _glupHelper.EmitGlup(EventType.EmailValidated, request.OriginHost, userAgent);
+            _glupHelper.EmitGlup(request.EventType, request.OriginHost, userAgent);
 
             // 2. Retrieve UID2 token, set cookie and send token back in payload
             var token = await _uid2Adapter.GetId(request.Email);
