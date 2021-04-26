@@ -118,31 +118,25 @@ namespace Criteo.IdController.UTest.Controllers
                 expectGlup ? Times.Once() : Times.Never());
         }
 
-        [Theory]
-        public async Task GlupSupportsRevocableId(bool revocable)
+        [Test]
+        public async Task GlupSupportsRevocableId()
         {
             // Arrange
             var host = "originHost.com";
-            var expectedLwid = _testingLwid;
-            var expectedUid = _testingUid;
-            var expectedIfa = _testingIfa;
 
-            if (revocable)
-            {
-                var revLwid = LocalWebId.CreateNew(host);
-                var revCriteoId = CriteoId.New();
-                var revIfa = UserCentricAdId.New();
+            var revLwid = LocalWebId.CreateNew(host);
+            var revCriteoId = CriteoId.New();
+            var revIfa = UserCentricAdId.New();
 
-                // Override fakes
-                _internalMappingHelperMock.Setup(x => x.GetInternalLocalWebId(It.IsAny<LocalWebId?>())).ReturnsAsync((LocalWebId? lwid) => revLwid);
-                _internalMappingHelperMock.Setup(x => x.GetInternalCriteoId(It.IsAny<CriteoId?>())).ReturnsAsync((CriteoId? criteoId) => revCriteoId);
-                _internalMappingHelperMock.Setup(x => x.GetInternalUserCentricAdId(It.IsAny<UserCentricAdId?>())).ReturnsAsync((UserCentricAdId? ucaid) => revIfa);
+            // Override fakes
+            _internalMappingHelperMock.Setup(x => x.GetInternalLocalWebId(It.IsAny<LocalWebId?>())).ReturnsAsync((LocalWebId? lwid) => revLwid);
+            _internalMappingHelperMock.Setup(x => x.GetInternalCriteoId(It.IsAny<CriteoId?>())).ReturnsAsync((CriteoId? criteoId) => revCriteoId);
+            _internalMappingHelperMock.Setup(x => x.GetInternalUserCentricAdId(It.IsAny<UserCentricAdId?>())).ReturnsAsync((UserCentricAdId? ucaid) => revIfa);
 
-                // Update expected uids
-                expectedLwid = revLwid.CriteoId.ToString();
-                expectedUid = revCriteoId.Value.ToString();
-                expectedIfa = revIfa.Value.ToString();
-            }
+            // Update expected uids
+            var expectedLwid = revLwid.CriteoId.ToString();
+            var expectedUid = revCriteoId.Value.ToString();
+            var expectedIfa = revIfa.Value.ToString();
 
             var request = new EventRequest
             {

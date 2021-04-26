@@ -25,85 +25,100 @@ namespace Criteo.IdController.UTest.Helpers
             _identityMapperMock = new Mock<IIdentityMapper>();
         }
 
-        [Theory]
-        public async Task TestGetInternalCriteoId(bool revocable, bool isNull)
+        [Test]
+        public async Task GetInternalCriteoId_CaCParameterIsEnabled_InternalCriteoIdIsNotTheSame()
         {
-            // Arrange && Act
-            var criteoId = isNull ? (CriteoId?)null : CriteoId.New();
-            var identityMappingHelper = GetMockedIdentificationBundleMappingHelper(revocable);
+            // Arrange
+            var criteoId = CriteoId.New();
+            var identityMappingHelper = GetMockedIdentificationBundleMappingHelper();
+
+            // Act
             var internalCriteoId = await identityMappingHelper.GetInternalCriteoId(criteoId);
 
             // Assert
-            if (!revocable)
+            Assert.Multiple(() =>
             {
-                Assert.AreEqual(criteoId, internalCriteoId);
-            }
-            else
-            {
-                if (isNull)
-                {
-                    Assert.IsNull(internalCriteoId);
-                }
-                else
-                {
-                    Assert.IsNotNull(internalCriteoId);
-                    Assert.AreNotEqual(criteoId, internalCriteoId);
-                }
-            }
+                Assert.IsNotNull(internalCriteoId);
+                Assert.AreNotEqual(criteoId, internalCriteoId);
+            });
         }
 
-        [Theory]
-        public async Task TestGetInternalLocalWebId(bool revocable, bool isNull)
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task GetInternalCriteoId_CaCParameterIsSet_CriteoIdIsNull(bool revocable)
         {
-            // Arrange && Act
-            var localWebId = isNull ? (LocalWebId?)null : LocalWebId.CreateNew("testdomain.com");
+            // Arrange
             var identityMappingHelper = GetMockedIdentificationBundleMappingHelper(revocable);
+
+            // Act
+            var internalCriteoId = await identityMappingHelper.GetInternalCriteoId(null);
+
+            // Assert
+            Assert.IsNull(internalCriteoId);
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task GetInternalLocalWebId_CaCParameterIsSet_WebIdIsNull(bool revocable)
+        {
+            // Arrange
+            var identityMappingHelper = GetMockedIdentificationBundleMappingHelper(revocable);
+
+            // Act
+            var internalLocalWebId = await identityMappingHelper.GetInternalLocalWebId(null);
+
+            // Assert
+            Assert.IsNull(internalLocalWebId);
+        }
+
+        [Test]
+        public async Task GetInternalLocalWebId_CaCParameterIsEnabled_WebIdIsNotTheSame()
+        {
+            // Arrange
+            var localWebId = LocalWebId.CreateNew("testdomain.com");
+            var identityMappingHelper = GetMockedIdentificationBundleMappingHelper();
+
+            // Act
             var internalLocalWebId = await identityMappingHelper.GetInternalLocalWebId(localWebId);
 
             // Assert
-            if (!revocable)
+            Assert.Multiple(() =>
             {
-                Assert.AreEqual(localWebId, internalLocalWebId);
-            }
-            else
-            {
-                if (isNull)
-                {
-                    Assert.IsNull(internalLocalWebId);
-                }
-                else
-                {
-                    Assert.IsNotNull(internalLocalWebId);
-                    Assert.AreNotEqual(localWebId, internalLocalWebId);
-                }
-            }
+                Assert.IsNotNull(internalLocalWebId);
+                Assert.AreNotEqual(localWebId, internalLocalWebId);
+            });
         }
 
-        [Theory]
-        public async Task TestGetInternalUserCentricAdId(bool revocable, bool isNull)
+        [TestCase(false)]
+        [TestCase(true)]
+        public async Task GetInternalUserCentricAdId_CaCParameterIsSet_UserCentricAdIdIsNull(bool revocable)
         {
-            // Arrange && Act
-            var userCentricAdId = isNull ? (UserCentricAdId?)null : UserCentricAdId.New();
+            // Arrange
             var identityMappingHelper = GetMockedIdentificationBundleMappingHelper(revocable);
+
+            // Act
+            var internalDnaId = await identityMappingHelper.GetInternalUserCentricAdId(null);
+
+            // Assert
+            Assert.IsNull(internalDnaId);
+        }
+
+        [Test]
+        public async Task GetInternalUserCentricAdId_CaCParameterIsEnabled_UserCentricAdIdIsNotTheSame()
+        {
+            // Arrange
+            var userCentricAdId = UserCentricAdId.New();
+            var identityMappingHelper = GetMockedIdentificationBundleMappingHelper();
+
+            // Act
             var internalDnaId = await identityMappingHelper.GetInternalUserCentricAdId(userCentricAdId);
 
             // Assert
-            if (!revocable)
+            Assert.Multiple(() =>
             {
-                Assert.AreEqual(userCentricAdId, internalDnaId);
-            }
-            else
-            {
-                if (isNull)
-                {
-                    Assert.IsNull(internalDnaId);
-                }
-                else
-                {
-                    Assert.IsNotNull(internalDnaId);
-                    Assert.AreNotEqual(userCentricAdId, internalDnaId);
-                }
-            }
+                Assert.IsNotNull(internalDnaId);
+                Assert.AreNotEqual(userCentricAdId, internalDnaId);
+            });
         }
 
         #region Helpers
