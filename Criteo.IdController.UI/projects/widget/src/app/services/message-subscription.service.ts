@@ -41,7 +41,7 @@ export class MessageSubscriptionService {
 
   private setCookie(payload: PostMessagePayload) {
     const { token, isDeclined } = payload;
-    this.cookiesService.setCookie(environment.cookieName, token, environment.cookieLifetimeDays);
+    this.cookiesService.setCookie(environment.cookieUserToken, token, environment.cookieLifetimeDays);
     this.publicApiService.setUserData({ token, isDeclined });
   }
 }

@@ -56,7 +56,7 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     const { isDeclined } = this.publicApiService.getUserData();
-    this.isOpen = !this.cookiesService.getCookie(environment.cookieName) && !isDeclined;
+    this.isOpen = !this.cookiesService.getCookie(environment.cookieUserToken) && !isDeclined;
     if (this.isOpen) {
       this.subscribeToOpenPass();
       this.listenForClosingRequest();

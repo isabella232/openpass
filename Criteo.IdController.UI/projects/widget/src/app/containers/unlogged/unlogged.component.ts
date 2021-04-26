@@ -59,7 +59,7 @@ export class UnloggedComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.hasCookie = !!this.cookiesService.getCookie(environment.cookieName);
+    this.hasCookie = !!this.cookiesService.getCookie(environment.cookieUserToken);
   }
 
   ngOnDestroy() {
