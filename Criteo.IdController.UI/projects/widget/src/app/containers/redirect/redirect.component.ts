@@ -17,12 +17,19 @@ export class RedirectComponent implements OnInit {
 
   ngOnInit() {
     const hasCookie = !!this.cookiesService.getCookie(environment.cookieUserToken);
-    const token = new URL(this.window.location.href).searchParams.get('token');
+    const searchParams = new URL(this.window.location.href).searchParams;
+    const hasToken = searchParams.has('token');
+    const token = searchParams.get('token');
+    const { isDeclined } = this.publicApiService.getUserData();
 
     if (!hasCookie) {
-      if (token) {
-        this.saveToken(token);
-      } else {
+      if (hasToken) {
+        if (token !== 'null') {
+          this.saveToken(token);
+        } else {
+          this.saveDecline();
+        }
+      } else if (!isDeclined) {
         this.doRedirect();
       }
     }
@@ -41,7 +48,15 @@ export class RedirectComponent implements OnInit {
   private saveToken(token: string) {
     this.cookiesService.setCookie(environment.cookieUserToken, token, environment.cookieLifetimeDays);
     this.publicApiService.setUserData({ token });
+    this.clearUrl();
+  }
 
+  private saveDecline() {
+    this.publicApiService.setUserData({ isDeclined: true });
+    this.clearUrl();
+  }
+
+  private clearUrl() {
     const clearPath = new URL(this.window.location.href);
     clearPath.searchParams.delete('token');
     this.window.history.replaceState({}, this.window.document.title, clearPath.toString());
