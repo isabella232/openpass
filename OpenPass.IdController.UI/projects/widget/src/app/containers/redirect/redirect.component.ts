@@ -24,7 +24,7 @@ export class RedirectComponent implements OnInit {
 
     if (!hasCookie) {
       if (hasToken) {
-        if (token !== 'null') {
+        if (token) {
           this.saveToken(token);
         } else {
           this.saveDecline();
