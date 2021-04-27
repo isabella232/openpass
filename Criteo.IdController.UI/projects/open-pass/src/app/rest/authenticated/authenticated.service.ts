@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { OtpDto } from '../otp/otp.dto';
 import { Observable } from 'rxjs';
 import { TokenDto } from '../otp/token.dto';
+import { EventTypes } from '@enums/event-types.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,7 @@ export class AuthenticatedService {
     return this.http.post<TokenDto>(this.namespace + '/authenticated/otp/validate', otp);
   }
 
-  getTokenByEmail(email: string): Observable<TokenDto> {
-    return this.http.post<TokenDto>(this.namespace + '/authenticated/sso', { email });
+  getTokenByEmail(email: string, eventType: EventTypes): Observable<TokenDto> {
+    return this.http.post<TokenDto>(this.namespace + '/authenticated/sso', { email, eventType });
   }
 }

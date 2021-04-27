@@ -1,4 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { EventTypes } from '@enums/event-types.enum';
 
 const scope = '[Auth]';
 
@@ -51,7 +52,7 @@ export class ValidateCodeFail {
 export class GetTokenByEmail {
   static readonly type = `${scope} Get Token By Email`;
 
-  constructor(public readonly email: string) {}
+  constructor(public readonly email: string, public readonly eventType: EventTypes) {}
 }
 
 export class GetTokenByEmailFailed {

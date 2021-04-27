@@ -6,4 +6,9 @@ export enum EventTypes {
   bannerIgnored,
   learnMore,
   emailShared,
+  emailEntered = 7,
+  emailValidated = 8,
+  openPassSso = 9,
+  openPassFacebook = 10,
+  openPassGoogle = 11,
 }

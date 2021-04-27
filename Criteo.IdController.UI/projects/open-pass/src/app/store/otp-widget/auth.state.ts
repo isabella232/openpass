@@ -16,6 +16,7 @@ import {
   ReceiveToken,
 } from './auth.actions';
 import { localStorage } from '@shared/utils/storage-decorator';
+import { EventTypes } from '@enums/event-types.enum';
 
 export interface IAuthState {
   email: string;
@@ -122,13 +123,13 @@ export class AuthState {
   }
 
   @Action(GetTokenByEmail)
-  getTokenByEmail(ctx: LocalStateContext, { email }: GetTokenByEmail) {
+  getTokenByEmail(ctx: LocalStateContext, { email, eventType }: GetTokenByEmail) {
     ctx.patchState({
       isFetching: true,
       email,
     });
 
-    return this.authenticatedService.getTokenByEmail(email).pipe(
+    return this.authenticatedService.getTokenByEmail(email, eventType).pipe(
       switchMap(({ token }) => ctx.dispatch(new ReceiveToken(token))),
       catchError((error) => ctx.dispatch(new GetTokenByEmailFailed(error))),
       finalize(() => ctx.patchState({ isFetching: false }))

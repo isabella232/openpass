@@ -21,6 +21,8 @@ export class SsoViewComponent implements OnInit, OnDestroy {
   @Select(AuthState.fullState)
   authState$: Observable<IAuthState>;
 
+  eventTypes = EventTypes;
+
   private authSubscriptions: Subscription;
 
   constructor(
@@ -31,8 +33,8 @@ export class SsoViewComponent implements OnInit, OnDestroy {
   ) {}
 
   @Dispatch()
-  getToken(email: string) {
-    return new GetTokenByEmail(email);
+  getToken(email: string, eventType: EventTypes) {
+    return new GetTokenByEmail(email, eventType);
   }
 
   ngOnInit() {
