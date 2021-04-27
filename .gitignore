@@ -1,7 +1,7 @@
 bin/
 obj/
 node_modules
-Criteo.IdController/wwwroot/js
+OpenPass.IdController/wwwroot/js
 
 # Gradle
 .build/

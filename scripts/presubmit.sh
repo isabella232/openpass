@@ -24,8 +24,8 @@ executelogandtime() {
 
 BASE_DIR=`dirname $0`
 if [ "$1" = "end" ]; then
-    cd $BASE_DIR/../Criteo.IdController.UI || return
-    UI_CHANGE_COUNT=`git diff-tree --no-commit-id --name-only -r HEAD | grep Criteo.IdController.UI | wc -l`
+    cd $BASE_DIR/../OpenPass.IdController.UI || return
+    UI_CHANGE_COUNT=`git diff-tree --no-commit-id --name-only -r HEAD | grep OpenPass.IdController.UI | wc -l`
 
     if [ $UI_CHANGE_COUNT -ne 0 ]; then
         executelogandtime 'npm run lint' 'Angular app lint'

@@ -1,0 +1,13 @@
+configurations {
+    frontend {}
+}
+
+moabDependencies {
+    frontend ':identification:id-controller:OpenPass.IdController.UI'
+}
+
+msbuildPackage {
+    from(configurations.frontend) {
+        into("OpenPass.IdController/dist")
+    }
+}

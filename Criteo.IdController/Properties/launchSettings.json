@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Criteo.IdController.netcore": {
-      "commandName": "Project",
-      "launchBrowser": true
-    }
-  }
-}
