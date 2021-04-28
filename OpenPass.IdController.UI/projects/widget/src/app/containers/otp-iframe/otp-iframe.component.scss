@@ -11,9 +11,20 @@
       overflow: auto;
       padding: 2em;
 
+      @media screen and (max-width: 800px) {
+        & {
+          padding: 1em;
+        }
+      }
+
       iframe {
         height: 600px;
-        width: 400px;
+
+        @media screen and (max-width: 500px) {
+          & {
+            width: 90vw;
+          }
+        }
       }
     }
   }
@@ -42,10 +53,9 @@
   background: rgb(0 0 0 / 10%);
 }
 
-
 iframe {
   border: none;
-  width: 100%;
+  width: 400px;
   margin: auto;
   z-index: 1;
 }
