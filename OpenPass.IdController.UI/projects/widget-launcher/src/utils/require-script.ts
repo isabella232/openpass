@@ -15,6 +15,7 @@ export function requireScript(scriptName: string) {
     es2015.type = 'module';
     document.head.appendChild(es5);
   } else {
+    es2015.async = false;
     es2015.src = `${environment.APP_PATH}/${scriptName}.js`;
   }
   document.head.appendChild(es2015);
