@@ -102,7 +102,7 @@ namespace OpenPass.IdController.UTest.Helpers
                 Assert.AreEqual(emailConfig.MailServerPort, 25);
                 Assert.AreEqual(emailConfig.MailServerSsl, false);
                 Assert.AreEqual(emailConfig.SenderDisplayName, "OpenPass");
-                Assert.AreEqual(emailConfig.SenderEmailAddress, "user-first@criteo.com");
+                Assert.AreEqual(emailConfig.SenderEmailAddress, "openpass@criteo.com");
                 Assert.AreEqual(emailConfig.AuthUserName, null);
                 Assert.AreEqual(emailConfig.AuthPassword, null);
             });

@@ -31,7 +31,7 @@ namespace OpenPass.IdController.Helpers
         // Sender configuration
         public string SenderDisplayName => _configuration.GetValue<string>("Email:Sender:DisplayName") ?? "OpenPass";
 
-        public string SenderEmailAddress => _configuration.GetValue<string>("Email:Sender:Address") ?? "user-first@criteo.com";  // FIXME: use external domain once bought
+        public string SenderEmailAddress => _configuration.GetValue<string>("Email:Sender:Address") ?? "openpass@criteo.com";  // FIXME: use external domain once bought
 
         // Authentication configuration
         public string AuthUserName => _configuration.GetValue<string>("Email:Authentication:UserName");
