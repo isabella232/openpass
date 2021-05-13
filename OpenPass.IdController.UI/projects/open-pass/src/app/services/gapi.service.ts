@@ -3,6 +3,7 @@ import { WINDOW } from '@utils/injection-tokens';
 import { environment } from '@env';
 import { ReplaySubject } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { fromPromise } from 'rxjs/internal-compatibility';
 
 type WindowWithGapi = Window & { gapi: any };
 
@@ -44,5 +45,12 @@ export class GapiService {
 
   signOut() {
     this.authInstance.signOut();
+  }
+
+  attachCustomButton(element: HTMLButtonElement) {
+    const signInEvent = new Promise((resolve) => {
+      this.gapiStateLoaded.pipe(take(1)).subscribe(() => this.authInstance.attachClickHandler(element, {}, resolve));
+    });
+    return fromPromise(signInEvent);
   }
 }

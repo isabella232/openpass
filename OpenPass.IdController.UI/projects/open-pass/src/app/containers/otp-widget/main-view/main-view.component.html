@@ -34,6 +34,14 @@
 >
   WELCOME.ACTION
 </button>
+<usrf-or-hr></usrf-or-hr>
+<div class="text-center">
+  <usrf-facebook-auth-small
+    class="mx-2"
+    (proceed)="getToken($event, eventTypes.openPassFacebook)"
+  ></usrf-facebook-auth-small>
+  <usrf-google-auth-small class="mx-2" (proceed)="getToken($event, eventTypes.openPassGoogle)"></usrf-google-auth-small>
+</div>
 <div class="text-center p-3">
   <a routerLink="sso" translate>SHARED.OTHER_WAY</a>
 </div>

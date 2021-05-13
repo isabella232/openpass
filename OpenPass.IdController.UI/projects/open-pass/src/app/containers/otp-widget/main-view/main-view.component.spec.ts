@@ -4,6 +4,10 @@ import { MainViewComponent } from './main-view.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxsModule } from '@ngxs/store';
 import { EventsTrackingService } from '@services/events-tracking.service';
+import { stub } from '@utils/stub-factory';
+import { AuthService } from '@services/auth.service';
+import { DialogWindowService } from '@services/dialog-window.service';
+import { PostMessagesService } from '@services/post-messages.service';
 
 describe('MainViewComponent', () => {
   let component: MainViewComponent;
@@ -14,10 +18,10 @@ describe('MainViewComponent', () => {
       imports: [TranslateModule.forRoot(), NgxsModule.forRoot()],
       declarations: [MainViewComponent],
       providers: [
-        {
-          provide: EventsTrackingService,
-          useFactory: () => ({ trackEvent: () => {} }),
-        },
+        stub(EventsTrackingService, { trackEvent: () => {} }),
+        stub(AuthService),
+        stub(DialogWindowService),
+        stub(PostMessagesService),
       ],
     }).compileComponents();
   });
