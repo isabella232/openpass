@@ -2,6 +2,6 @@
 <p class="mt-2" translate>SSO.DESCRIPTION</p>
 
 <usrf-google-auth-button (proceed)="getToken($event, eventTypes.openPassGoogle)"></usrf-google-auth-button>
-<div class="or-divider" translate>SHARED.OR</div>
+<usrf-or-hr></usrf-or-hr>
 <usrf-facebook-auth-button (proceed)="getToken($event, eventTypes.openPassFacebook)"></usrf-facebook-auth-button>
 <div *ngIf="(isFetching$ | async) || (authState$ | async)?.isFetching" class="loader"></div>
