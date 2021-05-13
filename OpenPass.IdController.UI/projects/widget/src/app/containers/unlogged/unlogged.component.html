@@ -5,11 +5,12 @@
     <div class="op-logo-container">
       <img [src]="'/assets/images/open-pass-logo.png' | useDeployUrl" alt="OpenPass logo" />
     </div>
+    <p [innerHTML]="'WELCOME.DESCRIPTION' | translate: { websiteName: websiteName }"></p>
     <p translate>WELCOME.WITH</p>
     <div class="my-3">
       <div class="spec-list-option" data-test="non-auth-pros-item">
         <div class="spec-list-icon">
-          <img [src]="'/assets/images/email-sec.png' | useDeployUrl" alt="info" data-test="non-auth-img-info" />
+          <img [src]="'/assets/images/support.png' | useDeployUrl" alt="info" data-test="non-auth-img-info" />
         </div>
         <div translate>WELCOME.OPEN_PASS_PROS.INFORMATION</div>
       </div>
@@ -21,9 +22,9 @@
       </div>
       <div class="spec-list-option" data-test="non-auth-pros-item">
         <div class="spec-list-icon">
-          <img [src]="'/assets/images/priv-cntrl.png' | useDeployUrl" alt="safe" data-test="non-auth-img-safe" />
+          <img [src]="'/assets/images/icon-email.png' | useDeployUrl" alt="safe" data-test="non-auth-img-safe" />
         </div>
-        <div translate>WELCOME.OPEN_PASS_PROS.CONTROL</div>
+        <div translate>UNLOGGED.OPEN_PASS_PROS.CONTROL</div>
       </div>
     </div>
     <button translate type="button" class="btn btn-wide btn-primary my-3" (click)="launchOpenPassApp()">

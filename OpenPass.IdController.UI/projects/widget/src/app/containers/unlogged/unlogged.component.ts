@@ -1,4 +1,4 @@
-import { Component, Inject, NgModule, OnDestroy, OnInit, Input, HostBinding } from '@angular/core';
+import { Component, HostBinding, Inject, Input, NgModule, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { WidgetModes } from '../../enums/widget-modes.enum';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -21,6 +21,10 @@ import { OpenPassDetailsModule } from '../../components/open-pass-details/open-p
 })
 export class UnloggedComponent implements OnInit, OnDestroy {
   @Input() view: WidgetModes;
+
+  get websiteName() {
+    return this.window.location.host;
+  }
 
   isOpen = true;
   widgetMods = WidgetModes;

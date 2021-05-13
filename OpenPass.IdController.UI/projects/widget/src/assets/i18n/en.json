@@ -1,24 +1,27 @@
 {
   "WELCOME": {
     "HEADING": "Get Access With",
-    "DESCRIPTION": "You're about to access <b>{{websiteName}}</b> for free! OpenPass allows you to enjoy and support your favorite sites, by helping brands show ads more relevant to your interests.",
+    "DESCRIPTION": "OpenPass is an independent service that secures your data. It allows you to control and personalize your advertising experience on <b>{{websiteName}}</b> with your explicit permission.",
     "WITH": "With OpenPass:",
     "OPEN_PASS_PROS": {
-      "INFORMATION": "Support independent small businesses and websites as you browse a large network of sites for free",
-      "ACCESS": "Manage and change your privacy preferences at any time at <a href=\"https://transparentadvertising.com\" target=\"+_blank\">transparentadvertising.com</a>",
-      "CONTROL": "OpenPass will never share your email  address without your permission"
+      "INFORMATION": "You will support online businesses that provide you with tailored content.",
+      "ACCESS": "You have full control of your privacy, anytime at <a class=\"styled-a\" href=\"https://transparentadvertising.com\" target=\"_blank\">transparentadvertising.com</a>",
+      "CONTROL": "Your email address is never shared without your permission"
     },
     "SUMMARY": {
       "TITLE": "How does OpenPass work?",
-      "DESCRIPTION": "With your permission. OpenPass converts your email address into a pseudonymous identifier. This identifier is shared with <b>trusted advertising partners</b> who use it to show you advertisement that they think are relevant to you. <a target=\"_blank\" href=\"https://criteo.com\">Learn more</a>"
+      "DESCRIPTION": "With your permission, OpenPass converts your email address into a pseudonymous identifier. This identifier is shared with <b>trusted advertising partners</b> who use it to show you advertisements that they think are relevant to you. <a class=\"styled-a\" target=\"_blank\" href=\"https://criteo.com\">Learn more</a>"
     },
-    "ACTION": "Sign up with OpenPass"
+    "ACTION": "Sign in with OpenPass"
   },
   "SHARED": {
     "OTHER_WAY": "Other options to access this site"
   },
   "UNLOGGED": {
-    "HEADING": "Get Personalized Advertising with",
-    "ACTION": "Access with OpenPass"
+    "HEADING": "Get Access With",
+    "ACTION": "I agree & access with OpenPass",
+    "OPEN_PASS_PROS": {
+      "CONTROL": "Your information will never be shared with anyone without your permission"
+    }
   }
 }
