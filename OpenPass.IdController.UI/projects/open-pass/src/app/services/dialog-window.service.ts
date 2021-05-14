@@ -18,8 +18,8 @@ export class DialogWindowService {
     private postMessagesService: PostMessagesService
   ) {}
 
-  closeDialogWindow() {
-    const message: PostMessagePayload = { action: PostMessageActions.closeChild };
+  closeDialogWindow(isDeclined = false) {
+    const message: PostMessagePayload = { action: PostMessageActions.closeChild, isDeclined };
     this.postMessagesService.sendMessage(message);
     this.window.close(); // fallback
     // The browser will only reach this code in the "redirect" variant,

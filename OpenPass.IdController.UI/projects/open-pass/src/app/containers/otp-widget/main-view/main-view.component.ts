@@ -45,6 +45,10 @@ export class MainViewComponent implements OnInit, OnDestroy {
     this.authSubscriptions?.unsubscribe?.();
   }
 
+  closeWindow() {
+    this.dialogWindowService.closeDialogWindow(true);
+  }
+
   private saveTokenAndClose() {
     this.authService.setTokenToOpener();
     this.eventsTrackingService.trackEvent(EventTypes.consentGranted);

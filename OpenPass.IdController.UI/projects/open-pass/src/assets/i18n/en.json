@@ -1,7 +1,7 @@
 {
   "WELCOME": {
     "HEADING": "Get Access With",
-    "DESCRIPTION": "OpenPass is an independent service that secures your data. It allows you to control and personalize your advertising experience on {{websiteName}} with your explicit permission.",
+    "DESCRIPTION": "OpenPass is an independent service that secures your data. It allows you to control and personalize your advertising experience on <b>{{websiteName}}</b> with your explicit permission.",
     "WITH": "With OpenPass:",
     "OPEN_PASS_PROS": {
       "INFORMATION": "You will support online businesses that provide you with tailored content.",
@@ -16,6 +16,7 @@
   },
   "SHARED": {
     "OTHER_WAY": "Other ways to access this site",
+    "CONTINUE_WITHOUT": "Continue without Openpass",
     "COPY": "Provided by",
     "FORM": {
       "EMAIL_PLACEHOLDER": "Enter email address",

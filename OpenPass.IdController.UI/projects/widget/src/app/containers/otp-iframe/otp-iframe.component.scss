@@ -9,20 +9,29 @@
 
     .container {
       overflow: auto;
-      padding: 2em;
 
       @media screen and (max-width: 800px) {
         & {
-          padding: 1em;
+          padding: 0 1em;
         }
       }
 
       iframe {
-        height: 630px;
+        height: 650px;
+        position: relative;
+        margin-top: 5em;
+        margin-bottom: 1em;
 
         @media screen and (max-width: 500px) {
           & {
             width: 90vw;
+          }
+        }
+
+        @media screen and (max-height: 800px) {
+          & {
+            margin-top: 1em;
+            margin-bottom: 1em;
           }
         }
       }
@@ -32,16 +41,7 @@
 
 .container {
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
-
-  @supports (display: grid) {
-    & {
-      display: grid;
-    }
-  }
 }
 
 .backdrop {
@@ -58,4 +58,5 @@ iframe {
   width: 400px;
   margin: auto;
   z-index: 1;
+  display: block;
 }

@@ -16,7 +16,7 @@ export class PublicApiService {
     return this.userData.asObservable();
   }
 
-  setUserData({ token, isDeclined }: UserData) {
+  setUserData({ token = this.token, isDeclined }: UserData) {
     this.token = token;
     this.isDeclined = isDeclined;
     this.userData.next({ token, isDeclined });

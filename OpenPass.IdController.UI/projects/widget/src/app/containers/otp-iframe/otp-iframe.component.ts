@@ -93,7 +93,10 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.postSubscription = this.postMessagesService
       .getSubscription()
       .pipe(filter(({ action }) => action === PostMessageActions.closeChild))
-      .subscribe(() => (this.isOpen = false));
+      .subscribe(({ isDeclined }) => {
+        this.publicApiService.setUserData({ isDeclined });
+        this.isOpen = false;
+      });
   }
 }
 

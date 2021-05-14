@@ -4,7 +4,7 @@
 </div>
 <p [innerHTML]="'WELCOME.DESCRIPTION' | translate: { websiteName: (websiteName$ | async) || '' }"></p>
 <p translate>WELCOME.WITH</p>
-<div class="mt-3 pb-4">
+<div class="mt-3 pb-5">
   <div class="spec-list-option" data-test="main-pros-item">
     <div class="spec-list-icon">
       <img src="assets/images/support.png" alt="info" data-test="main-img-info" />
@@ -42,8 +42,8 @@
   ></usrf-facebook-auth-small>
   <usrf-google-auth-small class="mx-2" (proceed)="getToken($event, eventTypes.openPassGoogle)"></usrf-google-auth-small>
 </div>
-<div class="text-center p-3">
-  <a routerLink="sso" translate>SHARED.OTHER_WAY</a>
+<div class="text-center p-3 pb-5">
+  <button class="btn btn-link" (click)="closeWindow()" translate>SHARED.CONTINUE_WITHOUT</button>
 </div>
 <usrf-open-pass-details class="pt-3 d-block" [name]="'WELCOME.SUMMARY.TITLE' | translate">
   <p [innerHTML]="'WELCOME.SUMMARY.DESCRIPTION' | translate"></p>
