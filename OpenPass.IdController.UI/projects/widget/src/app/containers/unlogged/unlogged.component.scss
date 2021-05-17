@@ -6,7 +6,7 @@
 @import '~projects/open-pass/src/styles/typography';
 @import '~projects/open-pass/src/styles/grid';
 
-:host {
+:host:not([hidden='true']) {
   width: 100%;
   height: 100%;
   display: block;

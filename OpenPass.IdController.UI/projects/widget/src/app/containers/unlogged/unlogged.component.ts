@@ -34,7 +34,12 @@ export class UnloggedComponent implements OnInit, OnDestroy {
 
   @HostBinding('class.modal')
   get isModal(): boolean {
-    return this.view === WidgetModes.modal && this.isOpen;
+    return this.view === WidgetModes.modal;
+  }
+
+  @HostBinding('attr.hidden')
+  get isHidden() {
+    return !this.isOpen || this.hasCookie;
   }
 
   get openerConfigs(): string {
@@ -91,7 +96,10 @@ export class UnloggedComponent implements OnInit, OnDestroy {
     this.postSubscription = this.postMessagesService
       .getSubscription()
       .pipe(filter(({ action }) => action === PostMessageActions.closeChild))
-      .subscribe(() => this.openPassWindow?.close());
+      .subscribe(() => {
+        this.isOpen = false;
+        this.openPassWindow?.close();
+      });
   }
 }
 
