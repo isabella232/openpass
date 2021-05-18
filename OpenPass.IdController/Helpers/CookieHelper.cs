@@ -8,8 +8,6 @@ namespace OpenPass.IdController.Helpers
         bool TryGetIdentifierCookie(IRequestCookieCollection cookieContainer, out string value);
 
         void SetIdentifierCookie(IResponseCookies cookieContainer, string value);
-
-        void RemoveIdentifierCookie(IResponseCookies cookieContainer);
     }
 
     public class CookieHelper : ICookieHelper
@@ -36,9 +34,6 @@ namespace OpenPass.IdController.Helpers
         private void SetCookie(IResponseCookies cookieContainer, string name, string value) =>
             cookieContainer.Append(name, value, _defaultCookieOptions);
 
-        private void RemoveCookie(IResponseCookies cookieContainer, string name) =>
-            cookieContainer.Delete(name);
-
         #endregion Generic methods
 
         #region Cookie-specific methods
@@ -48,9 +43,6 @@ namespace OpenPass.IdController.Helpers
 
         public void SetIdentifierCookie(IResponseCookies cookieContainer, string value) =>
             SetCookie(cookieContainer, _identifierCookieName, value);
-
-        public void RemoveIdentifierCookie(IResponseCookies cookieContainer) =>
-            RemoveCookie(cookieContainer, _identifierCookieName);
 
         #endregion Cookie-specific methods
     }

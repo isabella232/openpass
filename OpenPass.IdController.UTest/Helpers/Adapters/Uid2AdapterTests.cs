@@ -8,6 +8,8 @@ using Moq.Protected;
 using NUnit.Framework;
 using OpenPass.IdController.Helpers;
 using OpenPass.IdController.Helpers.Adapters;
+using OpenPass.IdController.Helpers.Configuration;
+using OpenPass.IdController.Models.Configuration;
 
 namespace OpenPass.IdController.UTest.Helpers.Adapters
 {
@@ -16,6 +18,7 @@ namespace OpenPass.IdController.UTest.Helpers.Adapters
     {
         private Mock<IMetricHelper> _metricHelperMock;
         private Mock<HttpMessageHandler> _messageHandlerMock;
+        private Mock<IConfigurationManager> _configurationManager;
         private Uid2Adapter _uid2Helper;
 
         [SetUp]
@@ -23,9 +26,17 @@ namespace OpenPass.IdController.UTest.Helpers.Adapters
         {
             _metricHelperMock = new Mock<IMetricHelper>();
             _messageHandlerMock = new Mock<HttpMessageHandler>();
+            _configurationManager = new Mock<IConfigurationManager>();
+            var uid2ConfigurationModel = new Uid2Configuration
+            {
+                ApiKey = "1234567890",
+                Endpoint = "http://test.com"
+            };
+            _configurationManager.Setup(x => x.Uid2Configuration).Returns(uid2ConfigurationModel);
+
             var httpClient = new HttpClient(_messageHandlerMock.Object);
 
-            _uid2Helper = new Uid2Adapter(httpClient, _metricHelperMock.Object);
+            _uid2Helper = new Uid2Adapter(httpClient, _metricHelperMock.Object, _configurationManager.Object);
         }
 
         [TestCase(null)]

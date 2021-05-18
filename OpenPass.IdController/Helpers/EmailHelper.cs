@@ -3,7 +3,8 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using Criteo.Logging;
+using Microsoft.Extensions.Logging;
+using OpenPass.IdController.Helpers.Configuration;
 
 namespace OpenPass.IdController.Helpers
 {
@@ -18,27 +19,38 @@ namespace OpenPass.IdController.Helpers
     {
         private static readonly string _metricPrefix = "email.";
 
-        private static readonly ILogger _logger = LogManager.GetLogger<EmailHelper>();
         private readonly IMetricHelper _metricsHelper;
+        private readonly ILogger _logger;
+
         private readonly IViewRenderHelper _viewRenderHelper;
-        private readonly IEmailConfiguration _config;
+        private readonly IConfigurationManager _configurationManager;
         private readonly SmtpClient _smtpClient;
 
-        public EmailHelper(IMetricHelper metricsHelper, IViewRenderHelper viewRenderHelper, IEmailConfiguration emailConfiguration)
+        public EmailHelper(
+            IMetricHelper metricsHelper,
+            IViewRenderHelper viewRenderHelper,
+            IConfigurationManager configurationManager,
+            ILogger<EmailHelper> logger)
         {
             _metricsHelper = metricsHelper;
             _viewRenderHelper = viewRenderHelper;
-            _config = emailConfiguration;
+            _configurationManager = configurationManager;
+            _logger = logger;
 
             _smtpClient = CreateSmtpClient();
         }
 
         private SmtpClient CreateSmtpClient()
         {
-            var smtpClient = new SmtpClient(_config.MailServer, _config.MailServerPort) { EnableSsl = _config.MailServerSsl };
+            var smtpClient = new SmtpClient(_configurationManager.SmtpSettings.Host, _configurationManager.SmtpSettings.Port)
+            {
+                EnableSsl = _configurationManager.SmtpSettings.EnableSsl
+            };
 
-            if (!(string.IsNullOrEmpty(_config.AuthUserName) || string.IsNullOrEmpty(_config.AuthPassword)))
-                smtpClient.Credentials = new NetworkCredential(_config.AuthUserName, _config.AuthPassword);
+            if (!(string.IsNullOrEmpty(_configurationManager.SmtpSettings.UserName)
+                    || string.IsNullOrEmpty(_configurationManager.SmtpSettings.Password)))
+                smtpClient.Credentials =
+                    new NetworkCredential(_configurationManager.SmtpSettings.UserName, _configurationManager.SmtpSettings.Password);
 
             // Add callback for metrics and logs
             smtpClient.SendCompleted += new SendCompletedEventHandler(SendCompletedCallback);
@@ -77,7 +89,8 @@ namespace OpenPass.IdController.Helpers
 
         private void SendEmailAsync(string recipient, string subject, string body, string token, bool isBodyHtml = false)
         {
-            var senderMailAddress = new MailAddress(_config.SenderEmailAddress, _config.SenderDisplayName);
+            var senderMailAddress =
+                new MailAddress(_configurationManager.SmtpSettings.Address, _configurationManager.SmtpSettings.DisplayName);
             var recipientMailAddress = new MailAddress(recipient);
 
             var message = new MailMessage
@@ -102,7 +115,7 @@ namespace OpenPass.IdController.Helpers
             if (e.Error != null)
             {
                 _metricsHelper.SendCounterMetric($"{metric}.error");
-                _logger.Log(LogLevel.Error, "Error when sending email", e.Error);
+                _logger.LogError("Error when sending email", e.Error);
             }
             else
             {

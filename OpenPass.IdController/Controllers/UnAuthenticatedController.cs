@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using OpenPass.IdController.Helpers;
 using OpenPass.IdController.Helpers.Adapters;
 
@@ -22,7 +23,13 @@ namespace OpenPass.IdController.Controllers
             _cookieHelper = cookieHelper;
         }
 
+        /// <summary>
+        /// Get or create unique identifier
+        /// </summary>
+        /// <returns>generated token</returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetOrCreateIfa()
         {
             string token;
@@ -52,15 +59,6 @@ namespace OpenPass.IdController.Controllers
             _cookieHelper.SetIdentifierCookie(Response.Cookies, token);
 
             return Ok(new { token });
-        }
-
-        [HttpGet("delete")]
-        public IActionResult DeleteIfa()
-        {
-            _metricHelper.SendCounterMetric($"{_metricPrefix}.delete");
-            _cookieHelper.RemoveIdentifierCookie(Response.Cookies);
-
-            return Ok();
         }
 
         private string GenerateRandomEmail() => $"{Guid.NewGuid()}@openpass.com";

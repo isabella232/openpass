@@ -103,20 +103,6 @@ namespace OpenPass.IdController.UTest.Controllers
                 It.Is<string>(k => k == idUserSide)), Times.Once);
         }
 
-        [Test]
-        public void TestDeleteIfa()
-        {
-            // Arrange
-            var response = _unauthenticatedController.DeleteIfa();
-
-            // Act
-            var data = GetResponseData(response);
-            Assert.IsNull(data);
-
-            // Assert
-            _cookieHelperMock.Verify(c => c.RemoveIdentifierCookie(It.IsAny<IResponseCookies>()), Times.Once);
-        }
-
         #region Helpers
 
         private static dynamic GetResponseData(IActionResult response)

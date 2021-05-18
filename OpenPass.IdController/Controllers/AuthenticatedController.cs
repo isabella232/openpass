@@ -2,8 +2,8 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
-using static Criteo.Glup.IdController.Types;
 using OpenPass.IdController.Helpers;
 using OpenPass.IdController.Helpers.Adapters;
 using OpenPass.IdController.Models;
@@ -19,10 +19,8 @@ namespace OpenPass.IdController.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IMetricHelper _metricHelper;
         private readonly IMemoryCache _activeOtps; // Mapping: (email -> OTP)
-        private readonly IConfigurationHelper _configurationHelper;
         private readonly IIdentifierAdapter _uid2Adapter;
         private readonly IEmailHelper _emailHelper;
-        private readonly IGlupHelper _glupHelper;
         private readonly ICodeGeneratorHelper _codeGeneratorHelper;
         private readonly ICookieHelper _cookieHelper;
 
@@ -30,39 +28,32 @@ namespace OpenPass.IdController.Controllers
             IHostingEnvironment hostingEnvironment,
             IMetricHelper metricRegistry,
             IMemoryCache memoryCache,
-            IConfigurationHelper configurationHelper,
             IIdentifierAdapter uid2Adapter,
             IEmailHelper emailHelper,
-            IGlupHelper glupHelper,
             ICodeGeneratorHelper codeGeneratorHelper,
             ICookieHelper cookieHelper)
         {
             _hostingEnvironment = hostingEnvironment;
             _metricHelper = metricRegistry;
             _activeOtps = memoryCache;
-            _configurationHelper = configurationHelper;
             _uid2Adapter = uid2Adapter;
             _emailHelper = emailHelper;
-            _glupHelper = glupHelper;
             _codeGeneratorHelper = codeGeneratorHelper;
             _cookieHelper = cookieHelper;
         }
 
         #region One-time password (OTP)
 
+        /// <summary>
+        /// Send email with one time password
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>No content</returns>
         [HttpPost("otp/generate")]
-        public IActionResult GenerateOtp(
-            [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromBody] GenerateRequest request)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public IActionResult GenerateOtp([FromBody] GenerateRequest request)
         {
             var prefix = $"{_metricPrefix}.otp.generate";
-
-            if (!_configurationHelper.EnableOtp)
-            {
-                _metricHelper.SendCounterMetric($"{prefix}.forbidden");
-                // Status code 404 -> resource not found (best way to say not available)
-                return NotFound();
-            }
 
             if (!_emailHelper.IsValidEmail(request.Email))
             {
@@ -70,18 +61,15 @@ namespace OpenPass.IdController.Controllers
                 return BadRequest();
             }
 
-            // 1. Generate OTP and add it to cache (keyed by email)
+            // Generate OTP and add it to cache (keyed by email)
             var otp = _codeGeneratorHelper.GenerateRandomCode();
             _activeOtps.Set(request.Email, otp, TimeSpan.FromMinutes(_otpCodeLifetimeMinutes));
 
             if (_hostingEnvironment.IsDevelopment())
                 Console.Out.WriteLine($"New OTP code generated (valid for {_otpCodeLifetimeMinutes} minutes): {request.Email} -> {otp}");
 
-            // 2. Send email (async -> don't wait)
+            // Send email (async -> don't wait)
             _emailHelper.SendOtpEmail(request.Email, otp);
-
-            // 3. Emit glup
-            _glupHelper.EmitGlup(EventType.EmailEntered, request.OriginHost, userAgent);
 
             // Metrics
             _metricHelper.SendCounterMetric($"{prefix}.ok");
@@ -90,19 +78,18 @@ namespace OpenPass.IdController.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Validate one time password
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Token if it valid</returns>
         [HttpPost("otp/validate")]
-        public async Task<IActionResult> ValidateOtp(
-            [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromBody] ValidateRequest request)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> ValidateOtp([FromBody] ValidateRequest request)
         {
             var prefix = $"{_metricPrefix}.otp.validate";
-
-            if (!_configurationHelper.EnableOtp)
-            {
-                _metricHelper.SendCounterMetric($"{prefix}.forbidden");
-                // Status code 404 -> resource not found (best way to say not available)
-                return NotFound();
-            }
 
             if (!(_emailHelper.IsValidEmail(request.Email) && _codeGeneratorHelper.IsValidCode(request.Otp)))
             {
@@ -117,8 +104,6 @@ namespace OpenPass.IdController.Controllers
 
                 // Remove code: OTP is valid only once
                 _activeOtps.Remove(request.Email);
-                // Emit glup
-                _glupHelper.EmitGlup(EventType.EmailValidated, request.OriginHost, userAgent);
 
                 // Retrieve UID2 token, set cookie and send token back in payload
                 var token = await _uid2Adapter.GetId(request.Email);
@@ -147,10 +132,16 @@ namespace OpenPass.IdController.Controllers
 
         #region External SSO services
 
+        /// <summary>
+        /// SSO login (Facebook, Google)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>generated token</returns>
         [HttpPost("sso")]
-        public async Task<IActionResult> GenerateEmailToken(
-            [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromBody] GenerateRequest request)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GenerateEmailToken([FromBody] GenerateRequest request)
         {
             var prefix = $"{_metricPrefix}.sso.generate";
 
@@ -161,7 +152,7 @@ namespace OpenPass.IdController.Controllers
             }
 
             // 1. Emit glup
-            _glupHelper.EmitGlup(request.EventType, request.OriginHost, userAgent);
+            //_glupHelper.EmitGlup(request.EventType, request.OriginHost, userAgent);
 
             // 2. Retrieve UID2 token, set cookie and send token back in payload
             var token = await _uid2Adapter.GetId(request.Email);

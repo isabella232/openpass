@@ -55,19 +55,6 @@ namespace OpenPass.IdController.UTest.Helpers
                     It.Is<CookieOptions>(co => co.Expires.Value.DateTime.Equals(expectedExpire))));
         }
 
-        [Test]
-        public void RemoveIdentifierCookieTest()
-        {
-            // Arrange
-            var cookieContainerMock = new Mock<IResponseCookies>();
-
-            // Act
-            _cookieHelper.RemoveIdentifierCookie(cookieContainerMock.Object);
-
-            // Assert
-            cookieContainerMock.Verify(c => c.Delete(It.Is<string>(k => k == _identifierCookieName)), Times.Once);
-        }
-
         #endregion Cookie-specific
     }
 }

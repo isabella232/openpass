@@ -2,30 +2,31 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using OpenPass.IdController.Helpers.Configuration;
 
 namespace OpenPass.IdController.Helpers.Adapters
 {
     public class Uid2Adapter : IIdentifierAdapter, IDisposable
     {
-        private const string _criteoApiKey = "";
-        private const string _uid2MappingEndpoint = "https://integ.uidapi.com/identity/map";
         private const string _uid2EmailParameterName = "email"; // Expected: email=email@example.com
         private const string _prefix = "uid2adapter";
 
         private readonly HttpClient _httpClient;
         private readonly IMetricHelper _metricHelper;
+        private readonly IConfigurationManager _configurationManager;
 
-        public Uid2Adapter(HttpClient httpClient, IMetricHelper metricHelper)
+        public Uid2Adapter(HttpClient httpClient, IMetricHelper metricHelper, IConfigurationManager configurationManager)
         {
             _httpClient = httpClient;
             _metricHelper = metricHelper;
+            _configurationManager = configurationManager;
         }
 
-        public Uid2Adapter(IMetricHelper metricHelper)
-            : this(new HttpClient(), metricHelper)
+        public Uid2Adapter(IMetricHelper metricHelper, IConfigurationManager configurationManager)
+            : this(new HttpClient(), metricHelper, configurationManager)
         {
             _httpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", _criteoApiKey);
+                    new AuthenticationHeaderValue("Bearer", configurationManager.Uid2Configuration.ApiKey);
         }
 
         public async Task<string> GetId(string emailIdentifier)
@@ -55,7 +56,7 @@ namespace OpenPass.IdController.Helpers.Adapters
             _httpClient?.Dispose();
         }
 
-        private static Uri GetRequestUri(string email) =>
-            new Uri(_uid2MappingEndpoint).AddQueryParameter(_uid2EmailParameterName, email);
+        private Uri GetRequestUri(string email) =>
+            new Uri(_configurationManager.Uid2Configuration.Endpoint).AddQueryParameter(_uid2EmailParameterName, email);
     }
 }
