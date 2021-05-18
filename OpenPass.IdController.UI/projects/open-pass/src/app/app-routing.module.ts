@@ -15,6 +15,11 @@ const routes: Routes = [
     path: 'reset',
     loadChildren: () => import('./containers/reset/reset.module').then((m) => m.ResetModule),
   },
+  {
+    path: 'under-construction',
+    loadChildren: () =>
+      import('./containers/under-construction/under-construction.module').then((m) => m.UnderConstructionModule),
+  },
 ];
 
 @NgModule({

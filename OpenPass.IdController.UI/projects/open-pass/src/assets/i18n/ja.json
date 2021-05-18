@@ -5,12 +5,12 @@
     "WITH": "OpenPassと共に",
     "OPEN_PASS_PROS": {
       "INFORMATION": "大規模なサイトネットワークを無料で閲覧しながら、独立した中小企業やWebサイトをサポートします。",
-      "ACCESS": "いつでも<a href=\"https://transparentadvertising.com\" target=\"_blank\">transparentadvertising.com</a>からプライバシー設定を変更、管理することができます。",
+      "ACCESS": "いつでも<a href=\"/open-pass/under-construction\" target=\"_blank\">transparentadvertising.com</a>からプライバシー設定を変更、管理することができます。",
       "CONTROL": "OpenPassはお客様のメールアドレスを許可なく共有することはありません。"
     },
     "SUMMARY": {
       "TITLE": "OpenPassとは、どの様な仕組みですか？",
-      "DESCRIPTION": "OpenPassはお客様の同意のもと、個人を特定することのできない識別子を<b>信頼できる広告パートナー</b>に共有し、お客様により適切な広告を提供します。<a target=\"_blank\" href=\"https://criteo.com\">詳細はこちら</a>"
+      "DESCRIPTION": "OpenPassはお客様の同意のもと、個人を特定することのできない識別子を<b>信頼できる広告パートナー</b>に共有し、お客様により適切な広告を提供します。<a target=\"_blank\" href=\"/open-pass/under-construction\">詳細はこちら</a>"
     },
     "ACTION": "OpenPassでサインアップ"
   },
@@ -24,7 +24,7 @@
       "CODE_ERROR": "コードが無効です。コードをお確かめの上、もう一度入力してください。",
       "SHARE_LABEL": "当Webサイトの利用を続けることにより、利用規約に同意します。"
     },
-    "AGREEMENT": "当Webサイトの利用を続けることにより、 <a href=\"#\" target=\"_blank\">利用規約</a>に同意します。",
+    "AGREEMENT": "当Webサイトの利用を続けることにより、 <a href=\"/open-pass/under-construction\" target=\"_blank\">利用規約</a>に同意します。",
     "OR": "または"
   },
   "AUTH": {
@@ -43,12 +43,12 @@
     "DESCRIPTION": "お客様のプライバシーを維持しながら<b>{{ websiteName }}</b>や多くのWebサイトに無料でアクセスするために「同意する＆サイトを見る」をクリックし、OpenPassの利用規約に同意してください。",
     "SUMMARY": {
       "TITLE": "OpenPassとは、どの様な仕組みですか？",
-      "OPEN_PASS_POWERED": "OpenPassは、サードパーティCookieよりも、よりプライバシーのコントロールを提供する<a href=\"\">Unified ID</a>を利用しています。",
+      "OPEN_PASS_POWERED": "OpenPassは、サードパーティCookieよりも、よりプライバシーのコントロールを提供する<a href=\"/open-pass/under-construction\">Unified ID</a>を利用しています。",
       "REDUCE": "Cookieバナーへの承諾回数を減らします。",
       "SHOW": "より関連性の高い広告を表示します。",
       "SUPPORT": "オープンなインターネット環境で無料コンテンツを提供します。",
       "MENAGE_SETTINGS": "<a>プライバシーポータル</a>でお客様の設定を管理する。",
-      "TERMS_LINK": "<a href=\"\">利用規約を見る</a>"
+      "TERMS_LINK": "<a href=\"/open-pass/under-construction\">利用規約を見る</a>"
     },
     "ACTION": "同意する＆Webサイトを見る"
   },
@@ -68,14 +68,14 @@
     "WITH": "Open Passと共に:",
     "OPEN_PASS_PROS": {
       "INFORMATION": "大規模なサイトネットワークを無料で閲覧しながら、独立した中小企業やWebサイトをサポートします。",
-      "ACCESS": "いつでも<a href=\"https://transparentadvertising.com\" target=\"_blank\">transparentadvertising.com</a>からプライバシー設定を変更、管理することができます。",
+      "ACCESS": "いつでも<a href=\"/open-pass/under-construction\" target=\"_blank\">transparentadvertising.com</a>からプライバシー設定を変更、管理することができます。",
       "CONTROL": "OpenPassはお客様のメールアドレスを許可なく共有することはありません。"
     },
     "SUMMARY": {
       "TITLE": "OpenPassとは、どの様な仕組みですか？",
-      "DESCRIPTION": "OpenPassはお客様の同意のもと、個人を特定することのできない識別子を<b>信頼できる広告パートナー</b>に共有し、お客様により適切な広告を提供します。 <a target=\"_blank\" href=\"https://criteo.com\">詳細はこちら</a>"
+      "DESCRIPTION": "OpenPassはお客様の同意のもと、個人を特定することのできない識別子を<b>信頼できる広告パートナー</b>に共有し、お客様により適切な広告を提供します。 <a target=\"_blank\" href=\"/open-pass/under-construction\">詳細はこちら</a>"
     },
-    "PREFERENCES": "OpenPassの詳細についての確認とプライバシー設定を管理するために<a href=\"#\" target=\"_blank\">ここをクリックする</a>",
+    "PREFERENCES": "OpenPassの詳細についての確認とプライバシー設定を管理するために<a href=\"/open-pass/under-construction\" target=\"_blank\">ここをクリックする</a>",
     "ACTION": "同意し、OpenPassを利用してアクセスする。"
   },
   "RECOGNIZED": {

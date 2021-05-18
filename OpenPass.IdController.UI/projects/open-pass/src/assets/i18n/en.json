@@ -5,12 +5,12 @@
     "WITH": "With OpenPass:",
     "OPEN_PASS_PROS": {
       "INFORMATION": "You will support online businesses that provide you with tailored content.",
-      "ACCESS": "You have full control of your privacy, anytime at <a href=\"https://transparentadvertising.com\" target=\"_blank\">transparentadvertising.com</a>",
+      "ACCESS": "You have full control of your privacy, anytime at <a href=\"/open-pass/under-construction\" target=\"\">transparentadvertising.com</a>",
       "CONTROL": "Your email address is never shared without your permission"
     },
     "SUMMARY": {
       "TITLE": "How does OpenPass work?",
-      "DESCRIPTION": "With your permission, OpenPass converts your email address into a pseudonymous identifier. This identifier is shared with <b>trusted advertising partners</b> who use it to show you advertisements that they think are relevant to you. <a target=\"_blank\" href=\"https://criteo.com\">Learn more</a>"
+      "DESCRIPTION": "With your permission, OpenPass converts your email address into a pseudonymous identifier. This identifier is shared with <b>trusted advertising partners</b> who use it to show you advertisements that they think are relevant to you. <a target=\"_blank\" href=\"/open-pass/under-construction\">Learn more</a>"
     },
     "ACTION": "Sign in with OpenPass"
   },
@@ -25,7 +25,7 @@
       "CODE_ERROR": "Code is not valid. Check the code and try one more time",
       "SHARE_LABEL": "By continuing on this site I agree to the terms and conditions"
     },
-    "AGREEMENT": "By continuing on this website I agree to <a href=\"#\" target=\"_blank\">terms and conditions</a>",
+    "AGREEMENT": "By continuing on this website I agree to <a href=\"/open-pass/under-construction\" target=\"_blank\">terms and conditions</a>",
     "OR": "or"
   },
   "AUTH": {
@@ -44,12 +44,12 @@
     "DESCRIPTION": "To access <b>{{ websiteName }}</b> and many websites for free while maintaining full control of your privacy, please accept the OpenPass Terms and Conditions by clicking Agree & Go to Site.",
     "SUMMARY": {
       "TITLE": "How does OpenPass work?",
-      "OPEN_PASS_POWERED": "OpenPass is powered by <a href=\"\">Unified ID</a>, which is an improvement over third-party cookies that offers more privacy control. It can:",
+      "OPEN_PASS_POWERED": "OpenPass is powered by <a href=\"/open-pass/under-construction\">Unified ID</a>, which is an improvement over third-party cookies that offers more privacy control. It can:",
       "REDUCE": "Reduce how often you have to consent to annoying cookie banners",
       "SHOW": "Show you more relevant and fewer repeat ads",
       "SUPPORT": "Support free content on the open internet",
       "MENAGE_SETTINGS": "Manage your settings in the <a>privacy portal</a>.",
-      "TERMS_LINK": "<a href=\"\">View terms and conditions</a>"
+      "TERMS_LINK": "<a href=\"/open-pass/under-construction\">View terms and conditions</a>"
     },
     "ACTION": "Agree & go to site"
   },
@@ -69,14 +69,14 @@
     "WITH": "With OpenPass:",
     "OPEN_PASS_PROS": {
       "INFORMATION": "Support independent small businesses and websites as you browse a large network of sites for free",
-      "ACCESS": "Manage and change your privacy preferences at any time at <a href=\"https://transparentadvertising.com\" target=\"+_blank\">transparentadvertising.com</a>",
+      "ACCESS": "Manage and change your privacy preferences at any time at <a href=\"/open-pass/under-construction\" target=\"+_blank\">transparentadvertising.com</a>",
       "CONTROL": "OpenPass will never share your information without your permission"
     },
     "SUMMARY": {
       "TITLE": "How does OpenPass work?",
-      "DESCRIPTION": "With your permission. OpenPass shares pseudonymous (non directly identifying) identifiers with <b>trusted advertising partners</b> who use it to show you advertisement that they think are relevant to you. <a target=\"_blank\" href=\"https://criteo.com\">Learn more</a>"
+      "DESCRIPTION": "With your permission. OpenPass shares pseudonymous (non directly identifying) identifiers with <b>trusted advertising partners</b> who use it to show you advertisement that they think are relevant to you. <a target=\"_blank\" href=\"/open-pass/under-construction\">Learn more</a>"
     },
-    "PREFERENCES": "<a href=\"#\" target=\"_blank\">Click here</a> to manage your privacy settings and learn more about OpenPass",
+    "PREFERENCES": "<a href=\"/open-pass/under-construction\" target=\"_blank\">Click here</a> to manage your privacy settings and learn more about OpenPass",
     "ACTION": "I agree & access with OpenPass"
   },
   "RECOGNIZED": {
