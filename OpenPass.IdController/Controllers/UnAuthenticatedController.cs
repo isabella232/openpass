@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OpenPass.IdController.Helpers;
 using OpenPass.IdController.Helpers.Adapters;
+using OpenPass.IdController.Models;
+using static Criteo.Glup.IdController.Types;
 
 namespace OpenPass.IdController.Controllers
 {
@@ -14,16 +16,21 @@ namespace OpenPass.IdController.Controllers
         private readonly IIdentifierAdapter _uid2Adapter;
         private readonly ICookieHelper _cookieHelper;
         private readonly IMetricHelper _metricHelper;
+        private readonly IGlupHelper _glupHelper;
 
-        public UnAuthenticatedController(IIdentifierAdapter uid2Adapter, IMetricHelper metricHelper, ICookieHelper cookieHelper)
+        public UnAuthenticatedController(IIdentifierAdapter uid2Adapter, IMetricHelper metricHelper, ICookieHelper cookieHelper, IGlupHelper glupHelper)
         {
             _uid2Adapter = uid2Adapter;
             _metricHelper = metricHelper;
             _cookieHelper = cookieHelper;
+            _glupHelper = glupHelper;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetOrCreateIfa()
+        public async Task<IActionResult> GetOrCreateIfa(
+            [FromHeader(Name = "User-Agent")] string userAgent,
+            [FromBody] GenerateRequest request
+        )
         {
             string token;
             var prefix = $"{_metricPrefix}.get.create";
@@ -32,6 +39,7 @@ namespace OpenPass.IdController.Controllers
             {
                 token = tokenCookie;
                 _metricHelper.SendCounterMetric($"{prefix}.reuse");
+                _glupHelper.EmitGlup(EventType.ReuseIfa, request.OriginHost, userAgent);
             }
             else
             {
@@ -46,6 +54,7 @@ namespace OpenPass.IdController.Controllers
                 }
 
                 _metricHelper.SendCounterMetric($"{prefix}.ok");
+                _glupHelper.EmitGlup(EventType.NewIfa, request.OriginHost, userAgent);
             }
 
             // Set cookie
