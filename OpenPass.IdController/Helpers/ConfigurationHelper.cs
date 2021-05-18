@@ -37,7 +37,7 @@ namespace OpenPass.IdController.Helpers
         {
             // This CaC is mainly used to get the ratio per domain to glup events
             var query = new EmitGlupsDomainRatio.Query(domain);
-            return _emitGlupsRatioParameter?.Get(query, 0.0) ?? 0.0;
+            return _emitGlupsRatioParameter?.Get(query, 1.0) ?? 1.0;
         }
 
         public bool EnableOtp => _enableOtpParameter?.Get(_enableOtpQuery, true) ?? true;
