@@ -7,6 +7,7 @@ using Criteo.Services;
 using Criteo.Services.Graphite;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using Criteo.AspNetCore.Monitoring;
 
 namespace OpenPass.IdController
 {
@@ -98,7 +99,7 @@ namespace OpenPass.IdController
 
                 // adds metrics for app monitoring. Should remain the last filter added in this block.
                 // In Pure DI mode, pass the IMetricsRegistry you've built
-                //options.Filters.AddCriteoMonitoringFilters();
+                options.Filters.AddCriteoMonitoringFilters();
             });
 
             // Register Admin handlers
