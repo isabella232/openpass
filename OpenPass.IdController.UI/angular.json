@@ -167,23 +167,6 @@
                   "maximumError": "10kb"
                 }
               ]
-            },
-            "preprod": {
-              "outputPath": "dist/preprod/widget",
-              "optimization": true,
-              "outputHashing": "none",
-              "sourceMap": false,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "deployUrl": "https://openpass.preprod.criteo.com/open-pass/preprod/widget/",
-              "fileReplacements": [
-                {
-                  "replace": "projects/widget/src/environments/environment.ts",
-                  "with": "projects/widget/src/environments/environment.preprod.ts"
-                }
-              ]
             }
           }
         },

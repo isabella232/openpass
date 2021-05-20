@@ -24,11 +24,6 @@ if (isBuild) {
       output: getOutputConfig('dist/widget/assets/'),
       plugins: [replace({ 'environment/environment': 'environment/environment.prod' }), ...defaultConfig.plugins],
     },
-    {
-      ...defaultConfig,
-      output: getOutputConfig('dist/preprod/widget/assets/'),
-      plugins: [replace({ 'environment/environment': 'environment/environment.preprod' }), ...defaultConfig.plugins],
-    },
   ];
 }
 
@@ -43,7 +38,7 @@ function getOutputConfig(path) {
       format: 'iife',
       plugins: [terser()],
     },
-  ]
+  ];
 }
 
 async function build(config) {
