@@ -10,12 +10,19 @@ namespace OpenPass.IdController.Helpers
         void SetIdentifierCookie(IResponseCookies cookieContainer, string value);
 
         void RemoveIdentifierCookie(IResponseCookies cookieContainer);
+
+        bool TryGetOptoutCookie(IRequestCookieCollection cookieContainer, out string value);
+
+        void SetOptoutCookie(IResponseCookies cookieContainer, string value);
+
+        void RemoveOptoutCookie(IResponseCookies cookieContainer);
     }
 
     public class CookieHelper : ICookieHelper
     {
         private const int _cookieLifetimeDays = 30;
         private const string _identifierCookieName = "__uid2_advertising_token";
+        private const string _optoutCookieName = "__optout";
 
         private readonly CookieOptions _defaultCookieOptions;
 
@@ -51,6 +58,15 @@ namespace OpenPass.IdController.Helpers
 
         public void RemoveIdentifierCookie(IResponseCookies cookieContainer) =>
             RemoveCookie(cookieContainer, _identifierCookieName);
+
+        public bool TryGetOptoutCookie(IRequestCookieCollection cookieContainer, out string value) =>
+            TryGetCookie(cookieContainer, _optoutCookieName, out value);
+
+        public void SetOptoutCookie(IResponseCookies cookieContainer, string value) =>
+            SetCookie(cookieContainer, _optoutCookieName, value);
+
+        public void RemoveOptoutCookie(IResponseCookies cookieContainer) =>
+            RemoveCookie(cookieContainer, _optoutCookieName);
 
         #endregion Cookie-specific methods
     }
