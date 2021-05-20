@@ -10,7 +10,7 @@ namespace OpenPass.IdController.Controllers
     [Route("open-pass")]
     public class OpenPassController : Controller
     {
-        private static readonly string _metricPrefix = "open-pass.";
+        private static readonly string _metricPrefix = "open-pass";
         private static readonly string _distFolderName = "dist";
         private static readonly string _widgetJsPath = "widget/assets/widget.min.js";
         private static readonly string _widgetIndexHtmlPath = "dist/widget/index.html";
