@@ -11,6 +11,7 @@ import { NgxsDispatchPluginModule } from '@ngxs-labs/dispatch-decorator';
 import { SsoState } from '@store/otp-widget/sso.state';
 import { AuthState } from '@store/otp-widget/auth.state';
 import { OpenerState } from '@store/otp-widget/opener.state';
+import { ControlsState } from '@store/controls.state';
 import { OtpWidgetState } from '@store/otp-widget/otp-widget.state';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -27,7 +28,7 @@ export const createTranslateLoader = (http: HttpClient): TranslateHttpLoader =>
     RouterModule,
     AppRoutingModule,
     HttpClientModule,
-    NgxsModule.forRoot([OpenerState, OtpWidgetState, AuthState, SsoState], {
+    NgxsModule.forRoot([OpenerState, OtpWidgetState, AuthState, SsoState, ControlsState], {
       developmentMode: !environment.production,
     }),
     NgxsDispatchPluginModule.forRoot(),
