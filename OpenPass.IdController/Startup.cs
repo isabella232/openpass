@@ -132,6 +132,8 @@ namespace OpenPass.IdController
             {
                 // generic (non controller-specific) routes are defined here
             });
+
+            app.UseGlobalExceptionMiddleware(_env);
         }
     }
 }
