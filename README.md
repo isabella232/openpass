@@ -1,4 +1,4 @@
-# Open Pass
+# OpenPass
 
 As users look for more transparency and ownership of their personal data, many existing identity technologies that enable 1:1 personalized advertising are being phased out. 
 
