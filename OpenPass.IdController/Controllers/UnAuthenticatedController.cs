@@ -26,7 +26,7 @@ namespace OpenPass.IdController.Controllers
             _glupHelper = glupHelper;
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> GetOrCreateIfa(
             [FromHeader(Name = "User-Agent")] string userAgent,
             [FromBody] GenerateRequest request

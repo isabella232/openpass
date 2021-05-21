@@ -19,7 +19,7 @@ export class AuthHelper {
   }
 
   static mockGetIfa(response: { [p: string]: any } = {}) {
-    cy.intercept('GET', '**/api/unauthenticated', response).as(AuthMocks.getIfa);
+    cy.intercept('POST', '**/api/unauthenticated', response).as(AuthMocks.getIfa);
 
     return '@' + AuthMocks.getIfa;
   }
