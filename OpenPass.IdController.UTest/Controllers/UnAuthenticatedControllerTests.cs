@@ -51,7 +51,7 @@ namespace OpenPass.IdController.UTest.Controllers
             _cookieHelperMock.Setup(c => c.TryGetIdentifierCookie(It.IsAny<IRequestCookieCollection>(), out placeholder)).Returns(false);
             _uid2AdapterMock.Setup(c => c.GetId(It.IsAny<string>())).ReturnsAsync(returnedToken);
 
-            var response = await _unauthenticatedController.GetOrCreateIfa(_testUserAgent, _request);
+            var response = await _unauthenticatedController.CreateIfa(_testUserAgent, _request);
 
             // Returned identifier
             var data = GetResponseData(response);
@@ -89,7 +89,7 @@ namespace OpenPass.IdController.UTest.Controllers
             _uid2AdapterMock.Setup(c => c.GetId(It.IsAny<string>())).ReturnsAsync(returnedToken);
 
             // Act
-            var response = await _unauthenticatedController.GetOrCreateIfa(_testUserAgent, _request);
+            var response = await _unauthenticatedController.CreateIfa(_testUserAgent, _request);
 
             // Assert
             // Not found -> adapter not available
@@ -109,7 +109,7 @@ namespace OpenPass.IdController.UTest.Controllers
             _cookieHelperMock.Setup(c => c.TryGetIdentifierCookie(It.IsAny<IRequestCookieCollection>(), out idUserSide)).Returns(true);
 
             // Act
-            var response = await _unauthenticatedController.GetOrCreateIfa(_testUserAgent, _request);
+            var response = await _unauthenticatedController.CreateIfa(_testUserAgent, _request);
 
             // Returned IFA
             var data = GetResponseData(response);

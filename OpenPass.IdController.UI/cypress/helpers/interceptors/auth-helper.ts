@@ -1,7 +1,7 @@
 enum AuthMocks {
   generate = 'generate',
   validate = 'validate',
-  getIfa = 'getIfa',
+  createIfa = 'createIfa',
 }
 
 // Specify '/api' in all stubs to avoid conflicts with front-end routes
@@ -18,9 +18,9 @@ export class AuthHelper {
     return '@' + AuthMocks.validate;
   }
 
-  static mockGetIfa(response: { [p: string]: any } = {}) {
-    cy.intercept('POST', '**/api/unauthenticated', response).as(AuthMocks.getIfa);
+  static mockCreateIfa(response: { [p: string]: any } = {}) {
+    cy.intercept('POST', '**/api/unauthenticated', response).as(AuthMocks.createIfa);
 
-    return '@' + AuthMocks.getIfa;
+    return '@' + AuthMocks.createIfa;
   }
 }

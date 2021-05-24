@@ -27,7 +27,7 @@ namespace OpenPass.IdController.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetOrCreateIfa(
+        public async Task<IActionResult> CreateIfa(
             [FromHeader(Name = "User-Agent")] string userAgent,
             [FromBody] GenerateRequest request
         )

@@ -42,7 +42,7 @@ export class IfaState {
   @Action(GetIfa)
   getIfa(ctx: LocalStateContext) {
     ctx.patchState({ isFetching: true });
-    return this.unauthenticatedService.getIfa().pipe(
+    return this.unauthenticatedService.createIfa().pipe(
       switchMap((ifaDto) => ctx.dispatch(new GetIfaSuccess(ifaDto.token))),
       catchError(() => ctx.dispatch(new GetIfaFailure())),
       finalize(() => ctx.patchState({ isFetching: false }))

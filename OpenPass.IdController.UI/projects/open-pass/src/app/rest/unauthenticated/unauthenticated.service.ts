@@ -12,7 +12,7 @@ export class UnauthenticatedService {
 
   constructor(private http: HttpClient) {}
 
-  getIfa(): Observable<TokenDto> {
+  createIfa(): Observable<TokenDto> {
     return this.http.post<TokenDto>(this.namespace + '/unauthenticated', {});
   }
 }
