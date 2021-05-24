@@ -21,6 +21,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
   isFetching$: Observable<boolean>;
 
   isDestroyed = new Subject();
+  acceptTerms = false;
 
   constructor(
     private store: Store,
@@ -40,6 +41,10 @@ export class MainViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.isDestroyed.next();
+  }
+
+  closeWindow() {
+    this.dialogWindowService.closeDialogWindow(true);
   }
 
   private confirm() {

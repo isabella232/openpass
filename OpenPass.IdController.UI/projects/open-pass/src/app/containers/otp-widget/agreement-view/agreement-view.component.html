@@ -1,8 +1,23 @@
 <h1 data-test="agreement-page-title" translate>AGREEMENT.HEADING</h1>
-<p><b translate>AGREEMENT.SUB_HEADING</b></p>
-<p [innerHTML]="'AGREEMENT.DESCRIPTION' | translate: { websiteName: websiteName$ | async }"></p>
-<usrf-open-pass-details></usrf-open-pass-details>
-<a class="btn btn-primary btn-wide" routerLink="../success" data-test="agreement-action-btn" translate>
-  AGREEMENT.ACTION
-</a>
+<p [innerHTML]="'AGREEMENT.SUB_HEADING' | translate"></p>
+<form (submit)="saveTokenAndClose()">
+  <div class="form-group">
+    <label class="form-control d-flex align-center">
+      <input class="form-control mr-2" type="checkbox" name="agreement" [(ngModel)]="isTermsAccepted" />
+      <span translate>AGREEMENT.CONDITION</span>
+    </label>
+  </div>
+  <div class="form-group my-4">
+    <button
+      type="submit"
+      class="btn btn-primary btn-wide"
+      [disabled]="!isTermsAccepted"
+      data-test="agreement-action-btn"
+      translate
+    >
+      AGREEMENT.ACTION
+    </button>
+  </div>
+  <div class="form-group" [innerHTML]="'AGREEMENT.REVIEW' | translate"></div>
+</form>
 <usrf-copyright></usrf-copyright>

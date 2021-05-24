@@ -29,6 +29,9 @@ export class DialogWindowService {
 
   private proceedToOrigin() {
     const origin = this.store.selectSnapshot(OpenerState.origin);
+    if (!origin) {
+      return;
+    }
     const originPath = new URL(origin);
     originPath.searchParams.set('token', this.authService.token ?? '');
     this.window.location.replace(originPath.toString());

@@ -1,12 +1,7 @@
-<ng-container *ngIf="!(authState$ | async).isEmailVerified">
-  <h1 data-test="auth-page-title" translate>AUTH.HEADING_1</h1>
-  <h3 class="mb-2" translate>AUTH.SUB_HEADING_1</h3>
-  <p class="mt-2" [innerHTML]="'AUTH.DESCRIPTION_1' | translate"></p>
-</ng-container>
-<ng-container *ngIf="(authState$ | async).isEmailVerified">
-  <h1 data-test="auth-page-title" translate>AUTH.HEADING_2</h1>
-  <h3 class="mb-2" translate>AUTH.SUB_HEADING_2</h3>
-  <p class="mt-2" translate>AUTH.DESCRIPTION_2</p>
+<ng-container>
+  <h1 data-test="auth-page-title" translate>AUTH.HEADING</h1>
+  <h3 class="mb-2" translate>AUTH.SUB_HEADING</h3>
+  <p class="mt-2" [innerHTML]="'AUTH.DESCRIPTION' | translate"></p>
 </ng-container>
 
 <form *ngIf="authState$ | async as authState" (submit)="submitForm()" ngNativeValidate>
@@ -20,7 +15,7 @@
       type="email"
       required
       [value]="authState.email"
-      (change)="patchEmail($event)"
+      (input)="patchEmail($event)"
     />
     <div class="hint" data-test="auth-email-warning" translate>SHARED.FORM.EMAIL_ERROR</div>
   </div>
@@ -34,34 +29,34 @@
       type="number"
       required
       [ngModel]="authState.code"
-      (change)="patchCode($event)"
+      (input)="patchCode($event)"
     />
     <div class="hint" data-test="auth-code-warning" translate>SHARED.FORM.CODE_ERROR</div>
   </div>
-  <div *ngIf="authState.isEmailVerified" [innerHTML]="'SHARED.AGREEMENT' | translate"></div>
-  <div *ngIf="!authState.isEmailVerified" class="py-3"></div>
-  <div class="pt-3">
+  <div *ngIf="authState.isEmailVerified" class="my-3">
+    <label class="form-control d-flex align-center">
+      <input
+        data-test="auth-agreement"
+        name="agreement"
+        type="checkbox"
+        class="form-control mr-2"
+        [(ngModel)]="isAcceptAgreement"
+      />
+      <span translate> SHARED.AGREEMENT </span>
+    </label>
+  </div>
+  <div class="mt-3">
     <button
-      *ngIf="!authState.isEmailVerified"
       data-test="auth-action-btn"
       type="submit"
       class="btn btn-primary btn-wide"
+      [disabled]="authState.isEmailVerified ? !isAcceptAgreement : !authState.email.length"
     >
       {{ 'AUTH.ACTION' | translate }}
     </button>
-    <button
-      *ngIf="authState.isEmailVerified"
-      data-test="auth-action-btn"
-      type="submit"
-      class="btn btn-primary btn-wide"
-    >
-      {{ 'AUTH.ACTION_PROCEED' | translate }}
-    </button>
   </div>
 </form>
-<div class="text-center p-3">
-  <a routerLink="../sso" translate>SHARED.OTHER_WAY</a>
-</div>
+<p class="text-small text-muted my-4" [innerHTML]="'AUTH.HINT' | translate"></p>
 
 <usrf-copyright></usrf-copyright>
 

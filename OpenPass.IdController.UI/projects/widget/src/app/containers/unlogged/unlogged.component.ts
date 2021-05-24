@@ -44,8 +44,8 @@ export class UnloggedComponent implements OnInit, OnDestroy {
 
   get openerConfigs(): string {
     const { innerHeight, innerWidth, screenX, screenY } = this.window;
-    const width = 400;
-    const height = 495;
+    const width = 450;
+    const height = 745;
     const config = {
       width,
       height,
