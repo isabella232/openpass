@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgxsModule } from '@ngxs/store';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -16,6 +16,7 @@ import { OtpWidgetState } from '@store/otp-widget/otp-widget.state';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { WINDOW } from '@utils/injection-tokens';
+import { OriginInterceptor } from './interceptors/origin.interceptor';
 
 export const createTranslateLoader = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -40,7 +41,10 @@ export const createTranslateLoader = (http: HttpClient): TranslateHttpLoader =>
       },
     }),
   ],
-  providers: [{ provide: WINDOW, useFactory: windowFactory }],
+  providers: [
+    { provide: WINDOW, useFactory: windowFactory },
+    { provide: HTTP_INTERCEPTORS, useClass: OriginInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
