@@ -30,7 +30,7 @@ namespace OpenPass.IdController.UTest.Helpers
             var cookieContainerMock = new Mock<IRequestCookieCollection>();
 
             // Act
-            _cookieHelper.TryGetIdentifierCookie(cookieContainerMock.Object, out _);
+            _cookieHelper.TryGetUid2AdvertisingCookie(cookieContainerMock.Object, out _);
 
             // Assert
             cookieContainerMock.Verify(c => c.TryGetValue(It.Is<string>(k => k == _identifierCookieName), out placeholder), Times.Once);
@@ -43,7 +43,7 @@ namespace OpenPass.IdController.UTest.Helpers
             var cookieContainerMock = new Mock<IResponseCookies>();
 
             // Act
-            _cookieHelper.SetIdentifierCookie(cookieContainerMock.Object, "value");
+            _cookieHelper.SetUid2AdvertisingCookie(cookieContainerMock.Object, "value");
 
             var expectedExpire = DateTime.Today.AddDays(_cookieLifetimeDays);
 
@@ -62,7 +62,7 @@ namespace OpenPass.IdController.UTest.Helpers
             var cookieContainerMock = new Mock<IResponseCookies>();
 
             // Act
-            _cookieHelper.RemoveIdentifierCookie(cookieContainerMock.Object);
+            _cookieHelper.RemoveUid2AdvertisingCookie(cookieContainerMock.Object);
 
             // Assert
             cookieContainerMock.Verify(c => c.Delete(It.Is<string>(k => k == _identifierCookieName)), Times.Once);

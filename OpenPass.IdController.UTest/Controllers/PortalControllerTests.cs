@@ -44,7 +44,7 @@ namespace OpenPass.IdController.UTest.Controllers
             // Assert
             Assert.IsAssignableFrom<OkResult>(response);
 
-            _cookieHelperMock.Verify(c => c.RemoveIdentifierCookie(
+            _cookieHelperMock.Verify(c => c.RemoveUid2AdvertisingCookie(
                 It.IsAny<IResponseCookies>()), Times.Once);
             _cookieHelperMock.Verify(c => c.SetOptoutCookie(
                 It.IsAny<IResponseCookies>(),

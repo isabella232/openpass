@@ -26,7 +26,7 @@ namespace OpenPass.IdController.Controllers
                                     [FromBody] GenerateRequest request)
         {
             // Apply internal opt-out
-            _cookieHelper.RemoveIdentifierCookie(Response.Cookies);
+            _cookieHelper.RemoveUid2AdvertisingCookie(Response.Cookies);
             _cookieHelper.SetOptoutCookie(Response.Cookies, "1");
 
             // TODO/OPT: call partners to apply opt-out on their side. This needs to be designed.

@@ -28,12 +28,14 @@ namespace OpenPass.IdController.Controllers
             [FromBody] GenerateRequest request
         )
         {
-            string token;
-            var prefix = $"{_metricPrefix}.get.create";
+            var prefix = $"{_metricPrefix}.create";
 
-            if (_cookieHelper.TryGetIdentifierCookie(Request.Cookies, out var tokenCookie))
+            if (_cookieHelper.TryGetUid2AdvertisingCookie(Request.Cookies, out var uid2Identifier))
             {
-                token = tokenCookie;
+                _metricHelper.SendCounterMetric($"{prefix}.uid2");
+            }
+            if (_cookieHelper.TryGetIdentifierForAdvertisingCookie(Request.Cookies, out var token))
+            {
                 _metricHelper.SendCounterMetric($"{prefix}.reuse");
                 _glupHelper.EmitGlup(EventType.ReuseIfa, request.OriginHost, userAgent);
             }
@@ -46,16 +48,16 @@ namespace OpenPass.IdController.Controllers
             }
 
             // Set cookie
-            _cookieHelper.SetIdentifierCookie(Response.Cookies, token);
+            _cookieHelper.SetIdentifierForAdvertisingCookie(Response.Cookies, token);
 
-            return Ok(new { token });
+            return Ok(new { token, uid2Identifier });
         }
 
         [HttpGet("delete")]
         public IActionResult DeleteIfa()
         {
             _metricHelper.SendCounterMetric($"{_metricPrefix}.delete");
-            _cookieHelper.RemoveIdentifierCookie(Response.Cookies);
+            _cookieHelper.RemoveUid2AdvertisingCookie(Response.Cookies);
 
             return Ok();
         }

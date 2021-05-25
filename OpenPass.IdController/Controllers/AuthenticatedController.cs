@@ -131,7 +131,7 @@ namespace OpenPass.IdController.Controllers
                     _metricHelper.SendCounterMetric($"{prefix}.ok");
 
                     // Set cookie
-                    _cookieHelper.SetIdentifierCookie(Response.Cookies, token);
+                    _cookieHelper.SetUid2AdvertisingCookie(Response.Cookies, token);
                     return Ok(new { token });
                 }
             }
@@ -172,7 +172,7 @@ namespace OpenPass.IdController.Controllers
                 return NotFound();
             }
 
-            _cookieHelper.SetIdentifierCookie(Response.Cookies, token);
+            _cookieHelper.SetUid2AdvertisingCookie(Response.Cookies, token);
 
             // Metrics
             _metricHelper.SendCounterMetric($"{prefix}.ok");

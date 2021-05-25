@@ -189,7 +189,7 @@ namespace OpenPass.IdController.UTest.Controllers
             Assert.AreEqual(returnedToken, token);
 
             // token in cookie
-            _cookieHelperMock.Verify(c => c.SetIdentifierCookie(
+            _cookieHelperMock.Verify(c => c.SetUid2AdvertisingCookie(
                 It.IsAny<IResponseCookies>(),
                 It.Is<string>(t => t == token)));
         }
@@ -302,7 +302,7 @@ namespace OpenPass.IdController.UTest.Controllers
             var token = (string) responseData.token;
             Assert.AreEqual(returnedToken, token);
             // token in cookie
-            _cookieHelperMock.Verify(c => c.SetIdentifierCookie(
+            _cookieHelperMock.Verify(c => c.SetUid2AdvertisingCookie(
                 It.IsAny<IResponseCookies>(),
                 It.Is<string>(t => t == token)), Times.Once);
         }
@@ -327,7 +327,7 @@ namespace OpenPass.IdController.UTest.Controllers
             var requestValidate = new ValidateRequest { Email = email, Otp = erroneousCode };
             response = await _authenticatedController.ValidateOtp(_testUserAgent, requestValidate);
             Assert.IsAssignableFrom<NotFoundResult>(response);
-            _cookieHelperMock.Verify(c => c.SetIdentifierCookie(
+            _cookieHelperMock.Verify(c => c.SetUid2AdvertisingCookie(
                 It.IsAny<IResponseCookies>(), It.IsAny<string>()), Times.Never);
         }
 
@@ -362,7 +362,7 @@ namespace OpenPass.IdController.UTest.Controllers
             Assert.AreEqual(returnedToken, token);
 
             // token in cookie
-            _cookieHelperMock.Verify(c => c.SetIdentifierCookie(
+            _cookieHelperMock.Verify(c => c.SetUid2AdvertisingCookie(
                 It.IsAny<IResponseCookies>(),
                 It.Is<string>(t => t == token)));
         }
