@@ -14,9 +14,9 @@ import {
   ValidateCode,
   ValidateCodeFail,
   ReceiveToken,
+  SetAuthDefault,
 } from './auth.actions';
 import { localStorage } from '@shared/utils/storage-decorator';
-import { EventTypes } from '@enums/event-types.enum';
 
 export interface IAuthState {
   email: string;
@@ -134,5 +134,17 @@ export class AuthState {
       catchError((error) => ctx.dispatch(new GetTokenByEmailFailed(error))),
       finalize(() => ctx.patchState({ isFetching: false }))
     );
+  }
+
+  @Action(SetAuthDefault)
+  setAuthDefault(ctx: LocalStateContext) {
+    ctx.patchState({
+      email: '',
+      code: '',
+      isFetching: false,
+      isCodeValid: true,
+      isEmailValid: true,
+      isEmailVerified: false,
+    });
   }
 }

@@ -60,3 +60,7 @@ export class GetTokenByEmailFailed {
 
   constructor(public readonly error: HttpErrorResponse) {}
 }
+
+export class SetAuthDefault {
+  static readonly type = `${scope} Set defaults`;
+}

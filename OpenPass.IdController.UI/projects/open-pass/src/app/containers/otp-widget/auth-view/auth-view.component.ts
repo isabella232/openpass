@@ -5,7 +5,14 @@ import { Actions, ofActionDispatched, Select, Store } from '@ngxs/store';
 import { OpenerState } from '@store/otp-widget/opener.state';
 import { Dispatch } from '@ngxs-labs/dispatch-decorator';
 import { AuthState, IAuthState } from '@store/otp-widget/auth.state';
-import { GenerateCode, SetCode, SetEmail, ValidateCode, ReceiveToken } from '@store/otp-widget/auth.actions';
+import {
+  GenerateCode,
+  SetCode,
+  SetEmail,
+  ValidateCode,
+  ReceiveToken,
+  SetAuthDefault,
+} from '@store/otp-widget/auth.actions';
 
 @Component({
   selector: 'usrf-auth-view',
@@ -37,6 +44,11 @@ export class AuthViewComponent implements OnInit, OnDestroy {
     return new SetCode((target as HTMLInputElement).value);
   }
 
+  @Dispatch()
+  private setDefaultState() {
+    return new SetAuthDefault();
+  }
+
   ngOnInit() {
     this.authSubscriptions = this.actions$
       .pipe(ofActionDispatched(ReceiveToken))
@@ -45,5 +57,6 @@ export class AuthViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.authSubscriptions?.unsubscribe?.();
+    this.setDefaultState();
   }
 }
