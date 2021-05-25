@@ -1,8 +1,6 @@
 using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OpenPass.IdController.Helpers;
-using OpenPass.IdController.Helpers.Adapters;
 using OpenPass.IdController.Models;
 using static Criteo.Glup.IdController.Types;
 
@@ -13,21 +11,19 @@ namespace OpenPass.IdController.Controllers
     {
         private static readonly string _metricPrefix = "unauthenticated";
 
-        private readonly IIdentifierAdapter _uid2Adapter;
         private readonly ICookieHelper _cookieHelper;
         private readonly IMetricHelper _metricHelper;
         private readonly IGlupHelper _glupHelper;
 
-        public UnAuthenticatedController(IIdentifierAdapter uid2Adapter, IMetricHelper metricHelper, ICookieHelper cookieHelper, IGlupHelper glupHelper)
+        public UnAuthenticatedController(IMetricHelper metricHelper, ICookieHelper cookieHelper, IGlupHelper glupHelper)
         {
-            _uid2Adapter = uid2Adapter;
             _metricHelper = metricHelper;
             _cookieHelper = cookieHelper;
             _glupHelper = glupHelper;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateIfa(
+        public IActionResult CreateIfa(
             [FromHeader(Name = "User-Agent")] string userAgent,
             [FromBody] GenerateRequest request
         )
@@ -43,16 +39,8 @@ namespace OpenPass.IdController.Controllers
             }
             else
             {
-                // Generate a random email to generate an UID2 token for an anonymous user
-                var randomId = GenerateRandomEmail();
-                token = await _uid2Adapter.GetId(randomId);
-
-                if (string.IsNullOrEmpty(token))
-                {
-                    _metricHelper.SendCounterMetric($"{prefix}.error.no_token");
-                    return NotFound();
-                }
-
+                // Generate a random guid token for an anonymous user
+                token = GenerateRandomGuid();
                 _metricHelper.SendCounterMetric($"{prefix}.ok");
                 _glupHelper.EmitGlup(EventType.NewIfa, request.OriginHost, userAgent);
             }
@@ -72,6 +60,6 @@ namespace OpenPass.IdController.Controllers
             return Ok();
         }
 
-        private string GenerateRandomEmail() => $"{Guid.NewGuid()}@openpass.com";
+        private string GenerateRandomGuid() => Guid.NewGuid().ToString();
     }
 }
