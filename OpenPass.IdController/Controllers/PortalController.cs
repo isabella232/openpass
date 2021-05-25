@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using OpenPass.IdController.Helpers;
 using OpenPass.IdController.Models;
 using static Criteo.Glup.IdController.Types;
@@ -27,6 +27,7 @@ namespace OpenPass.IdController.Controllers
         {
             // Apply internal opt-out
             _cookieHelper.RemoveUid2AdvertisingCookie(Response.Cookies);
+            _cookieHelper.RemoveIdentifierForAdvertisingCookie(Response.Cookies);
             _cookieHelper.SetOptoutCookie(Response.Cookies, "1");
 
             // TODO/OPT: call partners to apply opt-out on their side. This needs to be designed.

@@ -1,4 +1,3 @@
-﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -36,7 +35,7 @@ namespace OpenPass.IdController.UTest.Controllers
         }
 
         [Test]
-        public async Task TestOptout()
+        public void TestOptout()
         {
             // Act
             var response = _portalController.OptOut(_testUserAgent, _request);
@@ -46,13 +45,15 @@ namespace OpenPass.IdController.UTest.Controllers
 
             _cookieHelperMock.Verify(c => c.RemoveUid2AdvertisingCookie(
                 It.IsAny<IResponseCookies>()), Times.Once);
+            _cookieHelperMock.Verify(c => c.RemoveIdentifierForAdvertisingCookie(
+                It.IsAny<IResponseCookies>()), Times.Once);
             _cookieHelperMock.Verify(c => c.SetOptoutCookie(
                 It.IsAny<IResponseCookies>(),
                 It.Is<string>(k => k == "1")), Times.Once);
         }
 
         [Test]
-        public async Task TestOptin()
+        public void TestOptin()
         {
             // Act
             var response = _portalController.OptIn(_testUserAgent, _request);
