@@ -185,13 +185,13 @@ namespace OpenPass.IdController.UTest.Controllers
             // token in JSON response
             Assert.IsAssignableFrom<OkObjectResult>(response);
             var responseData = GetResponseData(response);
-            var token = (string) responseData.token;
-            Assert.AreEqual(returnedToken, token);
+            var uid2Token = (string) responseData.uid2Token;
+            Assert.AreEqual(returnedToken, uid2Token);
 
             // token in cookie
             _cookieHelperMock.Verify(c => c.SetUid2AdvertisingCookie(
                 It.IsAny<IResponseCookies>(),
-                It.Is<string>(t => t == token)));
+                It.Is<string>(t => t == uid2Token)));
         }
 
         [TestCase(null)]
@@ -299,12 +299,12 @@ namespace OpenPass.IdController.UTest.Controllers
 
             Assert.IsAssignableFrom<OkObjectResult>(response);
             var responseData = GetResponseData(response);
-            var token = (string) responseData.token;
-            Assert.AreEqual(returnedToken, token);
+            var uid2Token = (string) responseData.uid2Token;
+            Assert.AreEqual(returnedToken, uid2Token);
             // token in cookie
             _cookieHelperMock.Verify(c => c.SetUid2AdvertisingCookie(
                 It.IsAny<IResponseCookies>(),
-                It.Is<string>(t => t == token)), Times.Once);
+                It.Is<string>(t => t == uid2Token)), Times.Once);
         }
 
         [Test]
@@ -358,13 +358,13 @@ namespace OpenPass.IdController.UTest.Controllers
             // token in JSON response
             Assert.IsAssignableFrom<OkObjectResult>(response);
             var responseData = GetResponseData(response);
-            var token = (string) responseData.token;
-            Assert.AreEqual(returnedToken, token);
+            var uid2Token = (string) responseData.uid2Token;
+            Assert.AreEqual(returnedToken, uid2Token);
 
             // token in cookie
             _cookieHelperMock.Verify(c => c.SetUid2AdvertisingCookie(
                 It.IsAny<IResponseCookies>(),
-                It.Is<string>(t => t == token)));
+                It.Is<string>(t => t == uid2Token)));
         }
 
         #endregion External SSO services

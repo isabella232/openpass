@@ -30,11 +30,11 @@ namespace OpenPass.IdController.Controllers
         {
             var prefix = $"{_metricPrefix}.create";
 
-            if (_cookieHelper.TryGetUid2AdvertisingCookie(Request.Cookies, out var uid2Identifier))
+            if (_cookieHelper.TryGetUid2AdvertisingCookie(Request.Cookies, out var uid2Token))
             {
                 _metricHelper.SendCounterMetric($"{prefix}.uid2");
             }
-            if (_cookieHelper.TryGetIdentifierForAdvertisingCookie(Request.Cookies, out var token))
+            if (_cookieHelper.TryGetIdentifierForAdvertisingCookie(Request.Cookies, out var ifaToken))
             {
                 _metricHelper.SendCounterMetric($"{prefix}.reuse");
                 _glupHelper.EmitGlup(EventType.ReuseIfa, request.OriginHost, userAgent);
@@ -42,15 +42,15 @@ namespace OpenPass.IdController.Controllers
             else
             {
                 // Generate a random guid token for an anonymous user
-                token = GenerateRandomGuid();
+                ifaToken = GenerateRandomGuid();
                 _metricHelper.SendCounterMetric($"{prefix}.ok");
                 _glupHelper.EmitGlup(EventType.NewIfa, request.OriginHost, userAgent);
             }
 
             // Set cookie
-            _cookieHelper.SetIdentifierForAdvertisingCookie(Response.Cookies, token);
+            _cookieHelper.SetIdentifierForAdvertisingCookie(Response.Cookies, ifaToken);
 
-            return Ok(new { token, uid2Identifier });
+            return Ok(new { ifaToken, uid2Token });
         }
 
         [HttpGet("delete")]

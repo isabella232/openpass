@@ -50,17 +50,17 @@ namespace OpenPass.IdController.UTest.Controllers
 
             // Returned IFA
             var data = GetResponseData(response);
-            var token = (string) data.token;
-            var uid2Identifier = (string) data.uid2Identifier;
+            var ifaToken = (string) data.ifaToken;
+            var uid2Token = (string) data.uid2Token;
 
             // Assert
-            Assert.IsNotNull(token);
-            Assert.IsNotNull(uid2Identifier);
+            Assert.IsNotNull(ifaToken);
+            Assert.IsNotNull(uid2Token);
 
             // Cookie is set set
             _cookieHelperMock.Verify(c => c.SetIdentifierForAdvertisingCookie(
                 It.IsAny<IResponseCookies>(),
-                It.Is<string>(k => k == token)), Times.Once);
+                It.Is<string>(k => k == ifaToken)), Times.Once);
 
             // Glup is emitted
             _glupHelperMock.Verify(g => g.EmitGlup(
@@ -87,17 +87,17 @@ namespace OpenPass.IdController.UTest.Controllers
 
             // Returned identifier
             var data = GetResponseData(response);
-            var token = (string) data.token;
-            var uid2Identifier = (string) data.uid2Identifier;
+            var ifaToken = (string) data.ifaToken;
+            var uid2Token = (string) data.uid2Token;
 
             // Assert
-            Assert.IsNotNull(token);
-            Assert.IsNull(uid2Identifier);
+            Assert.IsNotNull(ifaToken);
+            Assert.IsNull(uid2Token);
 
             // Cookie is set
             _cookieHelperMock.Verify(c => c.SetIdentifierForAdvertisingCookie(
                 It.IsAny<IResponseCookies>(),
-                It.Is<string>(k => k == token)), Times.Once);
+                It.Is<string>(k => k == ifaToken)), Times.Once);
 
             // Glup is emitted
             _glupHelperMock.Verify(g => g.EmitGlup(
@@ -123,17 +123,17 @@ namespace OpenPass.IdController.UTest.Controllers
 
             // Returned identifier
             var data = GetResponseData(response);
-            var token = (string) data.token;
-            var uid2Identifier = (string) data.uid2Identifier;
+            var ifaToken = (string) data.ifaToken;
+            var uid2Token = (string) data.uid2Token;
 
             // Assert
-            Assert.IsNotNull(token);
-            Assert.IsNull(uid2Identifier);
+            Assert.IsNotNull(ifaToken);
+            Assert.IsNull(uid2Token);
 
             // Cookie is set
             _cookieHelperMock.Verify(c => c.SetIdentifierForAdvertisingCookie(
                 It.IsAny<IResponseCookies>(),
-                It.Is<string>(k => k == token)), Times.Once);
+                It.Is<string>(k => k == ifaToken)), Times.Once);
 
             // Glup is emitted
             _glupHelperMock.Verify(g => g.EmitGlup(

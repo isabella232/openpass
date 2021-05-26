@@ -121,8 +121,8 @@ namespace OpenPass.IdController.Controllers
                 _glupHelper.EmitGlup(EventType.EmailValidated, request.OriginHost, userAgent);
 
                 // Retrieve UID2 token, set cookie and send token back in payload
-                var token = await _uid2Adapter.GetId(request.Email);
-                if (string.IsNullOrEmpty(token))
+                var uid2Token = await _uid2Adapter.GetId(request.Email);
+                if (string.IsNullOrEmpty(uid2Token))
                 {
                     _metricHelper.SendCounterMetric($"{prefix}.error.no_token");
                 }
@@ -131,8 +131,8 @@ namespace OpenPass.IdController.Controllers
                     _metricHelper.SendCounterMetric($"{prefix}.ok");
 
                     // Set cookie
-                    _cookieHelper.SetUid2AdvertisingCookie(Response.Cookies, token);
-                    return Ok(new { token });
+                    _cookieHelper.SetUid2AdvertisingCookie(Response.Cookies, uid2Token);
+                    return Ok(new { uid2Token });
                 }
             }
             else
@@ -164,20 +164,20 @@ namespace OpenPass.IdController.Controllers
             _glupHelper.EmitGlup(request.EventType, request.OriginHost, userAgent);
 
             // 2. Retrieve UID2 token, set cookie and send token back in payload
-            var token = await _uid2Adapter.GetId(request.Email);
+            var uid2Token = await _uid2Adapter.GetId(request.Email);
 
-            if (string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(uid2Token))
             {
                 _metricHelper.SendCounterMetric($"{prefix}.error.no_token");
                 return NotFound();
             }
 
-            _cookieHelper.SetUid2AdvertisingCookie(Response.Cookies, token);
+            _cookieHelper.SetUid2AdvertisingCookie(Response.Cookies, uid2Token);
 
             // Metrics
             _metricHelper.SendCounterMetric($"{prefix}.ok");
 
-            return Ok(new { token });
+            return Ok(new { uid2Token });
         }
 
         #endregion External SSO services
