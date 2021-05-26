@@ -1,5 +1,6 @@
 export const defaultEnv = {
-  cookieUserToken: '__uid2_advertising_token',
+  cookieUid2Token: '__uid2_advertising_token',
+  cookieIfaToken: '__ifa',
   cookieLifetimeDays: 390,
   unloggedPath: '/unauthenticated',
 };

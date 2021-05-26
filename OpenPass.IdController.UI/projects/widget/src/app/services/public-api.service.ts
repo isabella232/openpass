@@ -7,7 +7,8 @@ import { Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class PublicApiService {
-  @localStorage('widget.token') token: string;
+  @localStorage('widget.ifaToken') ifaToken: string;
+  @localStorage('widget.uid2Token') uid2Token: string;
   @localStorage('widget.isDeclined') isDeclined: boolean;
 
   private userData = new Subject<UserData>();
@@ -16,14 +17,15 @@ export class PublicApiService {
     return this.userData.asObservable();
   }
 
-  setUserData({ token = this.token, isDeclined }: UserData) {
-    this.token = token;
+  setUserData({ ifaToken = this.ifaToken, uid2Token = this.uid2Token, isDeclined }: UserData) {
+    this.ifaToken = ifaToken;
+    this.uid2Token = uid2Token;
     this.isDeclined = isDeclined;
-    this.userData.next({ token, isDeclined });
+    this.userData.next({ ifaToken, uid2Token, isDeclined });
   }
 
   getUserData(): UserData {
-    const { token, isDeclined = false } = this;
-    return { token, isDeclined };
+    const { ifaToken, uid2Token, isDeclined = false } = this;
+    return { ifaToken, uid2Token, isDeclined };
   }
 }

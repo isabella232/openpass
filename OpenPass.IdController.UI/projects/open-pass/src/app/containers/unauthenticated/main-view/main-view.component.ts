@@ -4,12 +4,12 @@ import { OpenerState } from '@store/otp-widget/opener.state';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Dispatch } from '@ngxs-labs/dispatch-decorator';
-import { GetIfa, GetIfaSuccess } from '@store/ifa/ifa.actions';
-import { IfaState } from '@store/ifa/ifa.state';
 import { AuthService } from '@services/auth.service';
 import { DialogWindowService } from '@services/dialog-window.service';
 import { EventTypes } from '@enums/event-types.enum';
 import { EventsTrackingService } from '@services/events-tracking.service';
+import { GetAnonymousTokens, GetAnonymousTokensSuccess } from '@store/otp-widget/auth.actions';
+import { AuthState } from '@store/otp-widget/auth.state';
 
 @Component({
   selector: 'usrf-main-view',
@@ -19,7 +19,7 @@ import { EventsTrackingService } from '@services/events-tracking.service';
 export class MainViewComponent implements OnInit, OnDestroy {
   @Select(OpenerState.originFormatted)
   websiteName$: Observable<string>;
-  @Select(IfaState.isFetching)
+  @Select(AuthState.isFetching)
   isFetching$: Observable<boolean>;
 
   isDestroyed = new Subject();
@@ -35,11 +35,13 @@ export class MainViewComponent implements OnInit, OnDestroy {
 
   @Dispatch()
   fetchIfaAndProceed() {
-    return new GetIfa();
+    return new GetAnonymousTokens();
   }
 
   ngOnInit() {
-    this.actions$.pipe(ofActionDispatched(GetIfaSuccess), takeUntil(this.isDestroyed)).subscribe(() => this.confirm());
+    this.actions$
+      .pipe(ofActionDispatched(GetAnonymousTokensSuccess), takeUntil(this.isDestroyed))
+      .subscribe(() => this.confirm());
     this.eventsTrackingService.trackEvent(EventTypes.bannerRequest);
   }
 

@@ -8,7 +8,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { windowFactory } from '@utils/window-factory';
 import { environment } from '@env';
 import { NgxsDispatchPluginModule } from '@ngxs-labs/dispatch-decorator';
-import { IfaState } from '@store/ifa/ifa.state';
 import { SsoState } from '@store/otp-widget/sso.state';
 import { AuthState } from '@store/otp-widget/auth.state';
 import { OpenerState } from '@store/otp-widget/opener.state';
@@ -28,7 +27,7 @@ export const createTranslateLoader = (http: HttpClient): TranslateHttpLoader =>
     RouterModule,
     AppRoutingModule,
     HttpClientModule,
-    NgxsModule.forRoot([OpenerState, OtpWidgetState, AuthState, IfaState, SsoState], {
+    NgxsModule.forRoot([OpenerState, OtpWidgetState, AuthState, SsoState], {
       developmentMode: !environment.production,
     }),
     NgxsDispatchPluginModule.forRoot(),

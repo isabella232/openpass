@@ -8,17 +8,23 @@ import { localStorage } from '@shared/utils/storage-decorator';
   providedIn: 'root',
 })
 export class AuthService {
-  @localStorage('openpass.token')
-  private storageUserToken: string;
+  @localStorage('openpass.ifaToken')
+  private storageIfaToken: string;
+  @localStorage('openpass.uid2Token')
+  private storageUid2Token: string;
   @localStorage('openpass.email')
   private storageUserEmail: string;
 
   get isAuthenticated(): boolean {
-    return !!this.storageUserToken;
+    return !!this.storageUid2Token || !!this.storageIfaToken;
   }
 
-  get token(): string {
-    return this.storageUserToken;
+  get uid2Token(): string {
+    return this.storageUid2Token;
+  }
+
+  get ifaToken(): string {
+    return this.storageIfaToken;
   }
 
   get isEmailUsed(): boolean {
@@ -30,12 +36,14 @@ export class AuthService {
   setTokenToOpener() {
     const message: PostMessagePayload = {
       action: PostMessageActions.setToken,
-      token: this.storageUserToken,
+      ifaToken: this.storageIfaToken,
+      uid2Token: this.storageUid2Token,
     };
     this.postMessagesService.sendMessage(message);
   }
 
   resetToken() {
-    this.storageUserToken = null;
+    this.storageIfaToken = null;
+    this.storageUid2Token = null;
   }
 }

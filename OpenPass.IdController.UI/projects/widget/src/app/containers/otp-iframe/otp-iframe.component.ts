@@ -56,7 +56,10 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     const { isDeclined } = this.publicApiService.getUserData();
-    this.isOpen = !this.cookiesService.getCookie(environment.cookieUserToken) && !isDeclined;
+    const hasCookie =
+      this.cookiesService.getCookie(environment.cookieUid2Token) ||
+      this.cookiesService.getCookie(environment.cookieIfaToken);
+    this.isOpen = !hasCookie && !isDeclined;
     if (this.isOpen) {
       this.subscribeToOpenPass();
       this.listenForClosingRequest();
@@ -78,7 +81,7 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   backdropClick() {
     this.isOpen = false;
-    this.publicApiService.setUserData({ token: null, isDeclined: true });
+    this.publicApiService.setUserData({ ifaToken: null, uid2Token: null, isDeclined: true });
   }
 
   private subscribeToOpenPass() {
