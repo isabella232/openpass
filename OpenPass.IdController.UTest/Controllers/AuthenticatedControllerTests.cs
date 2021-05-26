@@ -28,6 +28,7 @@ namespace OpenPass.IdController.UTest.Controllers
         private Mock<IGlupHelper> _glupHelperMock;
         private Mock<ICodeGeneratorHelper> _codeGeneratorHelperMock;
         private Mock<ICookieHelper> _cookieHelperMock;
+        private Mock<IIdentifierHelper> _identifierHelperMock;
 
         private AuthenticatedController _authenticatedController;
 
@@ -39,6 +40,7 @@ namespace OpenPass.IdController.UTest.Controllers
             _configurationHelperMock.Setup(c => c.EnableOtp).Returns(true);
             _metricHelperMock = new Mock<IMetricHelper>();
             _metricHelperMock.Setup(mh => mh.SendCounterMetric(It.IsAny<string>()));
+            _identifierHelperMock = new Mock<IIdentifierHelper>();
             _memoryCache = new Mock<IMemoryCache>();
             // We use the Set method but cannot mock it because it is an extension
             // then we mock the CreateEntry method that is the native one used under the hood
@@ -58,7 +60,7 @@ namespace OpenPass.IdController.UTest.Controllers
 
             _authenticatedController = new AuthenticatedController(_hostingEnvironmentMock.Object, _metricHelperMock.Object,
                 _memoryCache.Object, _configurationHelperMock.Object, _uid2AdapterMock.Object, _emailHelperMock.Object, _glupHelperMock.Object,
-                _codeGeneratorHelperMock.Object, _cookieHelperMock.Object)
+                _codeGeneratorHelperMock.Object, _cookieHelperMock.Object, _identifierHelperMock.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
@@ -280,9 +282,12 @@ namespace OpenPass.IdController.UTest.Controllers
             var email = "example@mail.com";
             var code = "123456";
             var returnedToken = "FreshUID2token";
+            var expectedIfaToken = "ifaToken";
 
             _codeGeneratorHelperMock.Setup(c => c.GenerateRandomCode()).Returns(code);
             _uid2AdapterMock.Setup(c => c.GetId(It.IsAny<string>())).ReturnsAsync(returnedToken);
+            _identifierHelperMock.Setup(x=>x.GetOrCreateIfaToken(It.IsAny<IRequestCookieCollection>(), It.IsAny<string>(), It.IsAny<string>(), _testUserAgent))
+                .Returns(expectedIfaToken);
 
             // Generate
             var requestGenerate = new GenerateRequest { Email = email };
@@ -300,11 +305,20 @@ namespace OpenPass.IdController.UTest.Controllers
             Assert.IsAssignableFrom<OkObjectResult>(response);
             var responseData = GetResponseData(response);
             var uid2Token = (string) responseData.uid2Token;
+            var ifaToken = (string) responseData.ifaToken;
+
             Assert.AreEqual(returnedToken, uid2Token);
+            Assert.AreEqual(expectedIfaToken, ifaToken);
+
             // token in cookie
             _cookieHelperMock.Verify(c => c.SetUid2AdvertisingCookie(
                 It.IsAny<IResponseCookies>(),
                 It.Is<string>(t => t == uid2Token)), Times.Once);
+
+            _cookieHelperMock.Verify(x => x.SetIdentifierForAdvertisingCookie(
+                It.IsAny<IResponseCookies>(),
+                It.Is<string>(token => token == ifaToken)),
+               Times.Once);
         }
 
         [Test]

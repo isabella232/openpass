@@ -25,6 +25,7 @@ namespace OpenPass.IdController.Controllers
         private readonly IGlupHelper _glupHelper;
         private readonly ICodeGeneratorHelper _codeGeneratorHelper;
         private readonly ICookieHelper _cookieHelper;
+        private readonly IIdentifierHelper _identifierHelper;
 
         public AuthenticatedController(
             IHostingEnvironment hostingEnvironment,
@@ -35,7 +36,8 @@ namespace OpenPass.IdController.Controllers
             IEmailHelper emailHelper,
             IGlupHelper glupHelper,
             ICodeGeneratorHelper codeGeneratorHelper,
-            ICookieHelper cookieHelper)
+            ICookieHelper cookieHelper,
+            IIdentifierHelper identifierHelper)
         {
             _hostingEnvironment = hostingEnvironment;
             _metricHelper = metricRegistry;
@@ -46,6 +48,7 @@ namespace OpenPass.IdController.Controllers
             _glupHelper = glupHelper;
             _codeGeneratorHelper = codeGeneratorHelper;
             _cookieHelper = cookieHelper;
+            _identifierHelper = identifierHelper;
         }
 
         #region One-time password (OTP)
@@ -132,8 +135,14 @@ namespace OpenPass.IdController.Controllers
 
                     // Set cookie
                     _cookieHelper.SetUid2AdvertisingCookie(Response.Cookies, uid2Token);
-                    return Ok(new { uid2Token });
                 }
+
+                var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, prefix, request.OriginHost, userAgent);
+
+                // Set cookie
+                _cookieHelper.SetIdentifierForAdvertisingCookie(Response.Cookies, ifaToken);
+
+                return Ok(new { ifaToken, uid2Token });
             }
             else
             {
@@ -169,15 +178,21 @@ namespace OpenPass.IdController.Controllers
             if (string.IsNullOrEmpty(uid2Token))
             {
                 _metricHelper.SendCounterMetric($"{prefix}.error.no_token");
-                return NotFound();
+            }
+            else
+            {
+                _cookieHelper.SetUid2AdvertisingCookie(Response.Cookies, uid2Token);
+
+                // Metrics
+                _metricHelper.SendCounterMetric($"{prefix}.ok");
             }
 
-            _cookieHelper.SetUid2AdvertisingCookie(Response.Cookies, uid2Token);
+            var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, prefix, request.OriginHost, userAgent);
 
-            // Metrics
-            _metricHelper.SendCounterMetric($"{prefix}.ok");
+            // Set cookie
+            _cookieHelper.SetIdentifierForAdvertisingCookie(Response.Cookies, ifaToken);
 
-            return Ok(new { uid2Token });
+            return Ok(new { ifaToken, uid2Token });
         }
 
         #endregion External SSO services

@@ -1,4 +1,3 @@
-using Criteo.UserIdentification;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -6,7 +5,6 @@ using NUnit.Framework;
 using OpenPass.IdController.Controllers;
 using OpenPass.IdController.Helpers;
 using OpenPass.IdController.Models;
-using static Criteo.Glup.IdController.Types;
 
 
 namespace OpenPass.IdController.UTest.Controllers
@@ -19,7 +17,7 @@ namespace OpenPass.IdController.UTest.Controllers
 
         private Mock<IMetricHelper> _metricHelperMock;
         private Mock<ICookieHelper> _cookieHelperMock;
-        private Mock<IGlupHelper> _glupHelperMock;
+        private Mock<IIdentifierHelper> _identifierHelperMock;
         private UnAuthenticatedController _unauthenticatedController;
         private GenerateRequest _request;
 
@@ -29,58 +27,24 @@ namespace OpenPass.IdController.UTest.Controllers
             _metricHelperMock = new Mock<IMetricHelper>();
             _metricHelperMock.Setup(mr => mr.SendCounterMetric(It.IsAny<string>()));
             _cookieHelperMock = new Mock<ICookieHelper>();
-            _glupHelperMock = new Mock<IGlupHelper>();
+            _identifierHelperMock = new Mock<IIdentifierHelper>();
             _request = new GenerateRequest { OriginHost = _testOriginHost };
 
-            _unauthenticatedController = new UnAuthenticatedController(_metricHelperMock.Object, _cookieHelperMock.Object, _glupHelperMock.Object)
+            _unauthenticatedController = new UnAuthenticatedController(_metricHelperMock.Object, _cookieHelperMock.Object, _identifierHelperMock.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
         }
 
-        [Test]
-        public void CreateIfa_OldCookieExists_RemoveAndCreateNewCookie()
+        [TestCase(false, null)]
+        [TestCase(true, "uid2token")]
+        public void CreateIfa_NoUid2CookiesExist_CreateNewIfaCookie(bool uid2CookieExists, string expectedUid2Cookie)
         {
             // Arrange
-            string placeholder = "uid2cookie";
-            _cookieHelperMock.Setup(c => c.TryGetUid2AdvertisingCookie(It.IsAny<IRequestCookieCollection>(), out placeholder)).Returns(true);
-
-            // Act
-            var response = _unauthenticatedController.CreateIfa(_testUserAgent, _request);
-
-            // Returned IFA
-            var data = GetResponseData(response);
-            var ifaToken = (string) data.ifaToken;
-            var uid2Token = (string) data.uid2Token;
-
-            // Assert
-            Assert.IsNotNull(ifaToken);
-            Assert.IsNotNull(uid2Token);
-
-            // Cookie is set set
-            _cookieHelperMock.Verify(c => c.SetIdentifierForAdvertisingCookie(
-                It.IsAny<IResponseCookies>(),
-                It.Is<string>(k => k == ifaToken)), Times.Once);
-
-            // Glup is emitted
-            _glupHelperMock.Verify(g => g.EmitGlup(
-                    It.Is<EventType>(e => e == EventType.NewIfa),
-                    It.Is<string>(h => h == _testOriginHost),
-                    It.IsAny<string>(),
-                    It.IsAny<LocalWebId?>(),
-                    It.IsAny<CriteoId?>(),
-                    It.IsAny<UserCentricAdId?>()),
-                Times.Once);
-        }
-
-        [Test]
-        public void CreateIfa_NoOldCookiesExist_CreateNewGuidIdentifierCookie()
-        {
-            // Arrange
-            var newCookie = "newcookie";
-            string placeholder;
-            _cookieHelperMock.Setup(c => c.TryGetUid2AdvertisingCookie(It.IsAny<IRequestCookieCollection>(), out placeholder)).Returns(false);
-            _cookieHelperMock.Setup(c => c.TryGetIdentifierForAdvertisingCookie(It.IsAny<IRequestCookieCollection>(), out newCookie)).Returns(true);
+            var expectedIfaToken = "ifaToken";
+            _cookieHelperMock.Setup(c => c.TryGetUid2AdvertisingCookie(It.IsAny<IRequestCookieCollection>(), out expectedUid2Cookie)).Returns(uid2CookieExists);
+            _identifierHelperMock.Setup(x => x.GetOrCreateIfaToken(It.IsAny<IRequestCookieCollection>(), It.IsAny<string>(), _testOriginHost, _testUserAgent))
+                .Returns(expectedIfaToken);
 
             // Act
             var response = _unauthenticatedController.CreateIfa(_testUserAgent, _request);
@@ -91,59 +55,13 @@ namespace OpenPass.IdController.UTest.Controllers
             var uid2Token = (string) data.uid2Token;
 
             // Assert
-            Assert.IsNotNull(ifaToken);
-            Assert.IsNull(uid2Token);
+            Assert.AreEqual(expectedIfaToken, ifaToken);
+            Assert.AreEqual(expectedUid2Cookie, uid2Token);
 
-            // Cookie is set
-            _cookieHelperMock.Verify(c => c.SetIdentifierForAdvertisingCookie(
+            _cookieHelperMock.Verify(x => x.SetIdentifierForAdvertisingCookie(
                 It.IsAny<IResponseCookies>(),
-                It.Is<string>(k => k == ifaToken)), Times.Once);
-
-            // Glup is emitted
-            _glupHelperMock.Verify(g => g.EmitGlup(
-                    It.Is<EventType>(e => e == EventType.ReuseIfa),
-                    It.Is<string>(h => h == _testOriginHost),
-                    It.IsAny<string>(),
-                    It.IsAny<LocalWebId?>(),
-                    It.IsAny<CriteoId?>(),
-                    It.IsAny<UserCentricAdId?>()),
-                Times.Once);
-        }
-
-        [Test]
-        public void CreateIfa_NoCookiesExist_CreateNewGuidIdentifierCookie()
-        {
-            // Arrange
-            string placeholder;
-            _cookieHelperMock.Setup(c => c.TryGetUid2AdvertisingCookie(It.IsAny<IRequestCookieCollection>(), out placeholder)).Returns(false);
-            _cookieHelperMock.Setup(c => c.TryGetIdentifierForAdvertisingCookie(It.IsAny<IRequestCookieCollection>(), out placeholder)).Returns(false);
-
-            // Act
-            var response = _unauthenticatedController.CreateIfa(_testUserAgent, _request);
-
-            // Returned identifier
-            var data = GetResponseData(response);
-            var ifaToken = (string) data.ifaToken;
-            var uid2Token = (string) data.uid2Token;
-
-            // Assert
-            Assert.IsNotNull(ifaToken);
-            Assert.IsNull(uid2Token);
-
-            // Cookie is set
-            _cookieHelperMock.Verify(c => c.SetIdentifierForAdvertisingCookie(
-                It.IsAny<IResponseCookies>(),
-                It.Is<string>(k => k == ifaToken)), Times.Once);
-
-            // Glup is emitted
-            _glupHelperMock.Verify(g => g.EmitGlup(
-                    It.Is<EventType>(e => e == EventType.NewIfa),
-                    It.Is<string>(h => h == _testOriginHost),
-                    It.IsAny<string>(),
-                    It.IsAny<LocalWebId?>(),
-                    It.IsAny<CriteoId?>(),
-                    It.IsAny<UserCentricAdId?>()),
-                Times.Once);
+                It.Is<string>(token => token == ifaToken)),
+               Times.Once);
         }
 
         [Test]

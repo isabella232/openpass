@@ -1,8 +1,6 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
 using OpenPass.IdController.Helpers;
 using OpenPass.IdController.Models;
-using static Criteo.Glup.IdController.Types;
 
 namespace OpenPass.IdController.Controllers
 {
@@ -13,13 +11,13 @@ namespace OpenPass.IdController.Controllers
 
         private readonly ICookieHelper _cookieHelper;
         private readonly IMetricHelper _metricHelper;
-        private readonly IGlupHelper _glupHelper;
+        private readonly IIdentifierHelper _identifierHelper;
 
-        public UnAuthenticatedController(IMetricHelper metricHelper, ICookieHelper cookieHelper, IGlupHelper glupHelper)
+        public UnAuthenticatedController(IMetricHelper metricHelper, ICookieHelper cookieHelper, IIdentifierHelper identifierHelper)
         {
             _metricHelper = metricHelper;
             _cookieHelper = cookieHelper;
-            _glupHelper = glupHelper;
+            _identifierHelper = identifierHelper;
         }
 
         [HttpPost]
@@ -34,18 +32,8 @@ namespace OpenPass.IdController.Controllers
             {
                 _metricHelper.SendCounterMetric($"{prefix}.uid2");
             }
-            if (_cookieHelper.TryGetIdentifierForAdvertisingCookie(Request.Cookies, out var ifaToken))
-            {
-                _metricHelper.SendCounterMetric($"{prefix}.reuse");
-                _glupHelper.EmitGlup(EventType.ReuseIfa, request.OriginHost, userAgent);
-            }
-            else
-            {
-                // Generate a random guid token for an anonymous user
-                ifaToken = GenerateRandomGuid();
-                _metricHelper.SendCounterMetric($"{prefix}.ok");
-                _glupHelper.EmitGlup(EventType.NewIfa, request.OriginHost, userAgent);
-            }
+
+            var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, prefix, request.OriginHost, userAgent);
 
             // Set cookie
             _cookieHelper.SetIdentifierForAdvertisingCookie(Response.Cookies, ifaToken);
@@ -61,7 +49,5 @@ namespace OpenPass.IdController.Controllers
 
             return Ok();
         }
-
-        private string GenerateRandomGuid() => Guid.NewGuid().ToString();
     }
 }

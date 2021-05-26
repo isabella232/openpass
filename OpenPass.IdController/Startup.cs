@@ -92,6 +92,8 @@ namespace OpenPass.IdController
             // [Custom] Add UID2 adapter
             services.AddUid2Adapter();
 
+            services.AddIdentifierHelper();
+
             // Configure MVC
             services.AddMvc(options =>
             {
