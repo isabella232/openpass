@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
 using static Criteo.Glup.IdController.Types;
 using OpenPass.IdController.Helpers;
-using OpenPass.IdController.Helpers.Adapters;
 using OpenPass.IdController.Models;
 
 namespace OpenPass.IdController.Controllers
@@ -20,7 +19,6 @@ namespace OpenPass.IdController.Controllers
         private readonly IMetricHelper _metricHelper;
         private readonly IMemoryCache _activeOtps; // Mapping: (email -> OTP)
         private readonly IConfigurationHelper _configurationHelper;
-        private readonly IIdentifierAdapter _uid2Adapter;
         private readonly IEmailHelper _emailHelper;
         private readonly IGlupHelper _glupHelper;
         private readonly ICodeGeneratorHelper _codeGeneratorHelper;
@@ -32,7 +30,6 @@ namespace OpenPass.IdController.Controllers
             IMetricHelper metricRegistry,
             IMemoryCache memoryCache,
             IConfigurationHelper configurationHelper,
-            IIdentifierAdapter uid2Adapter,
             IEmailHelper emailHelper,
             IGlupHelper glupHelper,
             ICodeGeneratorHelper codeGeneratorHelper,
@@ -43,7 +40,6 @@ namespace OpenPass.IdController.Controllers
             _metricHelper = metricRegistry;
             _activeOtps = memoryCache;
             _configurationHelper = configurationHelper;
-            _uid2Adapter = uid2Adapter;
             _emailHelper = emailHelper;
             _glupHelper = glupHelper;
             _codeGeneratorHelper = codeGeneratorHelper;
@@ -120,22 +116,10 @@ namespace OpenPass.IdController.Controllers
 
                 // Remove code: OTP is valid only once
                 _activeOtps.Remove(request.Email);
-                // Emit glup
-                _glupHelper.EmitGlup(EventType.EmailValidated, request.OriginHost, userAgent);
 
                 // Retrieve UID2 token, set cookie and send token back in payload
-                var uid2Token = await _uid2Adapter.GetId(request.Email);
-                if (string.IsNullOrEmpty(uid2Token))
-                {
-                    _metricHelper.SendCounterMetric($"{prefix}.error.no_token");
-                }
-                else
-                {
-                    _metricHelper.SendCounterMetric($"{prefix}.ok");
-
-                    // Set cookie
-                    _cookieHelper.SetUid2AdvertisingCookie(Response.Cookies, uid2Token);
-                }
+                var uid2Token = await _identifierHelper.TryGetUid2TokenAsync(Response.Cookies, EventType.EmailValidated,
+                    request.OriginHost, userAgent, request.Email, prefix);                
 
                 var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, prefix, request.OriginHost, userAgent);
 
@@ -169,23 +153,9 @@ namespace OpenPass.IdController.Controllers
                 return BadRequest();
             }
 
-            // 1. Emit glup
-            _glupHelper.EmitGlup(request.EventType, request.OriginHost, userAgent);
-
-            // 2. Retrieve UID2 token, set cookie and send token back in payload
-            var uid2Token = await _uid2Adapter.GetId(request.Email);
-
-            if (string.IsNullOrEmpty(uid2Token))
-            {
-                _metricHelper.SendCounterMetric($"{prefix}.error.no_token");
-            }
-            else
-            {
-                _cookieHelper.SetUid2AdvertisingCookie(Response.Cookies, uid2Token);
-
-                // Metrics
-                _metricHelper.SendCounterMetric($"{prefix}.ok");
-            }
+            // Retrieve UID2 token, set cookie and send token back in payload
+            var uid2Token = await _identifierHelper.TryGetUid2TokenAsync(Response.Cookies, request.EventType,
+                    request.OriginHost, userAgent, request.Email, prefix);
 
             var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, prefix, request.OriginHost, userAgent);
 
