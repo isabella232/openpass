@@ -5,8 +5,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NgxsModule } from '@ngxs/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@services/auth.service';
-import { PostMessagesService } from '@services/post-messages.service';
 import { DialogWindowService } from '@services/dialog-window.service';
+import { stub } from '@utils/stub-factory';
+import { EventsTrackingService } from '@services/events-tracking.service';
 
 describe('MainViewComponent', () => {
   let component: MainViewComponent;
@@ -15,16 +16,7 @@ describe('MainViewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, NgxsModule.forRoot(), TranslateModule.forRoot()],
-      providers: [
-        {
-          provide: AuthService,
-          useFactory: () => {},
-        },
-        {
-          provide: DialogWindowService,
-          useFactory: () => {},
-        },
-      ],
+      providers: [stub(AuthService), stub(DialogWindowService), stub(EventsTrackingService, { trackEvent: () => {} })],
       declarations: [MainViewComponent],
     }).compileComponents();
   });

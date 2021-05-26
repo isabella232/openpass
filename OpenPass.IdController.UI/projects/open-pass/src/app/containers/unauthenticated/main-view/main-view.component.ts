@@ -8,6 +8,8 @@ import { GetIfa, GetIfaSuccess } from '@store/ifa/ifa.actions';
 import { IfaState } from '@store/ifa/ifa.state';
 import { AuthService } from '@services/auth.service';
 import { DialogWindowService } from '@services/dialog-window.service';
+import { EventTypes } from '@enums/event-types.enum';
+import { EventsTrackingService } from '@services/events-tracking.service';
 
 @Component({
   selector: 'usrf-main-view',
@@ -27,7 +29,8 @@ export class MainViewComponent implements OnInit, OnDestroy {
     private store: Store,
     private actions$: Actions,
     private authService: AuthService,
-    private dialogWindowService: DialogWindowService
+    private dialogWindowService: DialogWindowService,
+    private eventsTrackingService: EventsTrackingService
   ) {}
 
   @Dispatch()
@@ -37,6 +40,7 @@ export class MainViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.actions$.pipe(ofActionDispatched(GetIfaSuccess), takeUntil(this.isDestroyed)).subscribe(() => this.confirm());
+    this.eventsTrackingService.trackEvent(EventTypes.bannerRequest);
   }
 
   ngOnDestroy() {
@@ -45,10 +49,12 @@ export class MainViewComponent implements OnInit, OnDestroy {
 
   closeWindow() {
     this.dialogWindowService.closeDialogWindow(true);
+    this.eventsTrackingService.trackEvent(EventTypes.consentNotGranted);
   }
 
   private confirm() {
     this.authService.setTokenToOpener();
+    this.eventsTrackingService.trackEvent(EventTypes.consentGranted);
     this.dialogWindowService.closeDialogWindow();
   }
 }

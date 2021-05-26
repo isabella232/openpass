@@ -11,4 +11,8 @@ export enum EventTypes {
   openPassSso = 9,
   openPassFacebook = 10,
   openPassGoogle = 11,
+  newIfa = 12,
+  reuseIfa = 13,
+  optOut = 14,
+  optIn = 15,
 }
