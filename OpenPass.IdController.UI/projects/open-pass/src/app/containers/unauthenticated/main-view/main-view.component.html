@@ -24,24 +24,24 @@
     <div [innerHTML]="'WELCOME.OPEN_PASS_PROS.CONTROL' | translate"></div>
   </div>
 </div>
-<p>
+<p *ngIf="false">
   <label class="d-flex align-center form-control">
     <input type="checkbox" class="form-control mr-2" [(ngModel)]="acceptTerms" name="terms" required />
     I agree to the OpenPass terms and conditions
   </label>
 </p>
-<p class="text-small text-muted" [innerHTML]="'NON_AUTH.HINT' | translate"></p>
+<p *ngIf="false" class="text-small text-muted" [innerHTML]="'NON_AUTH.HINT' | translate"></p>
 <button
   type="button"
   class="btn btn-wide btn-primary my-4"
   data-test="non-auth-action-btn"
   translate
-  [disabled]="!acceptTerms"
+  [disabled]="false && !acceptTerms"
   (click)="fetchIfaAndProceed()"
 >
   NON_AUTH.ACTION
 </button>
-<div class="text-center pt-2 pb-3">
+<div *ngIf="false" class="text-center pt-2 pb-3">
   <button class="btn btn-link" (click)="closeWindow()" translate>SHARED.CONTINUE_WITHOUT</button>
 </div>
 <usrf-open-pass-details [name]="'NON_AUTH.SUMMARY.TITLE' | translate">

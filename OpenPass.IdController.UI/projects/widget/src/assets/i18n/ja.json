@@ -19,6 +19,9 @@
   },
   "UNLOGGED": {
     "HEADING": "Get Personalized Advertising with",
-    "ACTION": "同意し、OpenPassを利用してアクセスする。"
+    "ACTION": "同意し、OpenPassを利用してアクセスする。",
+    "OPEN_PASS_PROS": {
+      "CONTROL": "OpenPassはお客様のメールアドレスを許可なく共有することはありません。"
+    }
   }
 }
