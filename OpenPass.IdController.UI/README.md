@@ -11,7 +11,7 @@ Widget and Main app can communicate through [PostMessages API](https://developer
 Widget launcher - it is a script that insert widget into partner website.
 
 ```
-Customer website
+Partner website
 +-----------------+               new browser window
 |  <launcher/>    |               +-------------+
 |      |          |               |             |
@@ -22,11 +22,11 @@ Customer website
 +-----------------+
 ```
 
-To add the app to customer website, customer should include script
-`<script src="//openpass.criteo.com/open-pass/widget-app"></script>`and html tag
+To integrate OpenPass into their website, a partner should include the following script
+`<script src="//openpass.criteo.com/open-pass/widget-app"></script>`and this html tag
 `<wdgt-identification></wdgt-identification>` in any place on the page.
-`wdgt-identification` tag has next attributes:
 
+`wdgt-identification` tag has the following attributes:
 - session = "authenticated" | "unauthenticated";
 - variant = "dialog" | "in-site";
 - view = "native" | "modal";
