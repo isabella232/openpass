@@ -1,13 +1,12 @@
 # OpenPass UI
 
-This app gives the ability for our customers to authorize their users.
-This app contains 3 projects:
-
+This gives the ability for our partners (publishers/advertisers) to integrate the OpenPass application through their websites .
+This application contains 3 projects:
 - Main app - ./projects/open-pass
 - Widget - ./projects/widget
 - Widget launcher - ./projects/widget-launcher
 
-Widget - it is a Web Component that is run on customer website. Widget can set/read cookie and launch the window with Main app.
+Widget - it is a Web Component that is run on a partner website. Widget can set/read cookie and launch the window with Main app.
 Widget and Main app can communicate through [PostMessages API](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage).
 Widget launcher - it is a script that insert widget into partner website.
 
@@ -71,9 +70,6 @@ dist
 
 The root url for dist folder is `/open-pass`. The server will respond with index.html of Main app.
 
-## TODO
-
-[] implement loading iframe instead of Web Component
 
 ## Running unit tests
 
