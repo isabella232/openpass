@@ -35,26 +35,27 @@ namespace OpenPass.IdController.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveEvent(
             [FromHeader(Name = "User-Agent")] string userAgent,
+            [FromHeader(Name = "Origin")] string originHost,
             [FromBody] EventRequest request)
         {
             var saveEventPrefix = $"{_metricPrefix}.save_event";
 
             // the controller tries to parse the EventType from the integer received
             // EventType.Unknown is either unsuccessful or indeed a evenType = 0, invalid in both cases
-            if (request.EventType == EventType.Unknown || string.IsNullOrEmpty(request.OriginHost))
+            if (request.EventType == EventType.Unknown || string.IsNullOrEmpty(originHost))
             {
                 _metricHelper.SendCounterMetric($"{saveEventPrefix}.bad_request");
                 return BadRequest();
             }
 
             var internalLocalWebId = Guid.TryParse(request.LocalWebId, out _) // LocalWebId parses when accessing the id, causing a runtime exception if invalid Guid
-                ? await _internalMappingHelper.GetInternalLocalWebId(LocalWebId.Parse(request.LocalWebId, request.OriginHost))
+                ? await _internalMappingHelper.GetInternalLocalWebId(LocalWebId.Parse(request.LocalWebId, originHost))
                 : null;
             var internalUid = await _internalMappingHelper.GetInternalCriteoId(CriteoId.Parse(request.Uid));
             var internalUserCentricAdId = await _internalMappingHelper.GetInternalUserCentricAdId(UserCentricAdId.Parse(request.Ifa));
 
             // Using sampling ratio for an endpoint generating glups directly
-            var samplingRatio = _configurationHelper.EmitGlupsRatio(request.OriginHost);
+            var samplingRatio = _configurationHelper.EmitGlupsRatio(originHost);
             if (_randomGenerator.NextDouble() > samplingRatio)
             {
                 _metricHelper.SendCounterMetric($"{saveEventPrefix}.over_sampling_ratio");
@@ -62,7 +63,7 @@ namespace OpenPass.IdController.Controllers
             else
             {
                 _metricHelper.SendCounterMetric($"{saveEventPrefix}.emit_glup.${request.EventType}");
-                _glupHelper.EmitGlup(request.EventType, request.OriginHost, userAgent, internalLocalWebId, internalUid, internalUserCentricAdId);
+                _glupHelper.EmitGlup(request.EventType, originHost, userAgent, internalLocalWebId, internalUid, internalUserCentricAdId);
             }
 
             return Ok(new { result = true }); // 200 OK with dummy content

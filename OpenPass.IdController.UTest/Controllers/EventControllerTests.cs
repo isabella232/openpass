@@ -46,11 +46,10 @@ namespace OpenPass.IdController.UTest.Controllers
             // Arrange
             var request = new EventRequest
             {
-                EventType = eventType,
-                OriginHost = originHost
+                EventType = eventType
             };
             // Act
-            await _eventController.SaveEvent(_testUserAgent, request);
+            await _eventController.SaveEvent(_testUserAgent, originHost, request);
 
             // Assert
             _glupHelperMock.Verify(
@@ -72,11 +71,10 @@ namespace OpenPass.IdController.UTest.Controllers
             // Arrange
             var request = new EventRequest
             {
-                EventType = eventType,
-                OriginHost = originHost
+                EventType = eventType
             };
             // Act
-            await _eventController.SaveEvent(_testUserAgent, request);
+            await _eventController.SaveEvent(_testUserAgent, originHost, request);
 
             // Assert
             _glupHelperMock.Verify(
@@ -100,11 +98,10 @@ namespace OpenPass.IdController.UTest.Controllers
 
             var request = new EventRequest
             {
-                EventType = EventType.BannerRequest,
-                OriginHost = "originHost.com"
+                EventType = EventType.BannerRequest
             };
             // Act
-            await _eventController.SaveEvent(_testUserAgent, request);
+            await _eventController.SaveEvent(_testUserAgent, "originHost.com", request);
 
             // Assert
             _glupHelperMock.Verify(
@@ -141,14 +138,13 @@ namespace OpenPass.IdController.UTest.Controllers
             var request = new EventRequest
             {
                 EventType = EventType.BannerRequest,
-                OriginHost = host,
                 LocalWebId = _testingLwid,
                 Uid = _testingUid,
                 Ifa = _testingIfa
             };
 
             // Act
-            await _eventController.SaveEvent(_testUserAgent, request);
+            await _eventController.SaveEvent(_testUserAgent, host, request);
 
             // Assert
             _glupHelperMock.Verify(

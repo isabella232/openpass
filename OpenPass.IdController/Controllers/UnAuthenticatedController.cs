@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using OpenPass.IdController.Helpers;
-using OpenPass.IdController.Models;
 
 namespace OpenPass.IdController.Controllers
 {
@@ -23,8 +22,7 @@ namespace OpenPass.IdController.Controllers
         [HttpPost]
         public IActionResult CreateIfa(
             [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromBody] GenerateRequest request
-        )
+            [FromHeader(Name = "Origin")] string originHost)
         {
             var prefix = $"{_metricPrefix}.create";
 
@@ -33,7 +31,7 @@ namespace OpenPass.IdController.Controllers
                 _metricHelper.SendCounterMetric($"{prefix}.uid2");
             }
 
-            var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, prefix, request.OriginHost, userAgent);
+            var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, prefix, originHost, userAgent);
 
             // Set cookie
             _cookieHelper.SetIdentifierForAdvertisingCookie(Response.Cookies, ifaToken);

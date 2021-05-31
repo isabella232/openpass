@@ -4,7 +4,6 @@ using Moq;
 using NUnit.Framework;
 using OpenPass.IdController.Controllers;
 using OpenPass.IdController.Helpers;
-using OpenPass.IdController.Models;
 
 namespace OpenPass.IdController.UTest.Controllers
 {
@@ -15,7 +14,6 @@ namespace OpenPass.IdController.UTest.Controllers
         private Mock<IMetricHelper> _metricHelperMock;
         private Mock<ICookieHelper> _cookieHelperMock;
         private Mock<IGlupHelper> _glupHelperMock;
-        private GenerateRequest _request;
         private PortalController _portalController;
 
         [SetUp]
@@ -25,7 +23,6 @@ namespace OpenPass.IdController.UTest.Controllers
             _metricHelperMock.Setup(mr => mr.SendCounterMetric(It.IsAny<string>()));
             _cookieHelperMock = new Mock<ICookieHelper>();
             _glupHelperMock = new Mock<IGlupHelper>();
-            _request = new GenerateRequest();
 
             _portalController =
                 new PortalController(_metricHelperMock.Object, _cookieHelperMock.Object, _glupHelperMock.Object)
@@ -38,7 +35,7 @@ namespace OpenPass.IdController.UTest.Controllers
         public void TestOptout()
         {
             // Act
-            var response = _portalController.OptOut(_testUserAgent, _request);
+            var response = _portalController.OptOut(_testUserAgent, It.IsAny<string>());
 
             // Assert
             Assert.IsAssignableFrom<OkResult>(response);
@@ -56,7 +53,7 @@ namespace OpenPass.IdController.UTest.Controllers
         public void TestOptin()
         {
             // Act
-            var response = _portalController.OptIn(_testUserAgent, _request);
+            var response = _portalController.OptIn(_testUserAgent, It.IsAny<string>());
 
             // Assert
             Assert.IsAssignableFrom<OkResult>(response);

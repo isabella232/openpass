@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using OpenPass.IdController.Helpers;
-using OpenPass.IdController.Models;
 using static Criteo.Glup.IdController.Types;
 
 namespace OpenPass.IdController.Controllers
@@ -22,8 +21,9 @@ namespace OpenPass.IdController.Controllers
         }
 
         [HttpPost("controls/optout")]
-        public IActionResult OptOut([FromHeader(Name = "User-Agent")] string userAgent,
-                                    [FromBody] GenerateRequest request)
+        public IActionResult OptOut(
+            [FromHeader(Name = "User-Agent")] string userAgent,
+            [FromHeader(Name = "Origin")] string originHost)
         {
             // Apply internal opt-out
             _cookieHelper.RemoveUid2AdvertisingCookie(Response.Cookies);
@@ -35,14 +35,15 @@ namespace OpenPass.IdController.Controllers
             // Emit metric and glup
             var optoutMetricPrefix = $"{_metricPrefix}.optout";
             _metricHelper.SendCounterMetric($"{optoutMetricPrefix}");
-            _glupHelper.EmitGlup(EventType.OptOut, request.OriginHost, userAgent);
+            _glupHelper.EmitGlup(EventType.OptOut, originHost, userAgent);
 
             return Ok();
         }
 
         [HttpPost("controls/optin")]
-        public IActionResult OptIn([FromHeader(Name = "User-Agent")] string userAgent,
-            [FromBody] GenerateRequest request)
+        public IActionResult OptIn(
+            [FromHeader(Name = "User-Agent")] string userAgent,
+            [FromHeader(Name = "Origin")] string originHost)
         {
             // Apply opt-in
             _cookieHelper.RemoveOptoutCookie(Response.Cookies);
@@ -50,7 +51,7 @@ namespace OpenPass.IdController.Controllers
             // Emit metric and glup
             var optoutMetricPrefix = $"{_metricPrefix}.optin";
             _metricHelper.SendCounterMetric($"{optoutMetricPrefix}");
-            _glupHelper.EmitGlup(EventType.OptIn, request.OriginHost, userAgent);
+            _glupHelper.EmitGlup(EventType.OptIn, originHost, userAgent);
 
             return Ok();
         }

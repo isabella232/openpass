@@ -19,7 +19,6 @@ namespace OpenPass.IdController.UTest.Controllers
         private Mock<ICookieHelper> _cookieHelperMock;
         private Mock<IIdentifierHelper> _identifierHelperMock;
         private UnAuthenticatedController _unauthenticatedController;
-        private GenerateRequest _request;
 
         [SetUp]
         public void Setup()
@@ -28,7 +27,6 @@ namespace OpenPass.IdController.UTest.Controllers
             _metricHelperMock.Setup(mr => mr.SendCounterMetric(It.IsAny<string>()));
             _cookieHelperMock = new Mock<ICookieHelper>();
             _identifierHelperMock = new Mock<IIdentifierHelper>();
-            _request = new GenerateRequest { OriginHost = _testOriginHost };
 
             _unauthenticatedController = new UnAuthenticatedController(_metricHelperMock.Object, _cookieHelperMock.Object, _identifierHelperMock.Object)
             {
@@ -47,7 +45,7 @@ namespace OpenPass.IdController.UTest.Controllers
                 .Returns(expectedIfaToken);
 
             // Act
-            var response = _unauthenticatedController.CreateIfa(_testUserAgent, _request);
+            var response = _unauthenticatedController.CreateIfa(_testUserAgent, _testOriginHost);
 
             // Returned identifier
             var data = GetResponseData(response);

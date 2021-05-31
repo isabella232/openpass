@@ -73,7 +73,7 @@ namespace OpenPass.IdController.UTest.Controllers
             var request = new GenerateRequest { Email = "example@mail.com" };
 
             // Act
-            var response = _authenticatedController.GenerateOtp(_testUserAgent, request);
+            var response = _authenticatedController.GenerateOtp(_testUserAgent, It.IsAny<string>(), request);
 
             // Assert
             Assert.IsAssignableFrom<NotFoundResult>(response);
@@ -87,7 +87,7 @@ namespace OpenPass.IdController.UTest.Controllers
             var request = new ValidateRequest{ Email = "example@mail.com", Otp = "123456" };
 
             // Act
-            var response = await _authenticatedController.ValidateOtp(_testUserAgent, request);
+            var response = await _authenticatedController.ValidateOtp(_testUserAgent, It.IsAny<string>(), request);
 
             // Assert
             Assert.IsAssignableFrom<NotFoundResult>(response);
@@ -102,7 +102,7 @@ namespace OpenPass.IdController.UTest.Controllers
             var request = new GenerateRequest();
 
             // Act
-            var response = _authenticatedController.GenerateOtp(_testUserAgent, request);
+            var response = _authenticatedController.GenerateOtp(_testUserAgent, It.IsAny<string>(), request);
 
             // Assert
             Assert.IsAssignableFrom<BadRequestResult>(response);
@@ -117,7 +117,7 @@ namespace OpenPass.IdController.UTest.Controllers
             var request = new ValidateRequest();
 
             // Act
-            var response = await _authenticatedController.ValidateOtp(_testUserAgent, request);
+            var response = await _authenticatedController.ValidateOtp(_testUserAgent, It.IsAny<string>(), request);
 
             // Assert
             Assert.IsAssignableFrom<BadRequestResult>(response);
@@ -132,7 +132,7 @@ namespace OpenPass.IdController.UTest.Controllers
             var request = new ValidateRequest();
 
             // Act
-            var response = await _authenticatedController.ValidateOtp(_testUserAgent, request);
+            var response = await _authenticatedController.ValidateOtp(_testUserAgent, It.IsAny<string>(), request);
 
             // Assert
             Assert.IsAssignableFrom<BadRequestResult>(response);
@@ -148,7 +148,7 @@ namespace OpenPass.IdController.UTest.Controllers
             var request = new ValidateRequest();
 
             // Act
-            var response = await _authenticatedController.ValidateOtp(_testUserAgent, request);
+            var response = await _authenticatedController.ValidateOtp(_testUserAgent, It.IsAny<string>(), request);
 
             // Assert
             Assert.IsAssignableFrom<BadRequestResult>(response);
@@ -161,7 +161,7 @@ namespace OpenPass.IdController.UTest.Controllers
             var request = new GenerateRequest();
 
             // Act
-            var response = _authenticatedController.GenerateOtp(_testUserAgent, request);
+            var response = _authenticatedController.GenerateOtp(_testUserAgent, It.IsAny<string>(), request);
 
             // Assert
             Assert.IsAssignableFrom<NoContentResult>(response);
@@ -186,7 +186,7 @@ namespace OpenPass.IdController.UTest.Controllers
                 .ReturnsAsync(expectedUid2Token);
             var request = new ValidateRequest { Email = email, Otp = "123456" };
 
-            var response = await _authenticatedController.ValidateOtp(_testUserAgent, request);
+            var response = await _authenticatedController.ValidateOtp(_testUserAgent, It.IsAny<string>(), request);
 
             // token in JSON response
             Assert.IsAssignableFrom<OkObjectResult>(response);
@@ -201,10 +201,10 @@ namespace OpenPass.IdController.UTest.Controllers
         public void GenerationGlupEmitted(string originHost)
         {
             // Arrange
-            var request = new GenerateRequest { Email = "example@mail.com", OriginHost = originHost };
+            var request = new GenerateRequest { Email = "example@mail.com" };
 
             // Act
-            _authenticatedController.GenerateOtp(_testUserAgent, request);
+            _authenticatedController.GenerateOtp(_testUserAgent, originHost, request);
 
             // Assert
             _glupHelperMock.Verify(g => g.EmitGlup(
@@ -225,7 +225,7 @@ namespace OpenPass.IdController.UTest.Controllers
             var request = new GenerateRequest { Email = email };
 
             // Act
-            _authenticatedController.GenerateOtp(_testUserAgent, request);
+            _authenticatedController.GenerateOtp(_testUserAgent, It.IsAny<string>(), request);
 
             // Assert
             _memoryCache.Verify(m => m.CreateEntry(It.Is<string>(s => s == email)), Times.Once);
@@ -243,7 +243,7 @@ namespace OpenPass.IdController.UTest.Controllers
             var request = new GenerateRequest { Email = email };
 
             // Act
-            _authenticatedController.GenerateOtp(_testUserAgent, request);
+            _authenticatedController.GenerateOtp(_testUserAgent, It.IsAny<string>(), request);
 
             // Assert
             _emailHelperMock.Verify(e => e.SendOtpEmail(It.Is<string>(s => s == email), It.Is<string>(c => c == code)), Times.Once);
@@ -270,7 +270,7 @@ namespace OpenPass.IdController.UTest.Controllers
 
             // Generate
             var requestGenerate = new GenerateRequest { Email = email };
-            var response = _authenticatedController.GenerateOtp(_testUserAgent, requestGenerate);
+            var response = _authenticatedController.GenerateOtp(_testUserAgent, It.IsAny<string>(), requestGenerate);
             Assert.IsAssignableFrom<NoContentResult>(response);
 
             // Validate
@@ -279,7 +279,7 @@ namespace OpenPass.IdController.UTest.Controllers
                 .Setup(m => m.TryGetValue(It.IsAny<object>(), out cacheCode))
                 .Returns(true);
             var requestValidate = new ValidateRequest { Email = email, Otp = (string) code };
-            response = await _authenticatedController.ValidateOtp(_testUserAgent, requestValidate);
+            response = await _authenticatedController.ValidateOtp(_testUserAgent, It.IsAny<string>(), requestValidate);
 
             Assert.IsAssignableFrom<OkObjectResult>(response);
             var responseData = GetResponseData(response);
@@ -305,7 +305,7 @@ namespace OpenPass.IdController.UTest.Controllers
 
             // Generate
             var requestGenerate = new GenerateRequest { Email = email };
-            var response = _authenticatedController.GenerateOtp(_testUserAgent, requestGenerate);
+            var response = _authenticatedController.GenerateOtp(_testUserAgent, It.IsAny<string>(), requestGenerate);
             Assert.IsAssignableFrom<NoContentResult>(response);
 
             // Validate
@@ -314,7 +314,7 @@ namespace OpenPass.IdController.UTest.Controllers
                 .Setup(m => m.TryGetValue(It.IsAny<object>(), out code))
                 .Returns(true);
             var requestValidate = new ValidateRequest { Email = email, Otp = erroneousCode };
-            response = await _authenticatedController.ValidateOtp(_testUserAgent, requestValidate);
+            response = await _authenticatedController.ValidateOtp(_testUserAgent, It.IsAny<string>(), requestValidate);
             Assert.IsAssignableFrom<NotFoundResult>(response);
             _cookieHelperMock.Verify(c => c.SetUid2AdvertisingCookie(
                 It.IsAny<IResponseCookies>(), It.IsAny<string>()), Times.Never);
@@ -330,7 +330,7 @@ namespace OpenPass.IdController.UTest.Controllers
             _emailHelperMock.Setup(e => e.IsValidEmail(It.IsAny<string>())).Returns(false);
 
             var request = new GenerateRequest();
-            var response = await _authenticatedController.GenerateEmailToken(_testUserAgent, request);
+            var response = await _authenticatedController.GenerateEmailToken(_testUserAgent, It.IsAny<string>(), request);
 
             Assert.IsAssignableFrom<BadRequestResult>(response);
         }
@@ -355,7 +355,7 @@ namespace OpenPass.IdController.UTest.Controllers
             var request = new GenerateRequest { Email = email };
 
             // Act
-            var response = await _authenticatedController.GenerateEmailToken(_testUserAgent, request);
+            var response = await _authenticatedController.GenerateEmailToken(_testUserAgent, It.IsAny<string>(), request);
 
             // token in JSON response
             Assert.IsAssignableFrom<OkObjectResult>(response);

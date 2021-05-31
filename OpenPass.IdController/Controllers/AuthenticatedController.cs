@@ -52,6 +52,7 @@ namespace OpenPass.IdController.Controllers
         [HttpPost("otp/generate")]
         public IActionResult GenerateOtp(
             [FromHeader(Name = "User-Agent")] string userAgent,
+            [FromHeader(Name = "Origin")] string originHost,
             [FromBody] GenerateRequest request)
         {
             var prefix = $"{_metricPrefix}.otp.generate";
@@ -80,7 +81,7 @@ namespace OpenPass.IdController.Controllers
             _emailHelper.SendOtpEmail(request.Email, otp);
 
             // 3. Emit glup
-            _glupHelper.EmitGlup(EventType.EmailEntered, request.OriginHost, userAgent);
+            _glupHelper.EmitGlup(EventType.EmailEntered, originHost, userAgent);
 
             // Metrics
             _metricHelper.SendCounterMetric($"{prefix}.ok");
@@ -92,6 +93,7 @@ namespace OpenPass.IdController.Controllers
         [HttpPost("otp/validate")]
         public async Task<IActionResult> ValidateOtp(
             [FromHeader(Name = "User-Agent")] string userAgent,
+            [FromHeader(Name = "Origin")] string originHost,
             [FromBody] ValidateRequest request)
         {
             var prefix = $"{_metricPrefix}.otp.validate";
@@ -119,9 +121,9 @@ namespace OpenPass.IdController.Controllers
 
                 // Retrieve UID2 token, set cookie and send token back in payload
                 var uid2Token = await _identifierHelper.TryGetUid2TokenAsync(Response.Cookies, EventType.EmailValidated,
-                    request.OriginHost, userAgent, request.Email, prefix);                
+                    originHost, userAgent, request.Email, prefix);                
 
-                var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, prefix, request.OriginHost, userAgent);
+                var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, prefix, originHost, userAgent);
 
                 // Set cookie
                 _cookieHelper.SetIdentifierForAdvertisingCookie(Response.Cookies, ifaToken);
@@ -143,6 +145,7 @@ namespace OpenPass.IdController.Controllers
         [HttpPost("sso")]
         public async Task<IActionResult> GenerateEmailToken(
             [FromHeader(Name = "User-Agent")] string userAgent,
+            [FromHeader(Name = "Origin")] string originHost,
             [FromBody] GenerateRequest request)
         {
             var prefix = $"{_metricPrefix}.sso.generate";
@@ -155,9 +158,9 @@ namespace OpenPass.IdController.Controllers
 
             // Retrieve UID2 token, set cookie and send token back in payload
             var uid2Token = await _identifierHelper.TryGetUid2TokenAsync(Response.Cookies, request.EventType,
-                    request.OriginHost, userAgent, request.Email, prefix);
+                    originHost, userAgent, request.Email, prefix);
 
-            var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, prefix, request.OriginHost, userAgent);
+            var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, prefix, originHost, userAgent);
 
             // Set cookie
             _cookieHelper.SetIdentifierForAdvertisingCookie(Response.Cookies, ifaToken);
