@@ -28,4 +28,8 @@ export class AuthPageComponent extends BaseComponent {
   getCodeWarning() {
     return this.getElement('code-warning');
   }
+
+  getAgreementCheckbox() {
+    return this.getElement('agreement');
+  }
 }

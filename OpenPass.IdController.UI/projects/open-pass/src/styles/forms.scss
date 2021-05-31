@@ -15,6 +15,7 @@
       color: $error-color;
       margin-top: 4px;
       font-size: 0.6rem;
+      display: none;
     }
 
     &:not(:placeholder-shown):invalid,
@@ -23,6 +24,7 @@
 
       & + .hint {
         visibility: visible;
+        display: block;
       }
     }
 
@@ -73,6 +75,12 @@
   }
 }
 
+label {
+  &.form-control {
+    cursor: pointer;
+  }
+}
+
 .form-group {
-  margin: 0.5rem 0;
+  margin: 1rem 0;
 }

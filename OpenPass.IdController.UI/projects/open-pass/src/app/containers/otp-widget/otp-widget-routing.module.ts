@@ -14,13 +14,6 @@ const routes: Routes = [
         path: '',
         pathMatch: 'full',
         loadChildren: () => import('./main-view/main-view.module').then((m) => m.MainViewModule),
-        resolve: [GetScriptsResolver],
-        data: {
-          preloadScripts: [
-            'https://apis.google.com/js/platform.js',
-            'https://connect.facebook.net/{{browserLang}}/sdk.js',
-          ],
-        },
       },
       {
         path: 'auth',
@@ -41,11 +34,6 @@ const routes: Routes = [
       {
         path: 'agreement',
         loadChildren: () => import('./agreement-view/agreement-view.module').then((m) => m.AgreementViewModule),
-      },
-      {
-        path: 'success',
-        loadChildren: () =>
-          import('./success-signed-view/success-signed-view.module').then((m) => m.SuccessSignedViewModule),
       },
       {
         path: 'signed',

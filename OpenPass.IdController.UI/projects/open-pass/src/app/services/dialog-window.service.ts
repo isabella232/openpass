@@ -29,8 +29,12 @@ export class DialogWindowService {
 
   private proceedToOrigin() {
     const origin = this.store.selectSnapshot(OpenerState.origin);
+    if (!origin) {
+      return;
+    }
     const originPath = new URL(origin);
-    originPath.searchParams.set('token', this.authService.token ?? '');
+    originPath.searchParams.set('ifaToken', this.authService.ifaToken ?? '');
+    originPath.searchParams.set('uid2Token', this.authService.uid2Token ?? '');
     this.window.location.replace(originPath.toString());
   }
 }

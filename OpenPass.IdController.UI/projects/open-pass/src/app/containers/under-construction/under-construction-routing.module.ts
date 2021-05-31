@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AgreementViewComponent } from './agreement-view.component';
+import { UnderConstructionComponent } from './under-construction.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: AgreementViewComponent,
+    component: UnderConstructionComponent,
   },
 ];
 
@@ -13,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AgreementViewRoutingModule {}
+export class UnderConstructionRoutingModule {}

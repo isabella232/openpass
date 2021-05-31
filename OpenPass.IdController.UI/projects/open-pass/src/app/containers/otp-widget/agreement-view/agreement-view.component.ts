@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { Select } from '@ngxs/store';
-import { Observable } from 'rxjs';
-import { OpenerState } from '@store/otp-widget/opener.state';
+import { EventTypes } from '@enums/event-types.enum';
+import { AuthService } from '@services/auth.service';
+import { DialogWindowService } from '@services/dialog-window.service';
+import { EventsTrackingService } from '@services/events-tracking.service';
 
 @Component({
   selector: 'usrf-agreement-view',
@@ -9,6 +10,17 @@ import { OpenerState } from '@store/otp-widget/opener.state';
   styleUrls: ['./agreement-view.component.scss'],
 })
 export class AgreementViewComponent {
-  @Select(OpenerState.originFormatted)
-  websiteName$: Observable<string>;
+  isTermsAccepted = false;
+
+  constructor(
+    private authService: AuthService,
+    private dialogWindowService: DialogWindowService,
+    private eventsTrackingService: EventsTrackingService
+  ) {}
+
+  saveTokenAndClose() {
+    this.authService.setTokenToOpener();
+    this.eventsTrackingService.trackEvent(EventTypes.consentGranted);
+    this.dialogWindowService.closeDialogWindow();
+  }
 }

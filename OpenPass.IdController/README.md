@@ -10,15 +10,18 @@ Controllers:
 
 - AuthenticatedController - provides endpoints to generate, validate and login via SSO logic:
   - GenerateOtp - generate one time password and send email with verification code
-  - ValidateOtp - validate verification code sent by email
-  - GenerateEmailToken - SSO login for Facebook and Google
+  - ValidateOtp - validate verification code sent by email and send two tokens with response
+  - GenerateEmailToken - SSO login for Facebook and Google and send two tokens with response
 - EventController - provides endpoint to save events from UI
   - SaveEvent - endpoint for tracking purposes
 - OpenPassController - provides endpoints to get physical path's to files
   - Widget - return path for widget/assets/widget.min.js
   - Index - return path for dist/index.html
+- PortalController - provides Optin and Optout mechanism
+  - OptOut - remove Ifa and Uid2 token. Set Optout cookie
+  - OptIn - remove Optout cookie
 - UnAuthenticatedController - provides endpoints for authenticated flow
-  - GetOrCreateIfa - get or create token for anonymous user
+  - CreateIfa - get or create token for anonymous user
 
 ## Configuration
 
@@ -34,8 +37,7 @@ AppSettings:
   - UserName: username for sending email
   - Password: password for sending email
 
-- Uid2Configuration - configuration for external integration for unauthenticated flow
-
+- Uid2Configuration - configuration for external integration for Authenticated flow
   - Endpoint - uid2 service endpoint
   - ApiKey - uid2 service API key
 

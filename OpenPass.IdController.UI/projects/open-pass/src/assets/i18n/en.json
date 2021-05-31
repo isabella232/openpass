@@ -5,17 +5,17 @@
     "WITH": "With OpenPass:",
     "OPEN_PASS_PROS": {
       "INFORMATION": "You will support online businesses that provide you with tailored content.",
-      "ACCESS": "You have full control of your privacy, anytime at <a href=\"https://transparentadvertising.com\" target=\"_blank\">transparentadvertising.com</a>",
+      "ACCESS": "You have full control of your privacy, anytime at <a href=\"/open-pass/under-construction\" target=\"\">transparentadvertising.com</a>",
       "CONTROL": "Your email address is never shared without your permission"
     },
     "SUMMARY": {
       "TITLE": "How does OpenPass work?",
-      "DESCRIPTION": "With your permission, OpenPass converts your email address into a pseudonymous identifier. This identifier is shared with <b>trusted advertising partners</b> who use it to show you advertisements that they think are relevant to you. <a target=\"_blank\" href=\"https://criteo.com\">Learn more</a>"
+      "DESCRIPTION": "With your permission, OpenPass converts your email address into a pseudonymous identifier. This identifier is shared with <b>trusted advertising partners</b> who use it to show you advertisements that they think are relevant to you. <a target=\"_blank\" href=\"/open-pass/under-construction\">Learn more</a>"
     },
     "ACTION": "Sign in with OpenPass"
   },
   "SHARED": {
-    "OTHER_WAY": "Other ways to access this site",
+    "OTHER_WAY": "Other options to access this site",
     "CONTINUE_WITHOUT": "Continue without Openpass",
     "COPY": "Provided by",
     "FORM": {
@@ -25,33 +25,22 @@
       "CODE_ERROR": "Code is not valid. Check the code and try one more time",
       "SHARE_LABEL": "By continuing on this site I agree to the terms and conditions"
     },
-    "AGREEMENT": "By continuing on this website I agree to <a href=\"#\" target=\"_blank\">terms and conditions</a>",
+    "AGREEMENT": "I consent to the use of my email address to create a pseudonymous identifier used to protect my privacy while enabling personalized advertising.",
     "OR": "or"
   },
   "AUTH": {
-    "HEADING_1": "Hi there!",
-    "HEADING_2": "Thanks!",
-    "SUB_HEADING_1": "Welcome to OpenPass.",
-    "SUB_HEADING_2": "Check your email...",
-    "DESCRIPTION_1": "Please enter your email address. You only need to do this once to access all sites that participate with OpenPass. <b>Your email and any related preferences or data is never shared without your permission.</b>",
-    "DESCRIPTION_2": "Please enter the verification code that was sent to your email address.",
+    "HEADING": "Hi there!",
+    "SUB_HEADING": "Welcome to OpenPass.",
+    "DESCRIPTION": "Please enter your email address. You only need to do this once to access all sites that participate with OpenPass. <b>Your email and any related preferences or data is never shared without your permission.</b>",
     "ACTION": "Continue",
-    "ACTION_PROCEED": "Continue to site"
+    "HINT": "OpenPass will use your email address to create a pseudonymous identifier in order to provide you with personalized advertising based on your preferences. Your email address will not be stored or otherwise processed. You have a right to access your personal data and a right to withdraw your consent and be forgotten at any time by clicking <a href=\"/open-pass/under-construction\">here</a>. For more information please read our <a  href=\"/open-pass/under-construction\">privacy policy</a>"
   },
   "AGREEMENT": {
-    "HEADING": "Awesome!",
-    "SUB_HEADING": "One last thing.",
-    "DESCRIPTION": "To access <b>{{ websiteName }}</b> and many websites for free while maintaining full control of your privacy, please accept the OpenPass Terms and Conditions by clicking Agree & Go to Site.",
-    "SUMMARY": {
-      "TITLE": "How does OpenPass work?",
-      "OPEN_PASS_POWERED": "OpenPass is powered by <a href=\"\">Unified ID</a>, which is an improvement over third-party cookies that offers more privacy control. It can:",
-      "REDUCE": "Reduce how often you have to consent to annoying cookie banners",
-      "SHOW": "Show you more relevant and fewer repeat ads",
-      "SUPPORT": "Support free content on the open internet",
-      "MENAGE_SETTINGS": "Manage your settings in the <a>privacy portal</a>.",
-      "TERMS_LINK": "<a href=\"\">View terms and conditions</a>"
-    },
-    "ACTION": "Agree & go to site"
+    "HEADING": "Almost there.",
+    "SUB_HEADING": "Please review the <a href=\"/open-pass/under-construction\">terms and conditions</a> and check the box below. ",
+    "CONDITION": "I agree to the OpenPass terms and conditions",
+    "REVIEW": "<a href=\"/open-pass/under-construction\">Click here</a> to manage your privacy settings and learn more about OpenPass.",
+    "ACTION": "Continue to site"
   },
   "SUCCESS": {
     "MESSAGE": "Securely signed in with OpenPass as {{ secureEmail }} Manage your settings in the <a>privacy portal</a>."
@@ -65,18 +54,19 @@
   },
   "NON_AUTH": {
     "HEADING": "Get Access With",
-    "DESCRIPTION": "You're about to access <b>{{ websiteName }}</b> for free! <br/> OpenPass allows you to enjoy and support your favorite sites, by helping brands show ads more relevant to your interests.",
+    "DESCRIPTION": "OpenPass is an independent service that secures your data. It allows you to control and personalize your advertising experience on <b>{{websiteName}}</b> with your explicit permission.",
     "WITH": "With OpenPass:",
     "OPEN_PASS_PROS": {
-      "INFORMATION": "Support independent small businesses and websites as you browse a large network of sites for free",
-      "ACCESS": "Manage and change your privacy preferences at any time at <a href=\"https://transparentadvertising.com\" target=\"+_blank\">transparentadvertising.com</a>",
-      "CONTROL": "OpenPass will never share your information without your permission"
+      "INFORMATION": "You will support online businesses that provide you with tailored content.",
+      "ACCESS": "You have full control of your privacy, anytime at <a href=\"/open-pass/under-construction\" target=\"\">transparentadvertising.com</a>",
+      "CONTROL": "Your information is never shared without your permission"
     },
+    "HINT": "OpenPass will use a cookie in order to provide you with personalized advertising based on your preferences. You have a right to access your personal data and a right to withdraw your consent and be forgotten at any time <a href=\"/open-pass/under-construction\">here</a>. For more information please read our <a href=\"/open-pass/under-construction\">privacy policy</a>",
     "SUMMARY": {
       "TITLE": "How does OpenPass work?",
-      "DESCRIPTION": "With your permission. OpenPass shares pseudonymous (non directly identifying) identifiers with <b>trusted advertising partners</b> who use it to show you advertisement that they think are relevant to you. <a target=\"_blank\" href=\"https://criteo.com\">Learn more</a>"
+      "DESCRIPTION": "With your permission. OpenPass shares pseudonymous identifiers with <b>trusted advertising partners</b> who use it to show you advertisement that they think are relevant to you. <a target=\"_blank\" href=\"/open-pass/under-construction\">Learn more</a>"
     },
-    "PREFERENCES": "<a href=\"#\" target=\"_blank\">Click here</a> to manage your privacy settings and learn more about OpenPass",
+    "PREFERENCES": "<a href=\"/open-pass/under-construction\" target=\"_blank\">Click here</a> to manage your privacy settings and learn more about OpenPass",
     "ACTION": "I agree & access with OpenPass"
   },
   "RECOGNIZED": {

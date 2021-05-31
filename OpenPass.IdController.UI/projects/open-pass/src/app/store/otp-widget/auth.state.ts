@@ -14,14 +14,19 @@ import {
   ValidateCode,
   ValidateCodeFail,
   ReceiveToken,
+  SetAuthDefault,
+  GetAnonymousTokens,
+  GetAnonymousTokensSuccess,
+  GetAnonymousTokensFailure,
 } from './auth.actions';
 import { localStorage } from '@shared/utils/storage-decorator';
-import { EventTypes } from '@enums/event-types.enum';
+import { UnauthenticatedService } from '@rest/unauthenticated/unauthenticated.service';
 
 export interface IAuthState {
   email: string;
   code: string;
-  token: string;
+  ifaToken: string;
+  uid2Token: string;
   isFetching: boolean;
   isCodeValid: boolean;
   isEmailValid: boolean;
@@ -34,7 +39,8 @@ type LocalStateContext = StateContext<IAuthState>;
 const defaults: IAuthState = {
   email: '',
   code: '',
-  token: '',
+  ifaToken: '',
+  uid2Token: '',
   isFetching: false,
   isCodeValid: true,
   isEmailValid: true,
@@ -47,17 +53,27 @@ const defaults: IAuthState = {
 })
 @Injectable()
 export class AuthState {
-  @localStorage('openpass.token')
-  private storageUserToken: string;
+  @localStorage('openpass.uid2Token')
+  private storageUid2Token: string;
+  @localStorage('openpass.ifaToken')
+  private storageIfaToken: string;
 
   @localStorage('openpass.email')
   private storageUserEmail: string;
 
-  constructor(private authenticatedService: AuthenticatedService) {}
+  constructor(
+    private authenticatedService: AuthenticatedService,
+    private unauthenticatedService: UnauthenticatedService
+  ) {}
 
   @Selector()
   static fullState(state: LocalStateModel): IAuthState {
     return state;
+  }
+
+  @Selector()
+  static isFetching({ isFetching }: LocalStateModel) {
+    return isFetching;
   }
 
   @Action(SetEmail)
@@ -71,8 +87,8 @@ export class AuthState {
   }
 
   @Action(SetToken)
-  setToken(ctx: LocalStateContext, { token }: SetToken) {
-    ctx.patchState({ token });
+  setToken(ctx: LocalStateContext, { tokens: { ifaToken, uid2Token } }: SetToken) {
+    ctx.patchState({ ifaToken, uid2Token });
   }
 
   @Action(GenerateCode)
@@ -103,18 +119,19 @@ export class AuthState {
     const { email, code: otp } = ctx.getState();
 
     return this.authenticatedService.validateOtp({ email, otp }).pipe(
-      switchMap(({ token }) => ctx.dispatch(new ReceiveToken(token))),
+      switchMap((tokens) => ctx.dispatch(new ReceiveToken(tokens))),
       catchError(() => ctx.dispatch(new ValidateCodeFail())),
       finalize(() => ctx.patchState({ isFetching: false }))
     );
   }
 
   @Action(ReceiveToken)
-  validateCodeSuccess(ctx: LocalStateContext, { token }: ReceiveToken) {
+  validateCodeSuccess(ctx: LocalStateContext, { tokens: { ifaToken, uid2Token } }: ReceiveToken) {
     const { email } = ctx.getState();
-    this.storageUserToken = token;
+    this.storageIfaToken = ifaToken;
+    this.storageUid2Token = uid2Token;
     this.storageUserEmail = email;
-    ctx.patchState({ token });
+    ctx.patchState({ ifaToken, uid2Token });
   }
 
   @Action(ValidateCodeFail)
@@ -130,9 +147,38 @@ export class AuthState {
     });
 
     return this.authenticatedService.getTokenByEmail(email, eventType).pipe(
-      switchMap(({ token }) => ctx.dispatch(new ReceiveToken(token))),
+      switchMap((tokens) => ctx.dispatch(new ReceiveToken(tokens))),
       catchError((error) => ctx.dispatch(new GetTokenByEmailFailed(error))),
       finalize(() => ctx.patchState({ isFetching: false }))
     );
+  }
+
+  @Action(GetAnonymousTokens)
+  getAnonymousTokens(ctx: LocalStateContext) {
+    ctx.patchState({ isFetching: true });
+    return this.unauthenticatedService.createIfa().pipe(
+      switchMap((tokens) => ctx.dispatch(new GetAnonymousTokensSuccess(tokens))),
+      catchError((error) => ctx.dispatch(new GetAnonymousTokensFailure(error))),
+      finalize(() => ctx.patchState({ isFetching: false }))
+    );
+  }
+
+  @Action(GetAnonymousTokensSuccess)
+  getAnonymousTokensSuccess(ctx: LocalStateContext, { tokens: { ifaToken, uid2Token } }: GetAnonymousTokensSuccess) {
+    this.storageIfaToken = ifaToken;
+    this.storageUid2Token = uid2Token;
+    ctx.patchState({ ifaToken, uid2Token });
+  }
+
+  @Action(SetAuthDefault)
+  setAuthDefault(ctx: LocalStateContext) {
+    ctx.patchState({
+      email: '',
+      code: '',
+      isFetching: false,
+      isCodeValid: true,
+      isEmailValid: true,
+      isEmailVerified: false,
+    });
   }
 }

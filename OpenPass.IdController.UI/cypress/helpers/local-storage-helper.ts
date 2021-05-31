@@ -1,7 +1,7 @@
 export class LocalStorageHelper {
   static setFakeToken() {
     const current = JSON.parse(window.localStorage.getItem('USRF'));
-    const patched = mergeDeep(current ?? {}, { openpass: { token: 'fake_token' } });
+    const patched = mergeDeep(current ?? {}, { openpass: { uid2Token: 'fake_token', ifaToken: 'fake_token' } });
     LocalStorageHelper.setItem('USRF', JSON.stringify(patched));
   }
 

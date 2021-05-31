@@ -62,7 +62,9 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    const hasCookie = !!this.cookiesService.getCookie(environment.cookieUserToken);
+    const hasCookie =
+      !!this.cookiesService.getCookie(environment.cookieUid2Token) ||
+      !!this.cookiesService.getCookie(environment.cookieIfaToken);
     const { isDeclined } = this.publicApiService.getUserData();
     this.isOpen = !hasCookie && !isDeclined;
   }
@@ -84,7 +86,7 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
 
   backdropClick() {
     this.isOpen = false;
-    this.publicApiService.setUserData({ token: null, isDeclined: true });
+    this.publicApiService.setUserData({ ifaToken: null, uid2Token: null, isDeclined: true });
   }
 
   private listenForClosingRequest() {

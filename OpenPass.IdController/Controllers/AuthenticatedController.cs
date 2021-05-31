@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using OpenPass.IdController.Helpers;
-using OpenPass.IdController.Helpers.Adapters;
 using OpenPass.IdController.Models;
 
 namespace OpenPass.IdController.Controllers
@@ -19,27 +18,27 @@ namespace OpenPass.IdController.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IMetricHelper _metricHelper;
         private readonly IMemoryCache _activeOtps; // Mapping: (email -> OTP)
-        private readonly IIdentifierAdapter _uid2Adapter;
         private readonly IEmailHelper _emailHelper;
         private readonly ICodeGeneratorHelper _codeGeneratorHelper;
         private readonly ICookieHelper _cookieHelper;
+        private readonly IIdentifierHelper _identifierHelper;
 
         public AuthenticatedController(
             IHostingEnvironment hostingEnvironment,
             IMetricHelper metricRegistry,
             IMemoryCache memoryCache,
-            IIdentifierAdapter uid2Adapter,
             IEmailHelper emailHelper,
             ICodeGeneratorHelper codeGeneratorHelper,
-            ICookieHelper cookieHelper)
+            ICookieHelper cookieHelper,
+            IIdentifierHelper identifierHelper)
         {
             _hostingEnvironment = hostingEnvironment;
             _metricHelper = metricRegistry;
             _activeOtps = memoryCache;
-            _uid2Adapter = uid2Adapter;
             _emailHelper = emailHelper;
             _codeGeneratorHelper = codeGeneratorHelper;
             _cookieHelper = cookieHelper;
+            _identifierHelper = identifierHelper;
         }
 
         #region One-time password (OTP)
@@ -106,19 +105,14 @@ namespace OpenPass.IdController.Controllers
                 _activeOtps.Remove(request.Email);
 
                 // Retrieve UID2 token, set cookie and send token back in payload
-                var token = await _uid2Adapter.GetId(request.Email);
-                if (string.IsNullOrEmpty(token))
-                {
-                    _metricHelper.SendCounterMetric($"{prefix}.error.no_token");
-                }
-                else
-                {
-                    _metricHelper.SendCounterMetric($"{prefix}.ok");
+                var uid2Token = await _identifierHelper.TryGetUid2TokenAsync(Response.Cookies, request.Email, prefix);
 
-                    // Set cookie
-                    _cookieHelper.SetIdentifierCookie(Response.Cookies, token);
-                    return Ok(new { token });
-                }
+                var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, prefix);
+
+                // Set cookie
+                _cookieHelper.SetIdentifierForAdvertisingCookie(Response.Cookies, ifaToken);
+
+                return Ok(new { ifaToken, uid2Token });
             }
             else
             {
@@ -151,24 +145,15 @@ namespace OpenPass.IdController.Controllers
                 return BadRequest();
             }
 
-            // 1. Emit glup
-            //_glupHelper.EmitGlup(request.EventType, request.OriginHost, userAgent);
+            // Retrieve UID2 token, set cookie and send token back in payload
+            var uid2Token = await _identifierHelper.TryGetUid2TokenAsync(Response.Cookies, request.Email, prefix);
 
-            // 2. Retrieve UID2 token, set cookie and send token back in payload
-            var token = await _uid2Adapter.GetId(request.Email);
+            var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, prefix);
 
-            if (string.IsNullOrEmpty(token))
-            {
-                _metricHelper.SendCounterMetric($"{prefix}.error.no_token");
-                return NotFound();
-            }
+            // Set cookie
+            _cookieHelper.SetIdentifierForAdvertisingCookie(Response.Cookies, ifaToken);
 
-            _cookieHelper.SetIdentifierCookie(Response.Cookies, token);
-
-            // Metrics
-            _metricHelper.SendCounterMetric($"{prefix}.ok");
-
-            return Ok(new { token });
+            return Ok(new { ifaToken, uid2Token });
         }
 
         #endregion External SSO services
