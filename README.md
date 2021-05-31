@@ -15,4 +15,4 @@ OpenPass SSO also strives for providing the best user experience possible, by no
 
 
 ## Run the application locally
-To run the application from your local environment, you need to run [Backend](https://github.com/criteo/openpass/blob/main/OpenPass.IdController/README.md) and [Frontend](https://github.com/criteo/openpass/blob/main/OpenPass.IdController.UI/README.md) projects.
+To run the application from your local environment, you need to run [back-end](https://github.com/criteo/openpass/blob/main/OpenPass.IdController/README.md) and [front-end](https://github.com/criteo/openpass/blob/main/OpenPass.IdController.UI/README.md) projects.
