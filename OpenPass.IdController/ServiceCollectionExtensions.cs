@@ -53,5 +53,12 @@ namespace OpenPass.IdController
 
             return services;
         }
+
+        public static IServiceCollection AddIdentifierHelper(this IServiceCollection services)
+        {
+            services.AddSingleton<IIdentifierHelper, IdentifierHelper>();
+
+            return services;
+        }
     }
 }

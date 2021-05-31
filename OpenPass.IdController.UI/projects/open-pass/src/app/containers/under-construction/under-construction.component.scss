@@ -1,0 +1,81 @@
+@import 'variables';
+
+.wrap {
+  width: 100%;
+  max-width: 300px;
+  margin: 5vh auto;
+  text-align: center;
+
+  pre {
+    color: $text-color;
+    font-size: 24px;
+  }
+}
+
+svg {
+  width: 100%;
+  padding: 2rem;
+
+  path {
+    fill: $secondary-neutral-3;
+    transition: fill 2s ease;
+
+    &:hover {
+      fill: $primary-dark;
+    }
+  }
+
+  .big-gear {
+    animation: rotate-right 79s infinite linear;
+    transform-origin: 29.8% 29.9%;
+  }
+
+  .medium-gear {
+    animation: rotate-left 70s infinite linear;
+    transform-origin: 76% 55.4%;
+  }
+
+  .small-gear {
+    animation: rotate-right 60s infinite linear;
+    transform-origin: 39.4% 79.3%;
+  }
+}
+
+@keyframes rotate-right {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate-left {
+  from {
+    transform: rotate(-0);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.navigation-wrap {
+  max-width: 400px;
+  margin: auto;
+
+  .nav-item {
+    appearance: none;
+    border: none;
+    height: 36px;
+    width: 48px;
+    cursor: pointer;
+    outline: none;
+    font-size: 1.3rem;
+    text-align: center;
+    background-color: #fff;
+
+    &:active {
+      background-color: #eee;
+    }
+  }
+}

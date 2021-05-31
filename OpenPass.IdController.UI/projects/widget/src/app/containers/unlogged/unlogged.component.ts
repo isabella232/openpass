@@ -44,8 +44,8 @@ export class UnloggedComponent implements OnInit, OnDestroy {
 
   get openerConfigs(): string {
     const { innerHeight, innerWidth, screenX, screenY } = this.window;
-    const width = 400;
-    const height = 495;
+    const width = 450;
+    const height = 745;
     const config = {
       width,
       height,
@@ -68,7 +68,9 @@ export class UnloggedComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.hasCookie = !!this.cookiesService.getCookie(environment.cookieUserToken);
+    this.hasCookie =
+      !!this.cookiesService.getCookie(environment.cookieUid2Token) ||
+      !!this.cookiesService.getCookie(environment.cookieIfaToken);
   }
 
   ngOnDestroy() {
@@ -78,7 +80,7 @@ export class UnloggedComponent implements OnInit, OnDestroy {
 
   backdropClick() {
     this.isOpen = false;
-    this.publicApiService.setUserData({ token: null, isDeclined: true });
+    this.publicApiService.setUserData({ ifaToken: null, uid2Token: null, isDeclined: true });
   }
 
   launchOpenPassApp() {

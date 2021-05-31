@@ -1,14 +1,18 @@
+import { Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { Actions, ofActionDispatched, Select, Store } from '@ngxs/store';
 import { OpenerState } from '@store/otp-widget/opener.state';
-import { Observable, Subscription } from 'rxjs';
 import { Dispatch } from '@ngxs-labs/dispatch-decorator';
 import { AuthState, IAuthState } from '@store/otp-widget/auth.state';
-import { GenerateCode, SetCode, SetEmail, ValidateCode, ReceiveToken } from '@store/otp-widget/auth.actions';
-import { EventTypes } from '@enums/event-types.enum';
-import { AuthService } from '@services/auth.service';
-import { DialogWindowService } from '@services/dialog-window.service';
-import { EventsTrackingService } from '@services/events-tracking.service';
+import {
+  GenerateCode,
+  SetCode,
+  SetEmail,
+  ValidateCode,
+  ReceiveToken,
+  SetAuthDefault,
+} from '@store/otp-widget/auth.actions';
 
 @Component({
   selector: 'usrf-auth-view',
@@ -19,15 +23,10 @@ export class AuthViewComponent implements OnInit, OnDestroy {
   @Select(OpenerState.originFormatted) websiteName$: Observable<string>;
   @Select(AuthState.fullState) authState$: Observable<IAuthState>;
 
+  isAcceptAgreement = false;
   private authSubscriptions: Subscription;
 
-  constructor(
-    private store: Store,
-    private actions$: Actions,
-    private authService: AuthService,
-    private dialogWindowService: DialogWindowService,
-    private eventsTrackingService: EventsTrackingService
-  ) {}
+  constructor(private store: Store, private router: Router, private actions$: Actions) {}
 
   @Dispatch()
   submitForm() {
@@ -45,19 +44,19 @@ export class AuthViewComponent implements OnInit, OnDestroy {
     return new SetCode((target as HTMLInputElement).value);
   }
 
+  @Dispatch()
+  private setDefaultState() {
+    return new SetAuthDefault();
+  }
+
   ngOnInit() {
     this.authSubscriptions = this.actions$
       .pipe(ofActionDispatched(ReceiveToken))
-      .subscribe(() => this.saveTokenAndClose());
+      .subscribe(() => this.router.navigate(['agreement']));
   }
 
   ngOnDestroy() {
     this.authSubscriptions?.unsubscribe?.();
-  }
-
-  private saveTokenAndClose() {
-    this.authService.setTokenToOpener();
-    this.eventsTrackingService.trackEvent(EventTypes.consentGranted);
-    this.dialogWindowService.closeDialogWindow();
+    this.setDefaultState();
   }
 }

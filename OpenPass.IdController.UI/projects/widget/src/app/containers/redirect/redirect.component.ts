@@ -16,16 +16,19 @@ export class RedirectComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const hasCookie = !!this.cookiesService.getCookie(environment.cookieUserToken);
+    const hasCookie =
+      !!this.cookiesService.getCookie(environment.cookieUid2Token) ||
+      !!this.cookiesService.getCookie(environment.cookieIfaToken);
     const searchParams = new URL(this.window.location.href).searchParams;
-    const hasToken = searchParams.has('token');
-    const token = searchParams.get('token');
+    const hasToken = searchParams.has('uid2Token') || searchParams.has('ifaToken');
+    const uid2Token = searchParams.get('uid2Token');
+    const ifaToken = searchParams.get('ifaToken');
     const { isDeclined } = this.publicApiService.getUserData();
 
     if (!hasCookie) {
       if (hasToken) {
-        if (token) {
-          this.saveToken(token);
+        if (uid2Token || ifaToken) {
+          this.saveToken(ifaToken, uid2Token);
         } else {
           this.saveDecline();
         }
@@ -45,9 +48,10 @@ export class RedirectComponent implements OnInit {
     this.window.location.replace(destUrl.toString());
   }
 
-  private saveToken(token: string) {
-    this.cookiesService.setCookie(environment.cookieUserToken, token, environment.cookieLifetimeDays);
-    this.publicApiService.setUserData({ token });
+  private saveToken(ifaToken: string, uid2Token: string) {
+    this.cookiesService.setCookie(environment.cookieUid2Token, uid2Token, environment.cookieLifetimeDays);
+    this.cookiesService.setCookie(environment.cookieIfaToken, ifaToken, environment.cookieLifetimeDays);
+    this.publicApiService.setUserData({ ifaToken, uid2Token });
     this.clearUrl();
   }
 
@@ -58,7 +62,8 @@ export class RedirectComponent implements OnInit {
 
   private clearUrl() {
     const clearPath = new URL(this.window.location.href);
-    clearPath.searchParams.delete('token');
+    clearPath.searchParams.delete('ifaToken');
+    clearPath.searchParams.delete('uid2Token');
     this.window.history.replaceState({}, this.window.document.title, clearPath.toString());
   }
 }

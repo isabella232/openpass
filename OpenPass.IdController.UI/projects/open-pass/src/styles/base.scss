@@ -3,6 +3,7 @@
 }
 
 body {
+  background: #fff;
   color: $text-color;
   font-family: 'Raleway', sans-serif;
   font-size: 0.75rem;
@@ -25,4 +26,11 @@ body {
     display: flex;
     justify-content: center;
   }
+}
+
+.container {
+  width: 100%;
+  max-width: 400px;
+  min-width: 150px;
+  margin: auto;
 }

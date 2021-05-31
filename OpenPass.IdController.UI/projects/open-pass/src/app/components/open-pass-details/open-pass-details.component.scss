@@ -4,7 +4,7 @@ $widget-space: 1.5rem;
 
 details {
   padding: 0 $widget-space;
-  margin: 0 -$widget-space;
+  margin: 0 #{-$widget-space};
   background: #eee;
 }
 

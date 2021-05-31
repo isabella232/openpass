@@ -41,7 +41,6 @@ context('Auth Page', () => {
       page.pageComponent.getActionBtn().click();
       cy.waitFor(waitingToken);
 
-      page.pageComponent.getPageTitle().should('contain.text', 'Thanks!');
       page.pageComponent.getEmailInput().should('exist');
       page.pageComponent.getCodeInput().should('exist');
       cy.reload();
@@ -53,10 +52,7 @@ context('Auth Page', () => {
       });
 
       it('should do not send request if there is no email', () => {
-        const waitingToken = AuthHelper.mockGenerateCode();
-        page.pageComponent.getActionBtn().click();
-
-        cy.get(waitingToken).should('not.exist');
+        page.pageComponent.getActionBtn().should('be.disabled');
       });
 
       it('should show error if email is invalid', () => {
@@ -89,6 +85,7 @@ context('Auth Page', () => {
         page.pageComponent.getEmailInput().type('valid@email.com');
         page.pageComponent.getActionBtn().click();
         cy.waitFor(waitingToken);
+        page.pageComponent.getAgreementCheckbox().click();
       });
 
       it('should allow only to type numbers', () => {

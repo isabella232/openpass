@@ -34,15 +34,12 @@
 >
   WELCOME.ACTION
 </button>
-<usrf-or-hr></usrf-or-hr>
-<div class="text-center">
-  <usrf-facebook-auth-small
-    class="mx-2"
-    (proceed)="getToken($event, eventTypes.openPassFacebook)"
-  ></usrf-facebook-auth-small>
-  <usrf-google-auth-small class="mx-2" (proceed)="getToken($event, eventTypes.openPassGoogle)"></usrf-google-auth-small>
+<div class="my-3">
+  <a routerLink="sso" class="btn btn-text btn-wide">
+    <u translate> SHARED.OTHER_WAY </u>
+  </a>
 </div>
-<div class="text-center p-3 pb-5">
+<div class="text-center my-3">
   <button class="btn btn-link" (click)="closeWindow()" translate>SHARED.CONTINUE_WITHOUT</button>
 </div>
 <usrf-open-pass-details class="pt-3 d-block" [name]="'WELCOME.SUMMARY.TITLE' | translate">

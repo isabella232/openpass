@@ -1,4 +1,5 @@
 export type UserData = {
-  token?: string;
+  ifaToken?: string;
+  uid2Token?: string;
   isDeclined?: boolean;
 };
