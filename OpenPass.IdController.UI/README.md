@@ -17,14 +17,22 @@ Partner website
 |      |          |               |             |
 |   (inserts)     |               |             |
 |      |          | post-messages |   Main app  |  rest
-|  [<Widget/> ]<----------------->|             |<------->[Criteo API]
+|  [<Widget/> ]<----------------->|             |<------->[Openpass API]
 |                 |               +-------------+
 +-----------------+
 ```
 
-To integrate OpenPass into their website, a partner should include the following script
-`<script src="//openpass.criteo.com/open-pass/widget-app"></script>`and this html tag
-`<wdgt-identification></wdgt-identification>` in any place on the page.
+To integrate OpenPass into their website, a partner should include the following script (Criteo hosts a production version of the launcher script)
+
+```
+<script src="//openpass.criteo.com/open-pass/widget-app"></script>
+```
+
+and this html tag
+```
+<wdgt-identification></wdgt-identification>
+```
+anywhere on the page.
 
 `wdgt-identification` tag has the following attributes:
 - session = "authenticated" | "unauthenticated";
@@ -36,11 +44,15 @@ There are different scripts for each environment. They are replaced during build
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.1.
 
+## Requirements
+* Node
+* NPM
+
 ## Development server
 
-Activate the flag: `chrome://flags/#allow-insecure-localhost`
-Run `npm install` - it install all required packages.
-Run `npm run start` - it runs both apps in development mode. Widget will serve on port 4300 and Main app on port 4200.
+* Activate the flag: `chrome://flags/#allow-insecure-localhost`
+* Run `npm install`: installs all required packages.
+* Run `npm run start`: runs both apps in development mode. Widget will serve on port 4300 and Main app on port 4200.
 The Url should be https://localhost:4200/api/open-pass
 Also, there are available option `:backendless` to redirect the api calls.
 
@@ -70,12 +82,11 @@ dist
 
 The root url for dist folder is `/open-pass`. The server will respond with index.html of Main app.
 
-
-## Running unit tests
+## Unit tests
 
 Run `npm run test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+## End-to-end tests
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
