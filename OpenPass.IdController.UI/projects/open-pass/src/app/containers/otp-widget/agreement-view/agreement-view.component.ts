@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { EventTypes } from '@enums/event-types.enum';
+import { EventTypes } from '@shared/enums/event-types.enum';
 import { AuthService } from '@services/auth.service';
 import { DialogWindowService } from '@services/dialog-window.service';
 import { EventsTrackingService } from '@services/events-tracking.service';

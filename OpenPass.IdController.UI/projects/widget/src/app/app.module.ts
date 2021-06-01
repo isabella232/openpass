@@ -1,5 +1,6 @@
 import { ApplicationRef, DoBootstrap, Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 
 import { AppComponent } from './app.component';
@@ -28,6 +29,7 @@ export class CustomTranslateLoader implements TranslateLoader {
         useClass: CustomTranslateLoader,
       },
     }),
+    HttpClientModule,
   ],
   providers: [
     { provide: WINDOW, useFactory: windowFactory },

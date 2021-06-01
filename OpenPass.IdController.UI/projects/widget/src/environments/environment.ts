@@ -3,11 +3,13 @@
 // The list of file replacements can be found in `angular.json`.
 
 import { defaultEnv } from './default';
+const appHost = 'https://localhost:4200';
 
 export const environment = {
+  appHost,
   ...defaultEnv,
   production: false,
-  idControllerAppUrl: 'https://localhost:4200/open-pass',
+  idControllerAppUrl: appHost + '/open-pass',
 };
 
 /*

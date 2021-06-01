@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { EventTypes } from '@enums/event-types.enum';
+import { EventTypes } from '@shared/enums/event-types.enum';
 import { TokenDto } from '@rest/otp/token.dto';
 
 const scope = '[Identification]';

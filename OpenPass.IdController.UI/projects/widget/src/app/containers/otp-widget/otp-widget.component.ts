@@ -13,6 +13,8 @@ import { CommonModule } from '@angular/common';
 import { PipesModule } from '../../pipes/pipes.module';
 import { WINDOW } from '../../utils/injection-tokens';
 import { OpenPassDetailsModule } from '../../components/open-pass-details/open-pass-details.module';
+import { EventTrackingService } from '../../rest/event-tracking/event-tracking.service';
+import { EventTypes } from '@shared/enums/event-types.enum';
 
 @Component({
   selector: 'wdgt-otp-widget',
@@ -58,6 +60,7 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
     private cookiesService: CookiesService,
     private publicApiService: PublicApiService,
     private postMessagesService: PostMessagesService,
+    private eventTrackingService: EventTrackingService,
     private messageSubscriptionService: MessageSubscriptionService
   ) {}
 
@@ -67,6 +70,9 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
       !!this.cookiesService.getCookie(environment.cookieIfaToken);
     const { isDeclined } = this.publicApiService.getUserData();
     this.isOpen = !hasCookie && !isDeclined;
+    if (this.isOpen) {
+      this.eventTrackingService.track(EventTypes.bannerRequest).subscribe();
+    }
   }
 
   ngOnDestroy() {
@@ -87,6 +93,7 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
   backdropClick() {
     this.isOpen = false;
     this.publicApiService.setUserData({ ifaToken: null, uid2Token: null, isDeclined: true });
+    this.eventTrackingService.track(EventTypes.bannerIgnored).subscribe();
   }
 
   private listenForClosingRequest() {

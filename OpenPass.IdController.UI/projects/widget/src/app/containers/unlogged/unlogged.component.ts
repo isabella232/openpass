@@ -1,4 +1,4 @@
-import { Component, HostBinding, Inject, Input, NgModule, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, HostBinding, Inject, Input, NgModule, OnDestroy, OnInit } from '@angular/core';
 import { WidgetModes } from '../../enums/widget-modes.enum';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -13,6 +13,8 @@ import { filter } from 'rxjs/operators';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
 import { PipesModule } from '../../pipes/pipes.module';
 import { OpenPassDetailsModule } from '../../components/open-pass-details/open-pass-details.module';
+import { EventTrackingService } from '../../rest/event-tracking/event-tracking.service';
+import { EventTypes } from '@shared/enums/event-types.enum';
 
 @Component({
   selector: 'wdgt-unlogged',
@@ -64,6 +66,7 @@ export class UnloggedComponent implements OnInit, OnDestroy {
     private cookiesService: CookiesService,
     private publicApiService: PublicApiService,
     private postMessagesService: PostMessagesService,
+    private eventTrackingService: EventTrackingService,
     private messageSubscriptionService: MessageSubscriptionService
   ) {}
 
@@ -71,6 +74,9 @@ export class UnloggedComponent implements OnInit, OnDestroy {
     this.hasCookie =
       !!this.cookiesService.getCookie(environment.cookieUid2Token) ||
       !!this.cookiesService.getCookie(environment.cookieIfaToken);
+    if (!this.hasCookie) {
+      this.eventTrackingService.track(EventTypes.bannerRequest).subscribe();
+    }
   }
 
   ngOnDestroy() {
@@ -81,6 +87,7 @@ export class UnloggedComponent implements OnInit, OnDestroy {
   backdropClick() {
     this.isOpen = false;
     this.publicApiService.setUserData({ ifaToken: null, uid2Token: null, isDeclined: true });
+    this.eventTrackingService.track(EventTypes.bannerIgnored).subscribe();
   }
 
   launchOpenPassApp() {
