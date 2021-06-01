@@ -35,7 +35,7 @@ namespace OpenPass.IdController.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveEvent(
             [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromHeader(Name = "Origin")] string originHost,
+            [FromHeader(Name = "x-origin-host")] string originHost,
             [FromBody] EventRequest request)
         {
             var saveEventPrefix = $"{_metricPrefix}.save_event";

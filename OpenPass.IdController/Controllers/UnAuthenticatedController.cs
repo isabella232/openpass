@@ -22,7 +22,7 @@ namespace OpenPass.IdController.Controllers
         [HttpPost]
         public IActionResult CreateIfa(
             [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromHeader(Name = "Origin")] string originHost)
+            [FromHeader(Name = "x-origin-host")] string originHost)
         {
             var prefix = $"{_metricPrefix}.create";
 

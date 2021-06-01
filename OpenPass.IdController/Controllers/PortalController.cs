@@ -23,7 +23,7 @@ namespace OpenPass.IdController.Controllers
         [HttpPost("controls/optout")]
         public IActionResult OptOut(
             [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromHeader(Name = "Origin")] string originHost)
+            [FromHeader(Name = "x-origin-host")] string originHost)
         {
             // Apply internal opt-out
             _cookieHelper.RemoveUid2AdvertisingCookie(Response.Cookies);
@@ -43,7 +43,7 @@ namespace OpenPass.IdController.Controllers
         [HttpPost("controls/optin")]
         public IActionResult OptIn(
             [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromHeader(Name = "Origin")] string originHost)
+            [FromHeader(Name = "x-origin-host")] string originHost)
         {
             // Apply opt-in
             _cookieHelper.RemoveOptoutCookie(Response.Cookies);

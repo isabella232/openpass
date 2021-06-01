@@ -52,7 +52,7 @@ namespace OpenPass.IdController.Controllers
         [HttpPost("otp/generate")]
         public IActionResult GenerateOtp(
             [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromHeader(Name = "Origin")] string originHost,
+            [FromHeader(Name = "x-origin-host")] string originHost,
             [FromBody] GenerateRequest request)
         {
             var prefix = $"{_metricPrefix}.otp.generate";
@@ -93,7 +93,7 @@ namespace OpenPass.IdController.Controllers
         [HttpPost("otp/validate")]
         public async Task<IActionResult> ValidateOtp(
             [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromHeader(Name = "Origin")] string originHost,
+            [FromHeader(Name = "x-origin-host")] string originHost,
             [FromBody] ValidateRequest request)
         {
             var prefix = $"{_metricPrefix}.otp.validate";
@@ -145,7 +145,7 @@ namespace OpenPass.IdController.Controllers
         [HttpPost("sso")]
         public async Task<IActionResult> GenerateEmailToken(
             [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromHeader(Name = "Origin")] string originHost,
+            [FromHeader(Name = "x-origin-host")] string originHost,
             [FromBody] GenerateRequest request)
         {
             var prefix = $"{_metricPrefix}.sso.generate";
