@@ -8,7 +8,6 @@ using Criteo.Services.Graphite;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using Criteo.AspNetCore.Monitoring;
-using Criteo.AspNetCore.Middlewares.GlobalException;
 
 namespace OpenPass.IdController
 {
@@ -115,9 +114,6 @@ namespace OpenPass.IdController
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IApplicationLifetime appLifetime)
         {
-            // Catch all uncatched exceptions
-            app.UseMiddleware<GlobalExceptionMiddleware>();
-
             // Add a CORS middleware. Must be called before UseMvc().
             string allowedOrigins = _env.IsDevelopment() ? "*" : (Configuration["allowedOrigins"] ?? string.Empty);
             app.UseCors(builder => builder.WithOrigins(allowedOrigins.Split(',')).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
