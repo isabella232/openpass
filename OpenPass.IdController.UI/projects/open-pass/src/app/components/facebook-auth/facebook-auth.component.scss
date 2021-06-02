@@ -1,0 +1,40 @@
+@import 'variables';
+
+button {
+  min-width: 200px;
+  margin: auto;
+  height: 36px;
+  background: #415994;
+  appearance: none;
+  border: none;
+  border-radius: $base-radius;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+  color: #fff;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 36px;
+    background: #415994 url('../../../assets/images/facebook-btn.png') center center no-repeat;
+  }
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+
+  &:active {
+    filter: brightness(0.8);
+  }
+
+  &:disabled {
+    filter: grayscale(1);
+    cursor: default;
+  }
+}
