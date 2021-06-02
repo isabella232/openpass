@@ -63,9 +63,7 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    const hasCookie =
-      !!this.cookiesService.getCookie(environment.cookieUid2Token) ||
-      !!this.cookiesService.getCookie(environment.cookieIfaToken);
+    const hasCookie = !!this.cookiesService.getCookie(environment.cookieUid2Token);
     const { isDeclined } = this.publicApiService.getUserData();
     this.isOpen = !hasCookie && !isDeclined;
     if (this.isOpen) {
