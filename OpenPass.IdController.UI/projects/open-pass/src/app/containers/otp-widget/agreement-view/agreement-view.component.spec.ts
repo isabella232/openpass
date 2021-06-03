@@ -7,6 +7,14 @@ import { stub } from '@utils/stub-factory';
 import { AuthService } from '@services/auth.service';
 import { EventsTrackingService } from '@services/events-tracking.service';
 import { DialogWindowService } from '@services/dialog-window.service';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'usrf-copyright',
+  template: '',
+})
+class StubCopyrightComponent {}
 
 describe('AgreementViewComponent', () => {
   let component: AgreementViewComponent;
@@ -14,9 +22,9 @@ describe('AgreementViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), NgxsModule.forRoot()],
+      imports: [TranslateModule.forRoot(), NgxsModule.forRoot(), FormsModule],
       providers: [stub(AuthService), stub(DialogWindowService), stub(EventsTrackingService)],
-      declarations: [AgreementViewComponent],
+      declarations: [AgreementViewComponent, StubCopyrightComponent],
     }).compileComponents();
   });
 
