@@ -3,6 +3,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RecognizedViewComponent } from './recognized-view.component';
 import { PostMessagesService } from '@services/post-messages.service';
 import { AuthService } from '@services/auth.service';
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'usrf-copyright',
+  template: '',
+})
+class StubCopyrightComponent {}
 
 describe('RecognizedViewComponent', () => {
   let component: RecognizedViewComponent;
@@ -20,7 +27,7 @@ describe('RecognizedViewComponent', () => {
           useFactory: () => {},
         },
       ],
-      declarations: [RecognizedViewComponent],
+      declarations: [RecognizedViewComponent, StubCopyrightComponent],
     }).compileComponents();
   });
 
