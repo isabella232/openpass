@@ -1,6 +1,5 @@
-import { Component, HostBinding, Inject, Input, NgModule, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, Inject, NgModule, OnDestroy, OnInit } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { WidgetModes } from '../../enums/widget-modes.enum';
 import { environment } from '../../../environments/environment';
 import { CookiesService } from '../../services/cookies.service';
 import { MessageSubscriptionService } from '../../services/message-subscription.service';
@@ -15,6 +14,7 @@ import { WINDOW } from '../../utils/injection-tokens';
 import { OpenPassDetailsModule } from '../../components/open-pass-details/open-pass-details.module';
 import { EventTrackingService } from '../../rest/event-tracking/event-tracking.service';
 import { EventTypes } from '@shared/enums/event-types.enum';
+import { WidgetConfigurationService } from '../../services/widget-configuration.service';
 
 @Component({
   selector: 'wdgt-otp-widget',
@@ -22,11 +22,9 @@ import { EventTypes } from '@shared/enums/event-types.enum';
   styleUrls: ['./otp-widget.component.scss'],
 })
 export class OtpWidgetComponent implements OnInit, OnDestroy {
-  @Input() view: WidgetModes;
-
   @HostBinding('class.modal')
   get isModal(): boolean {
-    return this.view === WidgetModes.modal && this.isOpen;
+    return this.widgetConfigurationService.isModal && this.isOpen;
   }
 
   get websiteName() {
@@ -34,7 +32,6 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
   }
 
   isOpen = true;
-  widgetMods = WidgetModes;
   openPassWindow: Window;
   postSubscription: Subscription;
 
@@ -61,7 +58,8 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
     private publicApiService: PublicApiService,
     private postMessagesService: PostMessagesService,
     private eventTrackingService: EventTrackingService,
-    private messageSubscriptionService: MessageSubscriptionService
+    private messageSubscriptionService: MessageSubscriptionService,
+    public widgetConfigurationService: WidgetConfigurationService
   ) {}
 
   ngOnInit() {

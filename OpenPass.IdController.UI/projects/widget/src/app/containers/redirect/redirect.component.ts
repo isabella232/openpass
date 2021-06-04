@@ -1,18 +1,18 @@
-import { Component, Inject, Input, NgModule, OnInit } from '@angular/core';
+import { Component, Inject, NgModule, OnInit } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Sessions } from '../../enums/sessions.enum';
 import { WINDOW } from '../../utils/injection-tokens';
 import { CookiesService } from '../../services/cookies.service';
 import { PublicApiService } from '../../services/public-api.service';
+import { WidgetConfigurationService } from '../../services/widget-configuration.service';
 
 @Component({ template: '' })
 export class RedirectComponent implements OnInit {
-  @Input() session: Sessions;
-
   constructor(
     @Inject(WINDOW) private window: Window,
     private cookiesService: CookiesService,
-    private publicApiService: PublicApiService
+    private publicApiService: PublicApiService,
+    private widgetConfigurationService: WidgetConfigurationService
   ) {}
 
   ngOnInit() {
@@ -39,13 +39,14 @@ export class RedirectComponent implements OnInit {
   }
 
   private doRedirect() {
-    const destUrl = new URL(environment.idControllerAppUrl);
-    destUrl.searchParams.set('origin', this.window.location.href);
-    if (this.session === Sessions.unauthenticated) {
-      destUrl.pathname += environment.unloggedPath;
-    }
-
-    this.window.location.replace(destUrl.toString());
+    this.widgetConfigurationService.getConfiguration().subscribe(({ session }) => {
+      const destUrl = new URL(environment.idControllerAppUrl);
+      destUrl.searchParams.set('origin', this.window.location.href);
+      if (session === Sessions.unauthenticated) {
+        destUrl.pathname += environment.unloggedPath;
+      }
+      this.window.location.replace(destUrl.toString());
+    });
   }
 
   private saveToken(ifaToken: string, uid2Token: string) {
