@@ -21,6 +21,8 @@ import { Sessions } from './enums/sessions.enum';
 import { ViewContainerDirective } from './directives/view-container.directive';
 import { TranslateService } from '@ngx-translate/core';
 import { Providers } from './enums/providers.enum';
+import { WidgetConfiguration } from './types/widget-configuration';
+import { WidgetConfigurationService } from './services/widget-configuration.service';
 
 @Component({
   selector: 'wdgt-identification',
@@ -59,11 +61,12 @@ export class AppComponent implements OnInit, OnDestroy {
   private widgetMode = WidgetModes.native;
 
   constructor(
+    private injector: Injector,
     private elementRef: ElementRef,
     private publicApiService: PublicApiService,
-    private injector: Injector,
+    private translateService: TranslateService,
     private componentFactoryResolver: ComponentFactoryResolver,
-    private translateService: TranslateService
+    private widgetConfigurationService: WidgetConfigurationService
   ) {
     if (!environment.production) {
       // in webcomponent mode we can read prop assigned to app component.
@@ -77,6 +80,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.applyLanguage();
+    this.saveConfiguration();
     this.loadComponent();
     const isDev = !environment.production;
     this.userDataSubscription = this.publicApiService.getSubscription().subscribe((userData) => {
@@ -104,11 +108,7 @@ export class AppComponent implements OnInit, OnDestroy {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(
       (await this.getComponentClass()) as any
     );
-    const componentRef = this.viewElement.viewContainerRef.createComponent<any>(componentFactory);
-
-    componentRef.instance.view = this.view;
-    componentRef.instance.session = this.session;
-    componentRef.instance.provider = this.provider;
+    this.viewElement.viewContainerRef.createComponent(componentFactory);
   }
 
   private async getComponentClass() {
@@ -137,5 +137,15 @@ export class AppComponent implements OnInit, OnDestroy {
     if (supportedLanguages.includes(userLanguage) && userLanguage !== this.translateService.getDefaultLang()) {
       this.translateService.use(userLanguage);
     }
+  }
+
+  private saveConfiguration() {
+    const config: WidgetConfiguration = {
+      view: this.view,
+      variant: this.variant,
+      session: this.session,
+      provider: this.provider,
+    };
+    this.widgetConfigurationService.setConfiguration(config);
   }
 }

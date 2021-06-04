@@ -1,4 +1,4 @@
-import { Component, HostBinding, Inject, Input, NgModule, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, Inject, NgModule, OnDestroy, OnInit } from '@angular/core';
 import { WidgetModes } from '../../enums/widget-modes.enum';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -15,6 +15,7 @@ import { PipesModule } from '../../pipes/pipes.module';
 import { OpenPassDetailsModule } from '../../components/open-pass-details/open-pass-details.module';
 import { EventTrackingService } from '../../rest/event-tracking/event-tracking.service';
 import { EventTypes } from '@shared/enums/event-types.enum';
+import { WidgetConfigurationService } from '../../services/widget-configuration.service';
 
 @Component({
   selector: 'wdgt-unlogged',
@@ -22,8 +23,6 @@ import { EventTypes } from '@shared/enums/event-types.enum';
   styleUrls: ['./unlogged.component.scss'],
 })
 export class UnloggedComponent implements OnInit, OnDestroy {
-  @Input() view: WidgetModes;
-
   get websiteName() {
     return this.window.location.host;
   }
@@ -35,8 +34,8 @@ export class UnloggedComponent implements OnInit, OnDestroy {
   postSubscription: Subscription;
 
   @HostBinding('class.modal')
-  get isModal(): boolean {
-    return this.view === WidgetModes.modal;
+  get isModal() {
+    return this.widgetConfigurationService.isModal;
   }
 
   @HostBinding('attr.hidden')
@@ -67,7 +66,8 @@ export class UnloggedComponent implements OnInit, OnDestroy {
     private publicApiService: PublicApiService,
     private postMessagesService: PostMessagesService,
     private eventTrackingService: EventTrackingService,
-    private messageSubscriptionService: MessageSubscriptionService
+    private messageSubscriptionService: MessageSubscriptionService,
+    public widgetConfigurationService: WidgetConfigurationService
   ) {}
 
   ngOnInit() {

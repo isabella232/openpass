@@ -1,26 +1,16 @@
-import {
-  AfterViewInit,
-  Component,
-  HostBinding,
-  Inject,
-  Input,
-  NgModule,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, HostBinding, Inject, NgModule, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Observable, Subscription } from 'rxjs';
 import { PostMessagesService } from '../../services/post-messages.service';
 import { filter, map, startWith } from 'rxjs/operators';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
-import { WidgetModes } from '../../enums/widget-modes.enum';
 import { MessageSubscriptionService } from '../../services/message-subscription.service';
 import { CookiesService } from '../../services/cookies.service';
 import { PublicApiService } from '../../services/public-api.service';
 import { CommonModule } from '@angular/common';
 import { WINDOW } from '../../utils/injection-tokens';
+import { WidgetConfigurationService } from '../../services/widget-configuration.service';
 
 @Component({
   selector: 'wdgt-otp-iframe',
@@ -29,11 +19,10 @@ import { WINDOW } from '../../utils/injection-tokens';
 })
 export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('iframe') iframeElement: HTMLIFrameElement;
-  @Input() view: WidgetModes;
 
   @HostBinding('class.modal')
   get isModal(): boolean {
-    return this.view === WidgetModes.modal && this.isOpen;
+    return this.widgetConfigurationService.isModal && this.isOpen;
   }
 
   isOpen = true;
@@ -48,7 +37,8 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
     private cookiesService: CookiesService,
     private publicApiService: PublicApiService,
     private postMessagesService: PostMessagesService,
-    private messageSubscriptionService: MessageSubscriptionService
+    private messageSubscriptionService: MessageSubscriptionService,
+    private widgetConfigurationService: WidgetConfigurationService
   ) {
     const iframeUrl = environment.idControllerAppUrl + '?origin=' + window.location.origin;
     this.iframeSrc = sanitizer.bypassSecurityTrustResourceUrl(iframeUrl);
