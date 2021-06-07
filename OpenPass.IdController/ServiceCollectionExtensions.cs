@@ -128,5 +128,12 @@ namespace OpenPass.IdController
 
             return services;
         }
+
+        public static IServiceCollection AddTrackingHelper(this IServiceCollection services)
+        {
+            services.AddSingleton<ITrackingHelper, TrackingHelper>();
+
+            return services;
+        }
     }
 }

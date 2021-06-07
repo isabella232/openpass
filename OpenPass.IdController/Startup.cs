@@ -94,6 +94,8 @@ namespace OpenPass.IdController
 
             services.AddIdentifierHelper();
 
+            services.AddTrackingHelper();
+
             // Configure MVC
             services.AddMvc(options =>
             {
