@@ -1,5 +1,4 @@
 import { Component, HostBinding, Inject, NgModule, OnDestroy, OnInit } from '@angular/core';
-import { WidgetModes } from '../../enums/widget-modes.enum';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
@@ -9,7 +8,7 @@ import { PublicApiService } from '../../services/public-api.service';
 import { PostMessagesService } from '../../services/post-messages.service';
 import { MessageSubscriptionService } from '../../services/message-subscription.service';
 import { environment } from '../../../environments/environment';
-import { filter } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
 import { PipesModule } from '../../pipes/pipes.module';
 import { OpenPassDetailsModule } from '../../components/open-pass-details/open-pass-details.module';
@@ -28,7 +27,6 @@ export class UnloggedComponent implements OnInit, OnDestroy {
   }
 
   isOpen = true;
-  widgetMods = WidgetModes;
   hasCookie = false;
   openPassWindow: Window;
   postSubscription: Subscription;
@@ -91,14 +89,20 @@ export class UnloggedComponent implements OnInit, OnDestroy {
   }
 
   launchOpenPassApp() {
-    const appPath = new URL(environment.idControllerAppUrl);
-    appPath.pathname += environment.unloggedPath;
-    appPath.searchParams.set('origin', this.window.location.origin);
-    this.openPassWindow = this.window.open(appPath.toString(), '_blank', this.openerConfigs);
-    if (this.openPassWindow) {
-      this.messageSubscriptionService.initTokenListener(this.openPassWindow);
-      this.listenForClosingRequest();
-    }
+    this.widgetConfigurationService
+      .getConfiguration()
+      .pipe(take(1))
+      .subscribe((config) => {
+        const appPath = new URL(environment.idControllerAppUrl);
+        appPath.pathname += environment.unloggedPath;
+        const searchParams = new URLSearchParams({ origin: this.window.location.origin, ...config });
+        const appUrl = `${appPath.toString()}?${searchParams.toString()}`;
+        this.openPassWindow = this.window.open(appUrl, '_blank', this.openerConfigs);
+        if (this.openPassWindow) {
+          this.messageSubscriptionService.initTokenListener(this.openPassWindow);
+          this.listenForClosingRequest();
+        }
+      });
   }
 
   private listenForClosingRequest() {
