@@ -26,25 +26,23 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isOpen = true;
-  iframeSrc: SafeResourceUrl;
+  iframeSrc$: Observable<SafeResourceUrl>;
 
   dynamicHeight$ = new Observable<number | undefined>();
   postSubscription: Subscription;
 
   constructor(
-    @Inject(WINDOW) window: Window,
-    sanitizer: DomSanitizer,
+    @Inject(WINDOW) private window: Window,
+    private sanitizer: DomSanitizer,
     private cookiesService: CookiesService,
     private publicApiService: PublicApiService,
     private postMessagesService: PostMessagesService,
     private messageSubscriptionService: MessageSubscriptionService,
     private widgetConfigurationService: WidgetConfigurationService
-  ) {
-    const iframeUrl = environment.idControllerAppUrl + '?origin=' + window.location.origin;
-    this.iframeSrc = sanitizer.bypassSecurityTrustResourceUrl(iframeUrl);
-  }
+  ) {}
 
   ngOnInit() {
+    this.iframeSrc$ = this.getIframeUrl();
     const { isDeclined } = this.publicApiService.getUserData();
     const hasCookie =
       this.cookiesService.getCookie(environment.cookieUid2Token) ||
@@ -90,6 +88,16 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.publicApiService.setUserData({ isDeclined });
         this.isOpen = false;
       });
+  }
+
+  private getIframeUrl(): Observable<SafeResourceUrl> {
+    return this.widgetConfigurationService.getConfiguration().pipe(
+      map((configs) => {
+        const query = new URLSearchParams({ origin: this.window.location.origin, ...configs });
+        const iframeUrl = `${environment.idControllerAppUrl}?${query.toString()}`;
+        return this.sanitizer.bypassSecurityTrustResourceUrl(iframeUrl);
+      })
+    );
   }
 }
 

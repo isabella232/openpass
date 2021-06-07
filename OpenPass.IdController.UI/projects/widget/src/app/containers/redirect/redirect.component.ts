@@ -39,13 +39,13 @@ export class RedirectComponent implements OnInit {
   }
 
   private doRedirect() {
-    this.widgetConfigurationService.getConfiguration().subscribe(({ session }) => {
+    this.widgetConfigurationService.getConfiguration().subscribe((config) => {
       const destUrl = new URL(environment.idControllerAppUrl);
-      destUrl.searchParams.set('origin', this.window.location.href);
-      if (session === Sessions.unauthenticated) {
+      const queryParams = new URLSearchParams({ origin: this.window.location.href, ...config });
+      if (config.session === Sessions.unauthenticated) {
         destUrl.pathname += environment.unloggedPath;
       }
-      this.window.location.replace(destUrl.toString());
+      this.window.location.replace(destUrl.toString() + '?' + queryParams.toString());
     });
   }
 

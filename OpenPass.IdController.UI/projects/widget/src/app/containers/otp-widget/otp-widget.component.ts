@@ -3,7 +3,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { environment } from '../../../environments/environment';
 import { CookiesService } from '../../services/cookies.service';
 import { MessageSubscriptionService } from '../../services/message-subscription.service';
-import { filter } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
 import { Subscription } from 'rxjs';
 import { PostMessagesService } from '../../services/post-messages.service';
@@ -79,13 +79,18 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
   }
 
   launchIdController(path = '') {
-    const queryParams = new URLSearchParams({ origin: this.window.location.origin });
-    const url = `${environment.idControllerAppUrl}${path}?${queryParams}`;
-    this.openPassWindow = this.window.open(url, '_blank', this.openerConfigs);
-    if (this.openPassWindow) {
-      this.messageSubscriptionService.initTokenListener(this.openPassWindow);
-      this.listenForClosingRequest();
-    }
+    this.widgetConfigurationService
+      .getConfiguration()
+      .pipe(take(1))
+      .subscribe((config) => {
+        const queryParams = new URLSearchParams({ origin: this.window.location.origin, ...config });
+        const url = `${environment.idControllerAppUrl}${path}?${queryParams}`;
+        this.openPassWindow = this.window.open(url, '_blank', this.openerConfigs);
+        if (this.openPassWindow) {
+          this.messageSubscriptionService.initTokenListener(this.openPassWindow);
+          this.listenForClosingRequest();
+        }
+      });
   }
 
   backdropClick() {

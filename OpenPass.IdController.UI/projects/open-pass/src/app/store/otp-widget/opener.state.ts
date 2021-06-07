@@ -1,16 +1,24 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import { SaveOpener } from './opener.actions';
+import { SaveOpener, SetConfig } from './opener.actions';
 
 interface IStateModel {
+  view: string;
   origin: string;
+  variant: string;
+  session: string;
+  provider: string;
 }
 
 type StateModel = IStateModel;
 type LocalStateContext = StateContext<IStateModel>;
 
 const defaults: StateModel = {
+  view: undefined,
   origin: undefined,
+  variant: undefined,
+  session: undefined,
+  provider: undefined,
 };
 
 @State<IStateModel>({
@@ -37,5 +45,10 @@ export class OpenerState {
   @Action(SaveOpener)
   saveOpener(ctx: LocalStateContext, { origin }: SaveOpener) {
     ctx.patchState({ origin });
+  }
+
+  @Action(SetConfig)
+  setConfig(ctx: LocalStateContext, { config }: SetConfig) {
+    ctx.patchState(config);
   }
 }
