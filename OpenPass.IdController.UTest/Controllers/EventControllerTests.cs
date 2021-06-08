@@ -40,10 +40,12 @@ namespace OpenPass.IdController.UTest.Controllers
             _eventController = new EventController(_configurationHelperMock.Object, _metricHelperMock.Object, _internalMappingHelperMock.Object, _glupHelperMock.Object);
         }
 
-        [TestCase(EventType.BannerRequest, "originHost.com")]
-        public async Task GlupEmittedWhenRequiredParametersArePresent(EventType eventType, string originHost)
+        [Test]
+        public async Task GlupEmittedWhenRequiredParametersArePresent()
         {
             // Arrange
+            var originHost = "originHost.com";
+            var eventType = EventType.BannerRequest;
             var request = new EventRequest
             {
                 EventType = eventType
@@ -61,6 +63,24 @@ namespace OpenPass.IdController.UTest.Controllers
                     It.IsAny<CriteoId?>(),
                     It.IsAny<UserCentricAdId?>()),
                 Times.Once);
+        }
+
+        [Test]
+        public async Task GlupNotEmittedWhenRequestIsNull()
+        {
+            // Arrange & Act
+            await _eventController.SaveEvent(It.IsAny<string>(), It.IsAny<string>(), null);
+
+            // Assert
+            _glupHelperMock.Verify(
+                x => x.EmitGlup(
+                    It.IsAny<EventType>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<LocalWebId?>(),
+                    It.IsAny<CriteoId?>(),
+                    It.IsAny<UserCentricAdId?>()),
+                Times.Never);
         }
 
         [TestCase(EventType.Unknown, "originHost.com")]

@@ -42,7 +42,7 @@ namespace OpenPass.IdController.Controllers
 
             // the controller tries to parse the EventType from the integer received
             // EventType.Unknown is either unsuccessful or indeed a evenType = 0, invalid in both cases
-            if (request.EventType == EventType.Unknown || string.IsNullOrEmpty(originHost))
+            if (request == null || request.EventType == EventType.Unknown || string.IsNullOrEmpty(originHost))
             {
                 _metricHelper.SendCounterMetric($"{saveEventPrefix}.bad_request");
                 return BadRequest();
