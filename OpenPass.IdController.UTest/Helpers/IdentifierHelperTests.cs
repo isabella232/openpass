@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using OpenPass.IdController.Helpers;
 using OpenPass.IdController.Helpers.Adapters;
+using OpenPass.IdController.Models.Tracking;
 using static Criteo.Glup.IdController.Types;
 
 namespace OpenPass.IdController.UTest.Helpers
@@ -45,7 +46,12 @@ namespace OpenPass.IdController.UTest.Helpers
                 .Returns(true);
 
             // Act
-            var token = _identifierHelper.GetOrCreateIfaToken(It.IsAny<IRequestCookieCollection>(), It.IsAny<string>(), originHost, It.IsAny<string>());
+            var token = _identifierHelper.GetOrCreateIfaToken(
+                It.IsAny<IRequestCookieCollection>(),
+                It.IsAny<TrackingModel>(),
+                It.IsAny<string>(),
+                originHost,
+                It.IsAny<string>());
 
             // Assert
             Assert.AreEqual(expectedIfaToken, token);
@@ -53,6 +59,7 @@ namespace OpenPass.IdController.UTest.Helpers
                     It.Is<EventType>(e => e == EventType.ReuseIfa),
                     It.Is<string>(h => h == originHost),
                     It.IsAny<string>(),
+                    It.IsAny<TrackingModel>(),
                     It.IsAny<LocalWebId?>(),
                     It.IsAny<CriteoId?>(),
                     It.IsAny<UserCentricAdId?>()),
@@ -69,7 +76,12 @@ namespace OpenPass.IdController.UTest.Helpers
                 .Returns(false);
 
             // Act
-            var token = _identifierHelper.GetOrCreateIfaToken(It.IsAny<IRequestCookieCollection>(), It.IsAny<string>(), originHost, It.IsAny<string>());
+            var token = _identifierHelper.GetOrCreateIfaToken(
+                It.IsAny<IRequestCookieCollection>(),
+                It.IsAny<TrackingModel>(),
+                It.IsAny<string>(),
+                originHost,
+                It.IsAny<string>());
 
             // Assert
             Assert.AreNotEqual(expectedIfaToken, token);
@@ -77,6 +89,7 @@ namespace OpenPass.IdController.UTest.Helpers
                     It.Is<EventType>(e => e == EventType.NewIfa),
                     It.Is<string>(h => h == originHost),
                     It.IsAny<string>(),
+                    It.IsAny<TrackingModel>(),
                     It.IsAny<LocalWebId?>(),
                     It.IsAny<CriteoId?>(),
                     It.IsAny<UserCentricAdId?>()),
@@ -97,6 +110,8 @@ namespace OpenPass.IdController.UTest.Helpers
             // Act
             var uid2Token = await _identifierHelper.TryGetUid2TokenAsync(
                 It.IsAny<IResponseCookies>(),
+
+                    It.IsAny<TrackingModel>(),
                 EventType.EmailValidated,
                 originHost,
                 userAgent,
@@ -109,6 +124,7 @@ namespace OpenPass.IdController.UTest.Helpers
                 It.Is<EventType>(e => e == EventType.EmailValidated),
                 It.Is<string>(h => h == originHost),
                 It.Is<string>(a => a == userAgent),
+                It.IsAny<TrackingModel>(),
                 It.IsAny<LocalWebId?>(),
                 It.IsAny<CriteoId?>(),
                 It.IsAny<UserCentricAdId?>()),

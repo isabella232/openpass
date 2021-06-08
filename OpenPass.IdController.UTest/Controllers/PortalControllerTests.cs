@@ -15,6 +15,7 @@ namespace OpenPass.IdController.UTest.Controllers
         private Mock<ICookieHelper> _cookieHelperMock;
         private Mock<IGlupHelper> _glupHelperMock;
         private PortalController _portalController;
+        private Mock<ITrackingHelper> _trackingHelperMock;
 
         [SetUp]
         public void Setup()
@@ -23,9 +24,10 @@ namespace OpenPass.IdController.UTest.Controllers
             _metricHelperMock.Setup(mr => mr.SendCounterMetric(It.IsAny<string>()));
             _cookieHelperMock = new Mock<ICookieHelper>();
             _glupHelperMock = new Mock<IGlupHelper>();
+            _trackingHelperMock = new Mock<ITrackingHelper>();
 
             _portalController =
-                new PortalController(_metricHelperMock.Object, _cookieHelperMock.Object, _glupHelperMock.Object)
+                new PortalController(_metricHelperMock.Object, _cookieHelperMock.Object, _glupHelperMock.Object, _trackingHelperMock.Object)
                 {
                     ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
                 };
@@ -35,7 +37,7 @@ namespace OpenPass.IdController.UTest.Controllers
         public void TestOptout()
         {
             // Act
-            var response = _portalController.OptOut(_testUserAgent, It.IsAny<string>());
+            var response = _portalController.OptOut(_testUserAgent, It.IsAny<string>(), It.IsAny<string>());
 
             // Assert
             Assert.IsAssignableFrom<OkResult>(response);
@@ -53,7 +55,7 @@ namespace OpenPass.IdController.UTest.Controllers
         public void TestOptin()
         {
             // Act
-            var response = _portalController.OptIn(_testUserAgent, It.IsAny<string>());
+            var response = _portalController.OptIn(_testUserAgent, It.IsAny<string>(), It.IsAny<string>());
 
             // Assert
             Assert.IsAssignableFrom<OkResult>(response);

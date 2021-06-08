@@ -6,12 +6,12 @@ namespace OpenPass.IdController.Models.Tracking
     public class TrackingModel
     {
         [JsonConverter(typeof(StringEnumConverter))]
-        public View View { get; set; }
+        public View? View { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
-        public Variant Variant { get; set; }
+        public Variant? Variant { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
-        public Session Session { get; set; }
+        public Session? Session { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
-        public Provider Provider { get; set; }
+        public Provider? Provider { get; set; }
     }
 }

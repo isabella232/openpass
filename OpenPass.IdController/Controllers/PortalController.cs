@@ -12,18 +12,25 @@ namespace OpenPass.IdController.Controllers
         private readonly IMetricHelper _metricHelper;
         private readonly ICookieHelper _cookieHelper;
         private readonly IGlupHelper _glupHelper;
+        private readonly ITrackingHelper _trackingHelper;
 
-        public PortalController(IMetricHelper metricHelper, ICookieHelper cookieHelper, IGlupHelper glupHelper)
+        public PortalController(
+            IMetricHelper metricHelper,
+            ICookieHelper cookieHelper,
+            IGlupHelper glupHelper,
+            ITrackingHelper trackingHelper)
         {
             _metricHelper = metricHelper;
             _cookieHelper = cookieHelper;
             _glupHelper = glupHelper;
+            _trackingHelper = trackingHelper;
         }
 
         [HttpPost("controls/optout")]
         public IActionResult OptOut(
             [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromHeader(Name = "x-origin-host")] string originHost)
+            [FromHeader(Name = "x-origin-host")] string originHost,
+            [FromHeader(Name = "x-tracked-data")] string trackedData)
         {
             // Apply internal opt-out
             _cookieHelper.RemoveUid2AdvertisingCookie(Response.Cookies);
@@ -35,7 +42,10 @@ namespace OpenPass.IdController.Controllers
             // Emit metric and glup
             var optoutMetricPrefix = $"{_metricPrefix}.optout";
             _metricHelper.SendCounterMetric($"{optoutMetricPrefix}");
-            _glupHelper.EmitGlup(EventType.OptOut, originHost, userAgent);
+
+            var trackingModel = _trackingHelper.TryGetWidgetParameters(trackedData);
+
+            _glupHelper.EmitGlup(EventType.OptOut, originHost, userAgent, trackingModel);
 
             return Ok();
         }
@@ -43,7 +53,8 @@ namespace OpenPass.IdController.Controllers
         [HttpPost("controls/optin")]
         public IActionResult OptIn(
             [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromHeader(Name = "x-origin-host")] string originHost)
+            [FromHeader(Name = "x-origin-host")] string originHost,
+            [FromHeader(Name = "x-tracked-data")] string trackedData)
         {
             // Apply opt-in
             _cookieHelper.RemoveOptoutCookie(Response.Cookies);
@@ -51,7 +62,10 @@ namespace OpenPass.IdController.Controllers
             // Emit metric and glup
             var optoutMetricPrefix = $"{_metricPrefix}.optin";
             _metricHelper.SendCounterMetric($"{optoutMetricPrefix}");
-            _glupHelper.EmitGlup(EventType.OptIn, originHost, userAgent);
+
+            var trackingModel = _trackingHelper.TryGetWidgetParameters(trackedData);
+
+            _glupHelper.EmitGlup(EventType.OptIn, originHost, userAgent, trackingModel);
 
             return Ok();
         }

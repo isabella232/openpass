@@ -5,6 +5,7 @@ using Criteo.UserIdentification;
 using Moq;
 using NUnit.Framework;
 using OpenPass.IdController.Helpers;
+using OpenPass.IdController.Models.Tracking;
 using static Criteo.Glup.IdController.Types;
 using IdControllerGlup = Criteo.Glup.IdController;
 
@@ -33,7 +34,7 @@ namespace OpenPass.IdController.UTest.Helpers
         public void TestGlupIsEmitted()
         {
             // Arrange && Act
-            _glupHelper.EmitGlup(EventType.Unknown, "origin.com", "userAgent");
+            _glupHelper.EmitGlup(EventType.Unknown, "origin.com", "userAgent", It.IsAny<TrackingModel>());
 
             // Assert
             _glupServiceMock.Verify(g => g.Emit(It.IsAny<IdControllerGlup>()), Times.Once);
@@ -55,7 +56,7 @@ namespace OpenPass.IdController.UTest.Helpers
             var ifa = UserCentricAdId.Parse(ifaString);
 
             //  Act
-            _glupHelper.EmitGlup(EventType.Unknown, "originHost.com", "userAgent", lwid, uid, ifa);
+            _glupHelper.EmitGlup(EventType.Unknown, "originHost.com", "userAgent", It.IsAny<TrackingModel>(), lwid, uid, ifa);
 
             var parsedExpectedUid = !string.IsNullOrEmpty(expectedUid) ? Guid.Parse(expectedUid) : (Guid?) null;
 

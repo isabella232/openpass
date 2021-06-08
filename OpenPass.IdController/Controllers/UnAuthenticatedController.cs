@@ -11,17 +11,24 @@ namespace OpenPass.IdController.Controllers
         private readonly ICookieHelper _cookieHelper;
         private readonly IMetricHelper _metricHelper;
         private readonly IIdentifierHelper _identifierHelper;
+        private readonly ITrackingHelper _trackingHelper;
 
-        public UnAuthenticatedController(IMetricHelper metricHelper, ICookieHelper cookieHelper, IIdentifierHelper identifierHelper)
+        public UnAuthenticatedController(
+            IMetricHelper metricHelper,
+            ICookieHelper cookieHelper,
+            IIdentifierHelper identifierHelper,
+            ITrackingHelper trackingHelper)
         {
             _metricHelper = metricHelper;
             _cookieHelper = cookieHelper;
             _identifierHelper = identifierHelper;
+            _trackingHelper = trackingHelper;
         }
 
         [HttpPost]
         public IActionResult CreateIfa(
             [FromHeader(Name = "User-Agent")] string userAgent,
+            [FromHeader(Name = "x-tracked-data")] string trackedData,
             [FromHeader(Name = "x-origin-host")] string originHost)
         {
             var prefix = $"{_metricPrefix}.create";
@@ -31,7 +38,8 @@ namespace OpenPass.IdController.Controllers
                 _metricHelper.SendCounterMetric($"{prefix}.uid2");
             }
 
-            var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, prefix, originHost, userAgent);
+            var trackingModel = _trackingHelper.TryGetWidgetParameters(trackedData);
+            var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, trackingModel, prefix, originHost, userAgent);
 
             // Set cookie
             _cookieHelper.SetIdentifierForAdvertisingCookie(Response.Cookies, ifaToken);

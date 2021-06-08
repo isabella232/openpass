@@ -18,24 +18,29 @@ namespace OpenPass.IdController.Controllers
 
         private readonly IGlupHelper _glupHelper;
         private readonly Random _randomGenerator;
+        private readonly ITrackingHelper _trackingHelper;
 
         public EventController(
             IConfigurationHelper configurationHelper,
             IMetricHelper metricHelper,
             IInternalMappingHelper internalMappingHelper,
-            IGlupHelper glupHelper)
+            IGlupHelper glupHelper,
+            ITrackingHelper trackingHelper)
         {
             _configurationHelper = configurationHelper;
             _metricHelper = metricHelper;
             _internalMappingHelper = internalMappingHelper;
             _glupHelper = glupHelper;
             _randomGenerator = new Random();
+            _trackingHelper = trackingHelper;
+
         }
 
         [HttpPost]
         public async Task<IActionResult> SaveEvent(
             [FromHeader(Name = "User-Agent")] string userAgent,
             [FromHeader(Name = "x-origin-host")] string originHost,
+            [FromHeader(Name = "x-tracked-data")] string trackedData,
             [FromBody] EventRequest request)
         {
             var saveEventPrefix = $"{_metricPrefix}.save_event";
@@ -62,8 +67,9 @@ namespace OpenPass.IdController.Controllers
             }
             else
             {
+                var trackingModel = _trackingHelper.TryGetWidgetParameters(trackedData);
                 _metricHelper.SendCounterMetric($"{saveEventPrefix}.emit_glup.${request.EventType}");
-                _glupHelper.EmitGlup(request.EventType, originHost, userAgent, internalLocalWebId, internalUid, internalUserCentricAdId);
+                _glupHelper.EmitGlup(request.EventType, originHost, userAgent, trackingModel, internalLocalWebId, internalUid, internalUserCentricAdId);
             }
 
             return Ok(new { result = true }); // 200 OK with dummy content

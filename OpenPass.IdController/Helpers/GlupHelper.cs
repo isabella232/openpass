@@ -4,6 +4,7 @@ using Criteo.UserAgent;
 using Criteo.UserIdentification;
 using IdControllerGlup = Criteo.Glup.IdController;
 using static Criteo.Glup.IdController.Types;
+using OpenPass.IdController.Models.Tracking;
 
 namespace OpenPass.IdController.Helpers
 {
@@ -13,6 +14,7 @@ namespace OpenPass.IdController.Helpers
             EventType eventType,
             string originHost,
             string userAgentString,
+            TrackingModel trackingModel,
             LocalWebId? localwebid = null,
             CriteoId? uid = null,
             UserCentricAdId? ifa = null);
@@ -33,6 +35,7 @@ namespace OpenPass.IdController.Helpers
             EventType eventType,
             string originHost,
             string userAgentString,
+            TrackingModel trackingModel,
             LocalWebId? localwebid = null,
             CriteoId? uid = null,
             UserCentricAdId? ifa = null)

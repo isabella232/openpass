@@ -5,7 +5,7 @@ using NUnit.Framework;
 using OpenPass.IdController.Controllers;
 using OpenPass.IdController.Helpers;
 using OpenPass.IdController.Models;
-
+using OpenPass.IdController.Models.Tracking;
 
 namespace OpenPass.IdController.UTest.Controllers
 {
@@ -18,6 +18,7 @@ namespace OpenPass.IdController.UTest.Controllers
         private Mock<IMetricHelper> _metricHelperMock;
         private Mock<ICookieHelper> _cookieHelperMock;
         private Mock<IIdentifierHelper> _identifierHelperMock;
+        private Mock<ITrackingHelper> _trackingHelperMock;
         private UnAuthenticatedController _unauthenticatedController;
 
         [SetUp]
@@ -27,8 +28,9 @@ namespace OpenPass.IdController.UTest.Controllers
             _metricHelperMock.Setup(mr => mr.SendCounterMetric(It.IsAny<string>()));
             _cookieHelperMock = new Mock<ICookieHelper>();
             _identifierHelperMock = new Mock<IIdentifierHelper>();
+            _trackingHelperMock = new Mock<ITrackingHelper>();
 
-            _unauthenticatedController = new UnAuthenticatedController(_metricHelperMock.Object, _cookieHelperMock.Object, _identifierHelperMock.Object)
+            _unauthenticatedController = new UnAuthenticatedController(_metricHelperMock.Object, _cookieHelperMock.Object, _identifierHelperMock.Object, _trackingHelperMock.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
@@ -41,11 +43,11 @@ namespace OpenPass.IdController.UTest.Controllers
             // Arrange
             var expectedIfaToken = "ifaToken";
             _cookieHelperMock.Setup(c => c.TryGetUid2AdvertisingCookie(It.IsAny<IRequestCookieCollection>(), out expectedUid2Cookie)).Returns(uid2CookieExists);
-            _identifierHelperMock.Setup(x => x.GetOrCreateIfaToken(It.IsAny<IRequestCookieCollection>(), It.IsAny<string>(), _testOriginHost, _testUserAgent))
+            _identifierHelperMock.Setup(x => x.GetOrCreateIfaToken(It.IsAny<IRequestCookieCollection>(), It.IsAny<TrackingModel>(), It.IsAny<string>(), _testOriginHost, _testUserAgent))
                 .Returns(expectedIfaToken);
 
             // Act
-            var response = _unauthenticatedController.CreateIfa(_testUserAgent, _testOriginHost);
+            var response = _unauthenticatedController.CreateIfa(_testUserAgent, It.IsAny<string>(), _testOriginHost);
 
             // Returned identifier
             var data = GetResponseData(response);

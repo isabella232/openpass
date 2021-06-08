@@ -2,15 +2,16 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using OpenPass.IdController.Helpers.Adapters;
+using OpenPass.IdController.Models.Tracking;
 using static Criteo.Glup.IdController.Types;
 
 namespace OpenPass.IdController.Helpers
 {
     public interface IIdentifierHelper
     {
-        string GetOrCreateIfaToken(IRequestCookieCollection cookieContainer, string metricPrefix, string originHost, string userAgent);
+        string GetOrCreateIfaToken(IRequestCookieCollection cookieContainer, TrackingModel trackingModel, string metricPrefix, string originHost, string userAgent);
 
-        Task<string> TryGetUid2TokenAsync(IResponseCookies cookieContainer, EventType eventType, string originHost, string userAgent, string email, string metricPrefix);
+        Task<string> TryGetUid2TokenAsync(IResponseCookies cookieContainer, TrackingModel trackingModel, EventType eventType, string originHost, string userAgent, string email, string metricPrefix);
     }
 
     public class IdentifierHelper : IIdentifierHelper
@@ -32,27 +33,27 @@ namespace OpenPass.IdController.Helpers
             _uid2Adapter = uid2Adapter;
         }
 
-        public string GetOrCreateIfaToken(IRequestCookieCollection cookieContainer, string metricPrefix, string originHost, string userAgent)
+        public string GetOrCreateIfaToken(IRequestCookieCollection cookieContainer, TrackingModel trackingModel, string metricPrefix, string originHost, string userAgent)
         {
             if (_cookieHelper.TryGetIdentifierForAdvertisingCookie(cookieContainer, out var ifaToken))
             {
                 _metricHelper.SendCounterMetric($"{metricPrefix}.reuse");
-                _glupHelper.EmitGlup(EventType.ReuseIfa, originHost, userAgent);
+                _glupHelper.EmitGlup(EventType.ReuseIfa, originHost, userAgent, trackingModel);
             }
             else
             {
                 // Generate a random guid token for an anonymous user
                 ifaToken = GenerateRandomGuid();
                 _metricHelper.SendCounterMetric($"{metricPrefix}.ok");
-                _glupHelper.EmitGlup(EventType.NewIfa, originHost, userAgent);
+                _glupHelper.EmitGlup(EventType.NewIfa, originHost, userAgent, trackingModel);
             }
 
             return ifaToken;
         }
 
-        public async Task<string> TryGetUid2TokenAsync(IResponseCookies cookieContainer, EventType eventType, string originHost, string userAgent, string email, string metricPrefix)
+        public async Task<string> TryGetUid2TokenAsync(IResponseCookies cookieContainer, TrackingModel trackingModel, EventType eventType, string originHost, string userAgent, string email, string metricPrefix)
         {
-            _glupHelper.EmitGlup(eventType, originHost, userAgent);
+            _glupHelper.EmitGlup(eventType, originHost, userAgent, trackingModel);
 
             var uid2Token = await _uid2Adapter.GetId(email);
 
