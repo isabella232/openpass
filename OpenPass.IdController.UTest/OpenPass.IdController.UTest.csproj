@@ -27,6 +27,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="[default]" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="[default]" />
     <PackageReference Include="Moq" Version="[default]" />
+    <PackageReference Include="FluentAssertions" Version="[default]" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenPass.IdController\OpenPass.IdController.csproj" />

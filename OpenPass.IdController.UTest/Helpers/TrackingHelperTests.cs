@@ -1,8 +1,10 @@
 using Criteo.UserIdentification;
 using Criteo.UserIdentification.Services;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using OpenPass.IdController.Helpers;
+using OpenPass.IdController.Models.Tracking;
 
 namespace OpenPass.IdController.UTest.Helpers
 {
@@ -18,6 +20,37 @@ namespace OpenPass.IdController.UTest.Helpers
         {
             _identificationBundleHelperMock = new Mock<IIdentificationBundleHelper>();
             _trackingHelper = new TrackingHelper(_identificationBundleHelperMock.Object);
+        }
+
+        [Test]
+        public void TryGetWidgetParameters_JsonIsValid_ShouldDeserializeIntoModel()
+        {
+            // Arrange
+            var json = "{\"view\":\"modal\",\"variant\":\"in-site\",\"session\":\"unauthenticated\",\"provider\":\"advertiser\"}";
+
+            var expectedModel = new TrackingModel
+            {
+                Provider = Provider.Advertiser,
+                Session = Session.Unauthenticated,
+                Variant = Variant.InSite,
+                View = View.Modal
+            };
+
+            // Act
+            var actualData = _trackingHelper.TryGetWidgetParameters(json);
+
+            // Assert
+            actualData.Should().BeEquivalentTo(expectedModel);
+        }
+
+        [Test]
+        public void TryGetWidgetParameters_JsonIsNotPassed_ShouldReturnNull()
+        {
+            // Arrange & Act
+            var actualData = _trackingHelper.TryGetWidgetParameters(string.Empty);
+
+            // Assert
+            Assert.IsNull(actualData);
         }
 
         [TestCase("")]
