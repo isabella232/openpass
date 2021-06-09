@@ -19,21 +19,18 @@ export class EventTrackingService {
 
   track(eventType: EventTypes): Observable<void> {
     return this.widgetConfigurationService.getConfiguration().pipe(
-      mergeMap((config) => {
-        const originHost = this.window.location.origin;
-        const trackedData = {
-          originHost,
-          view: config.view,
-          variant: config.variant,
-          session: config.session,
-          provider: config.provider,
-        };
-        return this.http.post<void>(
+      mergeMap((config) =>
+        this.http.post<void>(
           environment.appHost + '/api/event',
           { eventType },
-          { headers: { 'x-tracked-data': JSON.stringify(trackedData) } }
-        );
-      })
+          {
+            headers: {
+              'x-tracked-data': JSON.stringify(config),
+              'x-origin-host': this.window.location.origin,
+            },
+          }
+        )
+      )
     );
   }
 }
