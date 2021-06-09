@@ -16,7 +16,7 @@ export class AuthenticatedGuard implements CanActivate {
     if (this.authService.isAuthenticated && this.authService.isEmailUsed) {
       return true;
     } else {
-      this.router.navigate(['auth']);
+      this.router.navigate(['auth'], { queryParamsHandling: 'preserve' });
       return false;
     }
   }

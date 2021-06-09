@@ -16,7 +16,7 @@ import { OtpWidgetState } from '@store/otp-widget/otp-widget.state';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { WINDOW } from '@utils/injection-tokens';
-import { OriginInterceptor } from './interceptors/origin.interceptor';
+import { TrackingDataInterceptor } from './interceptors/tracking-data.interceptor';
 
 export const createTranslateLoader = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -43,7 +43,7 @@ export const createTranslateLoader = (http: HttpClient): TranslateHttpLoader =>
   ],
   providers: [
     { provide: WINDOW, useFactory: windowFactory },
-    { provide: HTTP_INTERCEPTORS, useClass: OriginInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: TrackingDataInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })

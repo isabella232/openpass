@@ -6,7 +6,7 @@ import { OpenerState } from '@store/otp-widget/opener.state';
 import { WINDOW } from '@utils/injection-tokens';
 
 @Injectable()
-export class OriginInterceptor implements HttpInterceptor {
+export class TrackingDataInterceptor implements HttpInterceptor {
   constructor(private store: Store, @Inject(WINDOW) private window: Window) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
