@@ -4,6 +4,8 @@ import { AuthService } from '@services/auth.service';
 import { Router } from '@angular/router';
 import { WINDOW } from '@utils/injection-tokens';
 import { DialogWindowService } from '@services/dialog-window.service';
+import { EventTypes } from '@shared/enums/event-types.enum';
+import { EventsTrackingService } from '@services/events-tracking.service';
 
 @Component({
   selector: 'usrf-already-signed-view',
@@ -20,7 +22,8 @@ export class AlreadySignedViewComponent implements OnInit {
     private authService: AuthService,
     @Inject(WINDOW) private window: Window,
     private router: Router,
-    private dialogWindowService: DialogWindowService
+    private dialogWindowService: DialogWindowService,
+    private eventsTrackingService: EventsTrackingService
   ) {}
 
   ngOnInit() {
@@ -32,6 +35,7 @@ export class AlreadySignedViewComponent implements OnInit {
       this.storageUserEmail = this.userEmail;
     }
     this.authService.setTokenToOpener();
+    this.eventsTrackingService.trackEvent(EventTypes.consentGranted);
     this.dialogWindowService.closeDialogWindow();
   }
 

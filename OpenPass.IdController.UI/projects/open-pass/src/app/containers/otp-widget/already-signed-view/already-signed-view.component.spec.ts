@@ -6,6 +6,8 @@ import { NgxsModule } from '@ngxs/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { WINDOW } from '@utils/injection-tokens';
 import { Component } from '@angular/core';
+import { stub } from '@utils/stub-factory';
+import { EventsTrackingService } from '@services/events-tracking.service';
 
 const windowFactory = () => ({
   opener: {
@@ -28,7 +30,7 @@ describe('AlreadySignedViewComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [AlreadySignedViewComponent, StubCopyrightComponent],
       imports: [RouterTestingModule, NgxsModule.forRoot([]), TranslateModule.forRoot()],
-      providers: [{ provide: WINDOW, useFactory: windowFactory }],
+      providers: [{ provide: WINDOW, useFactory: windowFactory }, stub(EventsTrackingService)],
     }).compileComponents();
   });
 
