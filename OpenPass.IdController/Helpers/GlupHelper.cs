@@ -1,10 +1,12 @@
 using System;
+using System.Linq;
+using System.Runtime.Serialization;
 using Criteo.Services.Glup;
 using Criteo.UserAgent;
 using Criteo.UserIdentification;
-using IdControllerGlup = Criteo.Glup.IdController;
-using static Criteo.Glup.IdController.Types;
 using OpenPass.IdController.Models.Tracking;
+using static Criteo.Glup.IdController.Types;
+using IdControllerGlup = Criteo.Glup.IdController;
 
 namespace OpenPass.IdController.Helpers
 {
@@ -41,7 +43,7 @@ namespace OpenPass.IdController.Helpers
             UserCentricAdId? ifa = null)
         {
             // Create glup event with required fields
-            var glup = new IdControllerGlup()
+            var glup = new IdControllerGlup
             {
                 Event = eventType,
                 OriginHost = originHost ?? "" // must never be null
@@ -76,11 +78,36 @@ namespace OpenPass.IdController.Helpers
             if (ifa.HasValue)
                 glup.Ifa = ifa.Value.ToString();
 
+            SetWidgetParameters(trackingModel, glup);
+
             // Go!
             _glupService.Emit(glup);
         }
 
         #region Helpers
+        private void SetWidgetParameters(TrackingModel model, IdControllerGlup glup)
+        {
+            if (model != null && model.Provider.HasValue)
+                glup.Provider = GetEnumMemberAttrValue(typeof(Provider), model.Provider.Value);
+            if (model != null && model.Session.HasValue)
+                glup.Session = GetEnumMemberAttrValue(typeof(Session), model.Session.Value);
+            if (model != null && model.Variant.HasValue)
+                glup.Variant = GetEnumMemberAttrValue(typeof(Variant), model.Variant.Value);
+            if (model != null && model.View.HasValue)
+                glup.View = GetEnumMemberAttrValue(typeof(View), model.View.Value);
+        }
+
+        private string GetEnumMemberAttrValue(Type enumType, object enumVal)
+        {
+            var memInfo = enumType.GetMember(enumVal.ToString());
+            var attr = memInfo[0].GetCustomAttributes(false).OfType<EnumMemberAttribute>().FirstOrDefault();
+            if (attr != null)
+            {
+                return attr.Value;
+            }
+
+            return null;
+        }
 
         private IAgent GetUserAgent(string userAgentString, Guid? uid)
         {

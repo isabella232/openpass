@@ -65,5 +65,42 @@ namespace OpenPass.IdController.UTest.Helpers
                 x => x.Get(It.IsAny<AgentKey>(), It.Is<Guid?>(g => g.Equals(parsedExpectedUid))),
                 Times.Once);
         }
+
+        [Test]
+        public void EmitGlup_TrackingModelIsPassed_ShouldGetEnumMemberValueCorrectly()
+        {
+            var trackingModel = new TrackingModel
+            {
+                View = View.Modal,
+                Provider = Provider.Publisher,
+                Variant = Variant.InSite,
+                Session = Session.Authenticated
+            };
+
+            _glupHelper.EmitGlup(EventType.Unknown, string.Empty, string.Empty, trackingModel);
+
+            // Assert
+            _glupServiceMock.Verify(g => g.Emit(It.Is<IdControllerGlup>(
+                x => x.Variant.Equals("in-site") &&
+                    x.View.Equals("modal") &&
+                    x.Provider.Equals("publisher") &&
+                    x.Session.Equals("authenticated")))
+                , Times.Once);
+        }
+
+        [Test]
+        public void EmitGlup_TrackingModelIsNull_ShouldNotSetWidgetProperties()
+        {
+
+            _glupHelper.EmitGlup(EventType.Unknown, string.Empty, string.Empty, null);
+
+            // Assert
+            _glupServiceMock.Verify(g => g.Emit(It.Is<IdControllerGlup>(
+                x => string.IsNullOrEmpty(x.Variant) &&
+                    string.IsNullOrEmpty(x.View) &&
+                    string.IsNullOrEmpty(x.Provider) &&
+                    string.IsNullOrEmpty(x.Session)))
+                , Times.Once);
+        }
     }
 }
