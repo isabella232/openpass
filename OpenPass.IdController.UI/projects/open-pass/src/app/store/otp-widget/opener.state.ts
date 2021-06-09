@@ -33,6 +33,11 @@ export class OpenerState {
   }
 
   @Selector()
+  static config({ view, variant, session, provider }: StateModel): Partial<StateModel> {
+    return { view, variant, session, provider };
+  }
+
+  @Selector()
   static origin({ origin }: StateModel): string {
     return origin;
   }
