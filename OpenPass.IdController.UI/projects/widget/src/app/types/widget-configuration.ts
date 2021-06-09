@@ -8,4 +8,8 @@ export type WidgetConfiguration = {
   variant: Variants;
   session: Sessions;
   provider: Providers;
+
+  ifa: string;
+  uid2: string;
+  ctoBundle: string;
 };

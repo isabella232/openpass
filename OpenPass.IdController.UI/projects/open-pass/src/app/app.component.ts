@@ -21,11 +21,14 @@ export class AppComponent implements OnInit {
   private recognizeOrigin() {
     const searchParams = new URLSearchParams(this.window.location.search);
     const config = {
+      ifa: searchParams.get('ifa'),
+      uid2: searchParams.get('uid2'),
       view: searchParams.get('view'),
       origin: searchParams.get('origin'),
       variant: searchParams.get('variant'),
       session: searchParams.get('session'),
       provider: searchParams.get('provider'),
+      ctoBundle: searchParams.get('ctoBundle'),
     };
     return new SetConfig(config);
   }

@@ -16,7 +16,7 @@ export class RecognizedGuard implements CanActivate {
     if (!this.authService.isAuthenticated) {
       return true;
     } else {
-      this.router.navigate(['unauthenticated', 'recognized']);
+      this.router.navigate(['unauthenticated', 'recognized'], { queryParamsHandling: 'preserve' });
       return false;
     }
   }

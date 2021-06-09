@@ -13,6 +13,9 @@ export class WidgetConfigurationService {
   isModal = false;
 
   private configuration = new BehaviorSubject<WidgetConfiguration>({
+    ifa: '',
+    uid2: '',
+    ctoBundle: '',
     view: WidgetModes.native,
     variant: Variants.dialog,
     session: Sessions.authenticated,

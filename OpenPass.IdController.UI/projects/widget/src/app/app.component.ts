@@ -23,6 +23,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Providers } from './enums/providers.enum';
 import { WidgetConfiguration } from './types/widget-configuration';
 import { WidgetConfigurationService } from './services/widget-configuration.service';
+import { CookiesService } from './services/cookies.service';
 
 @Component({
   selector: 'wdgt-identification',
@@ -63,6 +64,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private injector: Injector,
     private elementRef: ElementRef,
+    private cookiesService: CookiesService,
     private publicApiService: PublicApiService,
     private translateService: TranslateService,
     private componentFactoryResolver: ComponentFactoryResolver,
@@ -145,6 +147,9 @@ export class AppComponent implements OnInit, OnDestroy {
       variant: this.variant,
       session: this.session,
       provider: this.provider,
+      ifa: this.cookiesService.getCookie(environment.cookieIfaToken) ?? '',
+      uid2: this.cookiesService.getCookie(environment.cookieUid2Token) ?? '',
+      ctoBundle: this.cookiesService.getCookie('cto_bundle') ?? '',
     };
     this.widgetConfigurationService.setConfiguration(config);
   }
