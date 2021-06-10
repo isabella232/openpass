@@ -13,7 +13,7 @@ export class AuthenticatedGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (this.authService.isAuthenticated && this.authService.isEmailUsed) {
+    if (!!this.authService.uid2Token && this.authService.isEmailUsed) {
       return true;
     } else {
       this.router.navigate(['auth'], { queryParamsHandling: 'preserve' });
