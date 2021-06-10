@@ -12,6 +12,7 @@ namespace OpenPass.IdController.UTest.Helpers
     public class TrackingHelperTests
     {
         private Mock<IIdentificationBundleHelper> _identificationBundleHelperMock;
+        private Mock<IInternalMappingHelper> _internalMappingHelperMock;
 
         private TrackingHelper _trackingHelper;
 
@@ -19,7 +20,8 @@ namespace OpenPass.IdController.UTest.Helpers
         public void Init()
         {
             _identificationBundleHelperMock = new Mock<IIdentificationBundleHelper>();
-            _trackingHelper = new TrackingHelper(_identificationBundleHelperMock.Object);
+            _internalMappingHelperMock = new Mock<IInternalMappingHelper>();
+            _trackingHelper = new TrackingHelper(_identificationBundleHelperMock.Object, _internalMappingHelperMock.Object);
         }
 
         [Test]
@@ -55,13 +57,13 @@ namespace OpenPass.IdController.UTest.Helpers
 
         [TestCase("")]
         [TestCase(null)]
-        public void TryGetCtoBundleCookie_BundleEmpty_ShouldReturnNull(string ctoBundle)
+        public void TryGetCtoBundle_BundleEmpty_ShouldReturnNull(string ctoBundle)
         {
             // Arrange
             IdentificationBundle? parsedCtoBundle;
 
             // Act
-            var identificationBundle = _trackingHelper.TryGetCtoBundleCookie(ctoBundle);
+            var identificationBundle = _trackingHelper.TryGetCtoBundle(ctoBundle);
 
             // Assert
             Assert.IsNull(identificationBundle);
@@ -70,7 +72,7 @@ namespace OpenPass.IdController.UTest.Helpers
         }
 
         [Test]
-        public void TryGetCtoBundleCookie_BundleExists_ShouldReturnIdentificationBundle()
+        public void TryGetCtoBundle_BundleExists_ShouldReturnIdentificationBundle()
         {
             // Arrange
             var ctoBundle = "ctoBundle";
@@ -78,7 +80,7 @@ namespace OpenPass.IdController.UTest.Helpers
             _identificationBundleHelperMock.Setup(x => x.TryDecryptIdentificationBundle(ctoBundle, out parsedCtoBundle));
 
             // Act
-            var identificationBundle = _trackingHelper.TryGetCtoBundleCookie(ctoBundle);
+            var identificationBundle = _trackingHelper.TryGetCtoBundle(ctoBundle);
 
             // Assert
             Assert.IsNotNull(identificationBundle);

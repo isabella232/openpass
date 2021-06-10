@@ -13,5 +13,8 @@ namespace OpenPass.IdController.Models.Tracking
         public Session? Session { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
         public Provider? Provider { get; set; }
+        public string Ifa { get; set; }
+        public string Uid2 { get; set; }
+        public string CtoBundle { get; set; }
     }
 }

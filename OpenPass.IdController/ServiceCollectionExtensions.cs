@@ -134,9 +134,9 @@ namespace OpenPass.IdController
             services.AddSingleton<ITrackingHelper>(r =>
             {
                 var graphiteHelper = r.GetService<IGraphiteHelper>();
-
+                var internalMappingHelper = r.GetService<IInternalMappingHelper>();
                 var identificationBundleHelper = new IdentificationBundleHelper(graphiteHelper);
-                return new TrackingHelper(identificationBundleHelper);
+                return new TrackingHelper(identificationBundleHelper, internalMappingHelper);
             });
 
             return services;
