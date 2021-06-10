@@ -29,18 +29,6 @@ describe('AuthService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should display the authentication state', () => {
-    expect(service.isAuthenticated).toBe(false, 'without any token');
-    updateStorageTokens({ ifaToken: 'fake' });
-    expect(service.isAuthenticated).toBe(true, 'with ifaToken token');
-    updateStorageTokens({});
-    expect(service.isAuthenticated).toBe(false, 'without an ifaToken token');
-    updateStorageTokens({ uid2Token: 'fake' });
-    expect(service.isAuthenticated).toBe(true, 'with uid2Token token');
-    updateStorageTokens({ uid2Token: 'fake1', ifaToken: 'fake2' });
-    expect(service.isAuthenticated).toBe(true, 'with both tokens');
-  });
-
   it('should return ifa token', () => {
     const tokenValue = 'tokenValue';
     updateStorageTokens({ ifaToken: tokenValue });
@@ -73,6 +61,7 @@ describe('AuthService', () => {
   it('should reset tokens', () => {
     updateStorageTokens({ uid2Token: 'fake1', ifaToken: 'fake2' });
     service.resetToken();
-    expect(service.isAuthenticated).toBeFalse();
+    expect(service.uid2Token).toBeFalsy();
+    expect(service.ifaToken).toBeFalsy();
   });
 });
