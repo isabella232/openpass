@@ -17,6 +17,8 @@ namespace OpenPass.IdController.Helpers
         TrackingModel TryGetWidgetParameters(string trackedDataJson);
 
         Task<TrackingContext> BuildTrackingContextAsync(EventType eventType, string trackedData);
+
+        Task<TrackingContext> BuildTrackingContextAsync(string trackedData);
     }
 
     public class TrackingHelper : ITrackingHelper
@@ -55,14 +57,21 @@ namespace OpenPass.IdController.Helpers
 
         public async Task<TrackingContext> BuildTrackingContextAsync(EventType eventType, string trackedData)
         {
+            var context = await BuildTrackingContextAsync(trackedData);
+            context.EventType = eventType;
+
+            return context;
+        }
+
+        public async Task<TrackingContext> BuildTrackingContextAsync(string trackedData)
+        {
             var widjetParameters = TryGetWidgetParameters(trackedData);
 
             var context = new TrackingContext
             {
-                EventType = eventType,
                 LocalWebId = await TryGetInternalLocalWebIdAsync(widjetParameters.CtoBundle),
-                Ifa = await _internalMappingHelper.GetInternalUserCentricAdId(UserCentricAdId.Parse(widjetParameters.Ifa)),
-                Uid = await _internalMappingHelper.GetInternalCriteoId(CriteoId.Parse(widjetParameters.Uid2))
+                Ifa = widjetParameters.Ifa,
+                Uid2 = widjetParameters.Uid2
             };
 
             SetWidgetParameters(widjetParameters, context);

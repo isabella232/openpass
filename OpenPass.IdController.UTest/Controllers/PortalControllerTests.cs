@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -34,10 +35,10 @@ namespace OpenPass.IdController.UTest.Controllers
         }
 
         [Test]
-        public void TestOptout()
+        public async Task TestOptout()
         {
             // Act
-            var response = _portalController.OptOut(_testUserAgent, It.IsAny<string>(), It.IsAny<string>());
+            var response = await _portalController.OptOut(_testUserAgent, It.IsAny<string>(), It.IsAny<string>());
 
             // Assert
             Assert.IsAssignableFrom<OkResult>(response);
@@ -52,10 +53,10 @@ namespace OpenPass.IdController.UTest.Controllers
         }
 
         [Test]
-        public void TestOptin()
+        public async Task TestOptin()
         {
             // Act
-            var response = _portalController.OptIn(_testUserAgent, It.IsAny<string>(), It.IsAny<string>());
+            var response = await _portalController.OptIn(_testUserAgent, It.IsAny<string>(), It.IsAny<string>());
 
             // Assert
             Assert.IsAssignableFrom<OkResult>(response);

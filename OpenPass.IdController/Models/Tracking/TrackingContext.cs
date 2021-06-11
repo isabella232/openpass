@@ -7,8 +7,8 @@ namespace OpenPass.IdController.Models.Tracking
     {
         public EventType EventType { get; set; }
         public LocalWebId? LocalWebId { get; set; }
-        public CriteoId? Uid { get; set; }
-        public UserCentricAdId? Ifa { get; set; }
+        public string Uid2 { get; set; }
+        public string Ifa { get; set; }
         public string View { get; set; }
         public string Variant { get; set; }
         public string Session { get; set; }

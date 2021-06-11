@@ -53,7 +53,7 @@ namespace OpenPass.IdController.Controllers
         #region One-time password (OTP)
 
         [HttpPost("otp/generate")]
-        public IActionResult GenerateOtp(
+        public async Task<IActionResult> GenerateOtp(
             [FromHeader(Name = "User-Agent")] string userAgent,
             [FromHeader(Name = "x-origin-host")] string originHost,
             [FromHeader(Name = "x-tracked-data")] string trackedData,
@@ -74,7 +74,7 @@ namespace OpenPass.IdController.Controllers
                 return BadRequest();
             }
 
-            var trackingModel = _trackingHelper.TryGetWidgetParameters(trackedData);
+            var trackingContext = await _trackingHelper.BuildTrackingContextAsync(EventType.EmailEntered, trackedData);
 
             // 1. Generate OTP and add it to cache (keyed by email)
             var otp = _codeGeneratorHelper.GenerateRandomCode();
@@ -87,7 +87,7 @@ namespace OpenPass.IdController.Controllers
             _emailHelper.SendOtpEmail(request.Email, otp);
 
             // 3. Emit glup
-            _glupHelper.EmitGlup(EventType.EmailEntered, originHost, userAgent, trackingModel);
+            _glupHelper.EmitGlup(originHost, userAgent, trackingContext);
 
             // Metrics
             _metricHelper.SendCounterMetric($"{prefix}.ok");
@@ -126,12 +126,12 @@ namespace OpenPass.IdController.Controllers
                 // Remove code: OTP is valid only once
                 _activeOtps.Remove(request.Email);
 
-                var trackingModel = _trackingHelper.TryGetWidgetParameters(trackedData);
+                var trackingContext = await _trackingHelper.BuildTrackingContextAsync(EventType.EmailValidated, trackedData);
                 // Retrieve UID2 token, set cookie and send token back in payload
-                var uid2Token = await _identifierHelper.TryGetUid2TokenAsync(Response.Cookies, trackingModel, EventType.EmailValidated,
-                    originHost, userAgent, request.Email, prefix);                
+                var uid2Token = await _identifierHelper.TryGetUid2TokenAsync(Response.Cookies, trackingContext,
+                    originHost, userAgent, request.Email, prefix);
 
-                var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, trackingModel, prefix, originHost, userAgent);
+                var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, trackingContext, prefix, originHost, userAgent);
 
                 // Set cookie
                 _cookieHelper.SetIdentifierForAdvertisingCookie(Response.Cookies, ifaToken);
@@ -165,13 +165,13 @@ namespace OpenPass.IdController.Controllers
                 return BadRequest();
             }
 
-            var trackingModel = _trackingHelper.TryGetWidgetParameters(trackedData);
+            var trackingContext = await _trackingHelper.BuildTrackingContextAsync(request.EventType, trackedData);
 
             // Retrieve UID2 token, set cookie and send token back in payload
-            var uid2Token = await _identifierHelper.TryGetUid2TokenAsync(Response.Cookies, trackingModel, request.EventType,
+            var uid2Token = await _identifierHelper.TryGetUid2TokenAsync(Response.Cookies, trackingContext,
                     originHost, userAgent, request.Email, prefix);
 
-            var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, trackingModel, prefix, originHost, userAgent);
+            var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, trackingContext, prefix, originHost, userAgent);
 
             // Set cookie
             _cookieHelper.SetIdentifierForAdvertisingCookie(Response.Cookies, ifaToken);

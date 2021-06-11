@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using Criteo.UserIdentification;
 using Criteo.UserIdentification.Services;
 using FluentAssertions;
@@ -84,6 +86,72 @@ namespace OpenPass.IdController.UTest.Helpers
 
             // Assert
             Assert.IsNotNull(identificationBundle);
+        }
+
+        [Test]
+        public async Task BuildTrackingContextAsync_ParseLocalWebId_ShouldReturnValidLocalWebId()
+        {
+            // Arrange
+            var ctoBundle = "string";
+            LocalWebId? localWebId = LocalWebId.CreateNew("test@domain.com");
+
+            IdentificationBundle? parsedCtoBundle = new IdentificationBundle
+                (It.IsAny<DateTime>(), It.IsAny<DateTime>(), null, localWebId, null, IdentificationBundle.IdentificationBundleSource.Unknown, null, null);
+            var json = $"{{\"uid2\":null,\"ifa\":null,\"ctoBundle\":\"{ctoBundle}\"}}";
+
+            _identificationBundleHelperMock.Setup(x => x.TryDecryptIdentificationBundle(ctoBundle, out parsedCtoBundle)).Returns(true);
+            _internalMappingHelperMock.Setup(x => x.GetInternalLocalWebId(localWebId)).ReturnsAsync(localWebId);
+
+            // Act
+            var context = await _trackingHelper.BuildTrackingContextAsync(json);
+
+            // Assert
+            Assert.AreEqual(context.LocalWebId, localWebId);
+            Assert.IsNull(context.Uid2);
+            Assert.IsNull(context.Ifa);
+        }
+
+
+        [Test]
+        public async Task BuildTrackingContextAsync_ParseIfa_ShouldReturnValidIfa()
+        {
+            // Arrange
+            var ifa = Guid.NewGuid().ToString();
+            var ctoBundle = "string";
+            var json = $"{{\"uid2\":null,\"ifa\":\"{ifa}\",\"ctoBundle\":\"{ctoBundle}\"}}";
+
+            IdentificationBundle? parsedCtoBundle = null;
+
+            _identificationBundleHelperMock.Setup(x => x.TryDecryptIdentificationBundle(ctoBundle, out parsedCtoBundle)).Returns(true);
+
+            // Act
+            var context = await _trackingHelper.BuildTrackingContextAsync(json);
+
+            // Assert
+            Assert.IsNull(context.LocalWebId);
+            Assert.IsNull(context.Uid2);
+            Assert.AreEqual(ifa, context.Ifa);
+        }
+
+        [Test]
+        public async Task BuildTrackingContextAsync_ParseUid2_ShouldReturnValidUid2()
+        {
+            // Arrange
+            var uid2 = Guid.NewGuid().ToString();
+            var ctoBundle = "string";
+            var json = $"{{\"uid2\":\"{uid2}\",\"ifa\":null,\"ctoBundle\":\"{ctoBundle}\"}}";
+
+            IdentificationBundle? parsedCtoBundle = null;
+
+            _identificationBundleHelperMock.Setup(x => x.TryDecryptIdentificationBundle(ctoBundle, out parsedCtoBundle)).Returns(true);
+
+            // Act
+            var context = await _trackingHelper.BuildTrackingContextAsync(json);
+
+            // Assert
+            Assert.IsNull(context.LocalWebId);
+            Assert.IsNull(context.Ifa);
+            Assert.AreEqual(uid2, context.Uid2);
         }
     }
 }

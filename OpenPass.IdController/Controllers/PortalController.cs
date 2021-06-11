@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OpenPass.IdController.Helpers;
 using static Criteo.Glup.IdController.Types;
@@ -27,7 +28,7 @@ namespace OpenPass.IdController.Controllers
         }
 
         [HttpPost("controls/optout")]
-        public IActionResult OptOut(
+        public async Task<IActionResult> OptOut(
             [FromHeader(Name = "User-Agent")] string userAgent,
             [FromHeader(Name = "x-origin-host")] string originHost,
             [FromHeader(Name = "x-tracked-data")] string trackedData)
@@ -43,15 +44,15 @@ namespace OpenPass.IdController.Controllers
             var optoutMetricPrefix = $"{_metricPrefix}.optout";
             _metricHelper.SendCounterMetric($"{optoutMetricPrefix}");
 
-            var trackingModel = _trackingHelper.TryGetWidgetParameters(trackedData);
+            var trackingContext = await _trackingHelper.BuildTrackingContextAsync(EventType.OptOut, trackedData);
 
-            _glupHelper.EmitGlup(EventType.OptOut, originHost, userAgent, trackingModel);
+            _glupHelper.EmitGlup(originHost, userAgent, trackingContext);
 
             return Ok();
         }
 
         [HttpPost("controls/optin")]
-        public IActionResult OptIn(
+        public async Task<IActionResult> OptIn(
             [FromHeader(Name = "User-Agent")] string userAgent,
             [FromHeader(Name = "x-origin-host")] string originHost,
             [FromHeader(Name = "x-tracked-data")] string trackedData)
@@ -63,9 +64,9 @@ namespace OpenPass.IdController.Controllers
             var optoutMetricPrefix = $"{_metricPrefix}.optin";
             _metricHelper.SendCounterMetric($"{optoutMetricPrefix}");
 
-            var trackingModel = _trackingHelper.TryGetWidgetParameters(trackedData);
+            var trackingContext = await _trackingHelper.BuildTrackingContextAsync(EventType.OptIn, trackedData);
 
-            _glupHelper.EmitGlup(EventType.OptIn, originHost, userAgent, trackingModel);
+            _glupHelper.EmitGlup(originHost, userAgent, trackingContext);
 
             return Ok();
         }

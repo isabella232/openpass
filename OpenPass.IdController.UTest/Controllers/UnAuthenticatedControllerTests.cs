@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -38,16 +39,16 @@ namespace OpenPass.IdController.UTest.Controllers
 
         [TestCase(false, null)]
         [TestCase(true, "uid2token")]
-        public void CreateIfa_NoUid2CookiesExist_CreateNewIfaCookie(bool uid2CookieExists, string expectedUid2Cookie)
+        public async Task CreateIfa_NoUid2CookiesExist_CreateNewIfaCookie(bool uid2CookieExists, string expectedUid2Cookie)
         {
             // Arrange
             var expectedIfaToken = "ifaToken";
             _cookieHelperMock.Setup(c => c.TryGetUid2AdvertisingCookie(It.IsAny<IRequestCookieCollection>(), out expectedUid2Cookie)).Returns(uid2CookieExists);
-            _identifierHelperMock.Setup(x => x.GetOrCreateIfaToken(It.IsAny<IRequestCookieCollection>(), It.IsAny<TrackingModel>(), It.IsAny<string>(), _testOriginHost, _testUserAgent))
+            _identifierHelperMock.Setup(x => x.GetOrCreateIfaToken(It.IsAny<IRequestCookieCollection>(), It.IsAny<TrackingContext>(), It.IsAny<string>(), _testOriginHost, _testUserAgent))
                 .Returns(expectedIfaToken);
 
             // Act
-            var response = _unauthenticatedController.CreateIfa(_testUserAgent, It.IsAny<string>(), _testOriginHost);
+            var response = await _unauthenticatedController.CreateIfa(_testUserAgent, It.IsAny<string>(), _testOriginHost);
 
             // Returned identifier
             var data = GetResponseData(response);

@@ -34,29 +34,26 @@ namespace OpenPass.IdController.UTest.Helpers
         public void TestGlupIsEmitted()
         {
             // Arrange && Act
-            _glupHelper.EmitGlup(EventType.Unknown, "origin.com", "userAgent", It.IsAny<TrackingModel>());
+            _glupHelper.EmitGlup("origin.com", "userAgent", new TrackingContext());
 
             // Assert
             _glupServiceMock.Verify(g => g.Emit(It.IsAny<IdControllerGlup>()), Times.Once);
         }
 
-        [TestCase(null, null, null, null)]
-        [TestCase(_testingLwid, null, null, _testingLwid)]
-        [TestCase(null, _testingUid, null, _testingUid)]
-        [TestCase(null, null, _testingIfa, _testingIfa)]
-        [TestCase(_testingLwid, _testingUid, null, _testingUid)]
-        [TestCase(_testingLwid, null, _testingIfa, _testingIfa)]
-        [TestCase(null, _testingUid, _testingIfa, _testingIfa)]
-        [TestCase(_testingLwid, _testingUid, _testingIfa, _testingIfa)]
-        public void UserAgentParsingReceivesExpectedUid(string lwidString, string uidString, string ifaString, string expectedUid)
+        [TestCase(null, null)]
+        [TestCase(_testingLwid, _testingLwid)]
+        public void UserAgentParsingReceivesExpectedUid(string lwidString, string expectedUid)
         {
             // Arrange
             var lwid = LocalWebId.Parse(lwidString, "originHost.com");
-            var uid = CriteoId.Parse(uidString);
-            var ifa = UserCentricAdId.Parse(ifaString);
 
+            var trackingContext = new TrackingContext
+            {
+                EventType = EventType.Unknown,
+                LocalWebId = lwid
+            };
             //  Act
-            _glupHelper.EmitGlup(EventType.Unknown, "originHost.com", "userAgent", It.IsAny<TrackingModel>(), lwid, uid, ifa);
+            _glupHelper.EmitGlup("originHost.com", "userAgent", trackingContext);
 
             var parsedExpectedUid = !string.IsNullOrEmpty(expectedUid) ? Guid.Parse(expectedUid) : (Guid?) null;
 
@@ -67,32 +64,9 @@ namespace OpenPass.IdController.UTest.Helpers
         }
 
         [Test]
-        public void EmitGlup_TrackingModelIsPassed_ShouldGetEnumMemberValueCorrectly()
+        public void EmitGlup_TrackingContextIsEmpty_ShouldNotSetWidgetProperties()
         {
-            var trackingModel = new TrackingModel
-            {
-                View = View.Modal,
-                Provider = Provider.Publisher,
-                Variant = Variant.InSite,
-                Session = Session.Authenticated
-            };
-
-            _glupHelper.EmitGlup(EventType.Unknown, string.Empty, string.Empty, trackingModel);
-
-            // Assert
-            _glupServiceMock.Verify(g => g.Emit(It.Is<IdControllerGlup>(
-                x => x.Variant.Equals("in-site") &&
-                    x.View.Equals("modal") &&
-                    x.Provider.Equals("publisher") &&
-                    x.Session.Equals("authenticated")))
-                , Times.Once);
-        }
-
-        [Test]
-        public void EmitGlup_TrackingModelIsNull_ShouldNotSetWidgetProperties()
-        {
-
-            _glupHelper.EmitGlup(EventType.Unknown, string.Empty, string.Empty, null);
+            _glupHelper.EmitGlup(string.Empty, string.Empty, new TrackingContext());
 
             // Assert
             _glupServiceMock.Verify(g => g.Emit(It.Is<IdControllerGlup>(

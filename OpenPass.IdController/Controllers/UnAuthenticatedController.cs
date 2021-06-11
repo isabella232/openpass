@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OpenPass.IdController.Helpers;
 
@@ -26,7 +27,7 @@ namespace OpenPass.IdController.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateIfa(
+        public async Task<IActionResult> CreateIfa(
             [FromHeader(Name = "User-Agent")] string userAgent,
             [FromHeader(Name = "x-tracked-data")] string trackedData,
             [FromHeader(Name = "x-origin-host")] string originHost)
@@ -38,8 +39,8 @@ namespace OpenPass.IdController.Controllers
                 _metricHelper.SendCounterMetric($"{prefix}.uid2");
             }
 
-            var trackingModel = _trackingHelper.TryGetWidgetParameters(trackedData);
-            var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, trackingModel, prefix, originHost, userAgent);
+            var trackingContext = await _trackingHelper.BuildTrackingContextAsync(trackedData);
+            var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, trackingContext, prefix, originHost, userAgent);
 
             // Set cookie
             _cookieHelper.SetIdentifierForAdvertisingCookie(Response.Cookies, ifaToken);

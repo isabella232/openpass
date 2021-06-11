@@ -1,11 +1,7 @@
 using System;
-using System.Linq;
-using System.Runtime.Serialization;
 using Criteo.Services.Glup;
 using Criteo.UserAgent;
-using Criteo.UserIdentification;
 using OpenPass.IdController.Models.Tracking;
-using static Criteo.Glup.IdController.Types;
 using IdControllerGlup = Criteo.Glup.IdController;
 
 namespace OpenPass.IdController.Helpers
@@ -13,13 +9,9 @@ namespace OpenPass.IdController.Helpers
     public interface IGlupHelper
     {
         void EmitGlup(
-            EventType eventType,
             string originHost,
             string userAgentString,
-            TrackingModel trackingModel,
-            LocalWebId? localwebid = null,
-            CriteoId? uid = null,
-            UserCentricAdId? ifa = null);
+            TrackingContext trackingContext);
     }
 
     public class GlupHelper : IGlupHelper
@@ -34,22 +26,18 @@ namespace OpenPass.IdController.Helpers
         }
 
         public void EmitGlup(
-            EventType eventType,
             string originHost,
             string userAgentString,
-            TrackingModel trackingModel,
-            LocalWebId? localwebid = null,
-            CriteoId? uid = null,
-            UserCentricAdId? ifa = null)
+            TrackingContext trackingContext)
         {
             // Create glup event with required fields
             var glup = new IdControllerGlup
             {
-                Event = eventType,
+                Event = trackingContext.EventType,
                 OriginHost = originHost ?? "" // must never be null
             };
 
-            var uidForUAlib = ifa?.Value ?? uid?.Value ?? localwebid?.CriteoId?.Value;
+            var uidForUAlib = trackingContext.LocalWebId?.CriteoId?.Value;
             var userAgent = GetUserAgent(userAgentString, uidForUAlib);
 
             // User Agent
@@ -71,42 +59,31 @@ namespace OpenPass.IdController.Helpers
                 glup.UaOsMinor = userAgent.OperatingSystemMinorVersion;
 
             // Optional
-            if (localwebid.HasValue && localwebid.Value.CriteoId.HasValue)
-                glup.LocalWebId = localwebid.Value.CriteoId.Value.ToString();
-            if (uid.HasValue)
-                glup.Uid = uid.Value.ToString();
-            if (ifa.HasValue)
-                glup.Ifa = ifa.Value.ToString();
+            if (trackingContext.LocalWebId.HasValue && trackingContext.LocalWebId.Value.CriteoId.HasValue)
+                glup.LocalWebId = trackingContext.LocalWebId.Value.CriteoId.Value.ToString();
+            if (!string.IsNullOrEmpty(trackingContext.Uid2))
+                glup.Uid = trackingContext.Uid2;
+            if (!string.IsNullOrEmpty(trackingContext.Ifa))
+                glup.Ifa = trackingContext.Ifa;
 
-            SetWidgetParameters(trackingModel, glup);
+            SetWidgetParameters(trackingContext, glup);
 
             // Go!
             _glupService.Emit(glup);
         }
 
         #region Helpers
-        private void SetWidgetParameters(TrackingModel model, IdControllerGlup glup)
-        {
-            if (model != null && model.Provider.HasValue)
-                glup.Provider = GetEnumMemberAttrValue(typeof(Provider), model.Provider.Value);
-            if (model != null && model.Session.HasValue)
-                glup.Session = GetEnumMemberAttrValue(typeof(Session), model.Session.Value);
-            if (model != null && model.Variant.HasValue)
-                glup.Variant = GetEnumMemberAttrValue(typeof(Variant), model.Variant.Value);
-            if (model != null && model.View.HasValue)
-                glup.View = GetEnumMemberAttrValue(typeof(View), model.View.Value);
-        }
 
-        private string GetEnumMemberAttrValue(Type enumType, object enumVal)
+        private void SetWidgetParameters(TrackingContext context, IdControllerGlup glup)
         {
-            var memInfo = enumType.GetMember(enumVal.ToString());
-            var attr = memInfo[0].GetCustomAttributes(false).OfType<EnumMemberAttribute>().FirstOrDefault();
-            if (attr != null)
-            {
-                return attr.Value;
-            }
-
-            return null;
+            if (!string.IsNullOrEmpty(context.Provider))
+                glup.Provider = context.Provider;
+            if (!string.IsNullOrEmpty(context.Session))
+                glup.Session = context.Session;
+            if (!string.IsNullOrEmpty(context.Variant))
+                glup.Variant = context.Variant;
+            if (!string.IsNullOrEmpty(context.View))
+                glup.View = context.View;
         }
 
         private IAgent GetUserAgent(string userAgentString, Guid? uid)

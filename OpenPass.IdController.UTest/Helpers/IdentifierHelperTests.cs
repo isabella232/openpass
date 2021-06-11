@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Criteo.UserIdentification;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using NUnit.Framework;
@@ -44,11 +43,12 @@ namespace OpenPass.IdController.UTest.Helpers
             var originHost = "origin";
             _cookieHelperMock.Setup(x => x.TryGetIdentifierForAdvertisingCookie(It.IsAny<IRequestCookieCollection>(), out expectedIfaToken))
                 .Returns(true);
+            var trackingContext = new TrackingContext { EventType = EventType.ReuseIfa };
 
             // Act
             var token = _identifierHelper.GetOrCreateIfaToken(
                 It.IsAny<IRequestCookieCollection>(),
-                It.IsAny<TrackingModel>(),
+                trackingContext,
                 It.IsAny<string>(),
                 originHost,
                 It.IsAny<string>());
@@ -56,13 +56,9 @@ namespace OpenPass.IdController.UTest.Helpers
             // Assert
             Assert.AreEqual(expectedIfaToken, token);
             _glupHelperMock.Verify(g => g.EmitGlup(
-                    It.Is<EventType>(e => e == EventType.ReuseIfa),
                     It.Is<string>(h => h == originHost),
                     It.IsAny<string>(),
-                    It.IsAny<TrackingModel>(),
-                    It.IsAny<LocalWebId?>(),
-                    It.IsAny<CriteoId?>(),
-                    It.IsAny<UserCentricAdId?>()),
+                    It.Is<TrackingContext>(x => x.EventType == trackingContext.EventType)),
                 Times.Once);
         }
 
@@ -74,11 +70,12 @@ namespace OpenPass.IdController.UTest.Helpers
             var originHost = "origin";
             _cookieHelperMock.Setup(x => x.TryGetIdentifierForAdvertisingCookie(It.IsAny<IRequestCookieCollection>(), out expectedIfaToken))
                 .Returns(false);
+            var trackingContext = new TrackingContext { EventType = EventType.NewIfa };
 
             // Act
             var token = _identifierHelper.GetOrCreateIfaToken(
                 It.IsAny<IRequestCookieCollection>(),
-                It.IsAny<TrackingModel>(),
+                trackingContext,
                 It.IsAny<string>(),
                 originHost,
                 It.IsAny<string>());
@@ -86,13 +83,9 @@ namespace OpenPass.IdController.UTest.Helpers
             // Assert
             Assert.AreNotEqual(expectedIfaToken, token);
             _glupHelperMock.Verify(g => g.EmitGlup(
-                    It.Is<EventType>(e => e == EventType.NewIfa),
                     It.Is<string>(h => h == originHost),
                     It.IsAny<string>(),
-                    It.IsAny<TrackingModel>(),
-                    It.IsAny<LocalWebId?>(),
-                    It.IsAny<CriteoId?>(),
-                    It.IsAny<UserCentricAdId?>()),
+                    It.Is<TrackingContext>(x => x.EventType == trackingContext.EventType)),
                 Times.Once);
         }
 
@@ -106,13 +99,12 @@ namespace OpenPass.IdController.UTest.Helpers
             var originHost = "originHost";
             var email = "test@test.com";
             _uid2AdapterMock.Setup(x => x.GetId(email)).ReturnsAsync(expectedUid2Token);
+            var trackingContext = new TrackingContext { EventType = EventType.EmailValidated };
 
             // Act
             var uid2Token = await _identifierHelper.TryGetUid2TokenAsync(
                 It.IsAny<IResponseCookies>(),
-
-                    It.IsAny<TrackingModel>(),
-                EventType.EmailValidated,
+                trackingContext,
                 originHost,
                 userAgent,
                 email,
@@ -121,13 +113,9 @@ namespace OpenPass.IdController.UTest.Helpers
             // Assert
             Assert.AreEqual(expectedUid2Token, uid2Token);
             _glupHelperMock.Verify(g => g.EmitGlup(
-                It.Is<EventType>(e => e == EventType.EmailValidated),
                 It.Is<string>(h => h == originHost),
                 It.Is<string>(a => a == userAgent),
-                It.IsAny<TrackingModel>(),
-                It.IsAny<LocalWebId?>(),
-                It.IsAny<CriteoId?>(),
-                It.IsAny<UserCentricAdId?>()),
+                It.Is<TrackingContext>(x => x.EventType == trackingContext.EventType)),
                 Times.Once);
 
             _cookieHelperMock.Verify(x =>

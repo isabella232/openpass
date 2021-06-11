@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Criteo.UserIdentification;
 using Moq;
 using NUnit.Framework;
 using OpenPass.IdController.Controllers;
@@ -7,7 +6,6 @@ using OpenPass.IdController.Helpers;
 using OpenPass.IdController.Models;
 using OpenPass.IdController.Models.Tracking;
 using static Criteo.Glup.IdController.Types;
-using CriteoId = Criteo.UserIdentification.CriteoId;
 
 namespace OpenPass.IdController.UTest.Controllers
 {
@@ -18,13 +16,9 @@ namespace OpenPass.IdController.UTest.Controllers
         private Mock<IConfigurationHelper> _configurationHelperMock;
         private Mock<IGlupHelper> _glupHelperMock;
         private Mock<IMetricHelper> _metricHelperMock;
-        private Mock<IInternalMappingHelper> _internalMappingHelperMock;
         private Mock<ITrackingHelper> _trackingHelperMock;
 
         private const string _testUserAgent = "TestUserAgent";
-        private const string _testingLwid = "00000000-0000-0000-0000-000000000001";
-        private const string _testingUid = "00000000-0000-0000-0000-000000000002";
-        private const string _testingIfa = "00000000-0000-0000-0000-000000000003";
 
         [SetUp]
         public void Setup()
@@ -35,15 +29,10 @@ namespace OpenPass.IdController.UTest.Controllers
             _metricHelperMock = new Mock<IMetricHelper>();
             _trackingHelperMock = new Mock<ITrackingHelper>();
             _metricHelperMock.Setup(mr => mr.SendCounterMetric(It.IsAny<string>()));
-            _internalMappingHelperMock = new Mock<IInternalMappingHelper>();
-            _internalMappingHelperMock.Setup(x => x.GetInternalCriteoId(It.IsAny<CriteoId?>())).ReturnsAsync((CriteoId? criteoId) => criteoId);
-            _internalMappingHelperMock.Setup(x => x.GetInternalLocalWebId(It.IsAny<LocalWebId?>())).ReturnsAsync((LocalWebId? lwid) => lwid);
-            _internalMappingHelperMock.Setup(x => x.GetInternalUserCentricAdId(It.IsAny<UserCentricAdId?>())).ReturnsAsync((UserCentricAdId? ucaid) => ucaid);
-
+            
             _eventController = new EventController(
                 _configurationHelperMock.Object,
                 _metricHelperMock.Object,
-                _internalMappingHelperMock.Object,
                 _glupHelperMock.Object,
                 _trackingHelperMock.Object);
         }
@@ -64,13 +53,9 @@ namespace OpenPass.IdController.UTest.Controllers
             // Assert
             _glupHelperMock.Verify(
                 x => x.EmitGlup(
-                    It.Is<EventType>(e => e == eventType),
                     It.Is<string>(o => o == originHost),
                     It.IsAny<string>(),
-                    It.IsAny<TrackingModel>(),
-                    It.IsAny<LocalWebId?>(),
-                    It.IsAny<CriteoId?>(),
-                    It.IsAny<UserCentricAdId?>()),
+                    It.IsAny<TrackingContext>()),
                 Times.Once);
         }
 
@@ -83,13 +68,9 @@ namespace OpenPass.IdController.UTest.Controllers
             // Assert
             _glupHelperMock.Verify(
                 x => x.EmitGlup(
-                    It.IsAny<EventType>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
-                    It.IsAny<TrackingModel>(),
-                    It.IsAny<LocalWebId?>(),
-                    It.IsAny<CriteoId?>(),
-                    It.IsAny<UserCentricAdId?>()),
+                    It.IsAny<TrackingContext>()),
                 Times.Never);
         }
 
@@ -109,19 +90,15 @@ namespace OpenPass.IdController.UTest.Controllers
             // Assert
             _glupHelperMock.Verify(
                 x => x.EmitGlup(
-                    It.IsAny<EventType>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
-                    It.IsAny<TrackingModel>(),
-                    It.IsAny<LocalWebId?>(),
-                    It.IsAny<CriteoId?>(),
-                    It.IsAny<UserCentricAdId?>()),
+                    It.IsAny<TrackingContext>()),
                 Times.Never);
         }
 
-        [TestCase(0.0, false)]
-        [TestCase(1.0, true)]
-        public async Task GlupEmissionAppliesRatio(double ratio, bool expectGlup)
+        [TestCase(0.0, 0)]
+        [TestCase(1.0, 1)]
+        public async Task GlupEmissionAppliesRatio(double ratio, int expectGlupCount)
         {
             // Arrange
             // use edge cases to test ratio (regardless of the value of the randomly generated value)
@@ -137,58 +114,10 @@ namespace OpenPass.IdController.UTest.Controllers
             // Assert
             _glupHelperMock.Verify(
                 x => x.EmitGlup(
-                    It.IsAny<EventType>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
-                    It.IsAny<TrackingModel>(),
-                    It.IsAny<LocalWebId?>(),
-                    It.IsAny<CriteoId?>(),
-                    It.IsAny<UserCentricAdId?>()),
-                expectGlup ? Times.Once() : Times.Never());
-        }
-
-        [Test]
-        public async Task GlupSupportsRevocableId()
-        {
-            // Arrange
-            var host = "originHost.com";
-
-            var revLwid = LocalWebId.CreateNew(host);
-            var revCriteoId = CriteoId.New();
-            var revIfa = UserCentricAdId.New();
-
-            // Override fakes
-            _internalMappingHelperMock.Setup(x => x.GetInternalLocalWebId(It.IsAny<LocalWebId?>())).ReturnsAsync((LocalWebId? lwid) => revLwid);
-            _internalMappingHelperMock.Setup(x => x.GetInternalCriteoId(It.IsAny<CriteoId?>())).ReturnsAsync((CriteoId? criteoId) => revCriteoId);
-            _internalMappingHelperMock.Setup(x => x.GetInternalUserCentricAdId(It.IsAny<UserCentricAdId?>())).ReturnsAsync((UserCentricAdId? ucaid) => revIfa);
-
-            // Update expected uids
-            var expectedLwid = revLwid.CriteoId.ToString();
-            var expectedUid = revCriteoId.Value.ToString();
-            var expectedIfa = revIfa.Value.ToString();
-
-            var request = new EventRequest
-            {
-                EventType = EventType.BannerRequest,
-                LocalWebId = _testingLwid,
-                Uid = _testingUid,
-                Ifa = _testingIfa
-            };
-
-            // Act
-            await _eventController.SaveEvent(_testUserAgent, host, It.IsAny<string>(), request);
-
-            // Assert
-            _glupHelperMock.Verify(
-                x => x.EmitGlup(
-                    It.IsAny<EventType>(),
-                    It.IsAny<string>(),
-                    It.IsAny<string>(),
-                    It.IsAny<TrackingModel>(),
-                    It.Is<LocalWebId?>(lwid => lwid.Value.Id == expectedLwid),
-                    It.Is<CriteoId?>(uid => uid.ToString() == expectedUid),
-                    It.Is<UserCentricAdId?>(ifa => ifa.ToString() == expectedIfa)),
-                Times.Once);
+                    It.IsAny<TrackingContext>()),
+                Times.Exactly(expectGlupCount));
         }
     }
 }
