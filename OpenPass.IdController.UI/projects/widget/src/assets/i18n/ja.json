@@ -1,27 +1,24 @@
 {
   "WELCOME": {
     "HEADING": "Get Access With",
-    "DESCRIPTION": "OpenPassは、お客様のデータを保護する独立したサービスです。このサービスは、お客様の明確な許可をもとに、<b>{{websiteName}}</b>上で、お客様が広告体験をパーソナライズしたりコントロールすることを可能にします。",
+    "DESCRIPTION": "無料で<b>{{websiteName}}</b>にアクセスします。OpenPassは、Webサイト閲覧をお楽しみいただけるよう、よりお客様の興味に関連した広告の配信を提供し、お客様のお気に入りのWebサイトを支援しています。",
     "WITH": "OpenPassと共に",
     "OPEN_PASS_PROS": {
-      "INFORMATION": "お客様にカスタマイズされたコンテンツを提供するオンラインビジネスをサポートします。",
-      "ACCESS": "<a href=\"/open-pass/under-construction\" target=\"\">transparentadvertising.com</a>から、お客様のプライバシー設定を、いつでもご自身で自由に変更することができます。",
-      "CONTROL": "お客様のメールアドレスはお客様の許可無しに共有されることはありません。"
+      "INFORMATION": "大規模なサイトネットワークを無料で閲覧しながら、独立した中小企業やWebサイトをサポートします。",
+      "ACCESS": "いつでも<a href=\"https://openpass.criteo.com/open-pass/under-construction\" target=\"_blank\">transparentadvertising.com</a>からプライバシー設定を変更、管理することができます。",
+      "CONTROL": "OpenPassはお客様のメールアドレスを許可なく共有することはありません。"
     },
     "SUMMARY": {
       "TITLE": "OpenPassとは、どの様な仕組みですか？",
-      "DESCRIPTION": "OpenPassはお客様の同意のもと、個人を特定することのできない識別子を<b>信頼できる広告パートナー</b>に共有し、お客様により適切な広告を提供します。<a target=\"_blank\" href=\"/open-pass/under-construction\">詳細はこちら</a>"
+      "DESCRIPTION": "OpenPassはお客様の同意のもと、個人を特定することのできない識別子を<b>信頼できる広告パートナー</b>に共有し、お客様により適切な広告を提供します。<a target=\"_blank\" href=\"https://openpass.criteo.com/open-pass/under-construction\">詳細はこちら</a>"
     },
-    "ACTION": "OpenPassでサインインする。"
+    "ACTION": "OpenPassでサインアップ"
   },
   "SHARED": {
-    "OTHER_WAY": "このサイトにアクセスするための、その他の方法"
+    "OTHER_WAY": "このWebサイトにアクセスするためのその他の方法"
   },
   "UNLOGGED": {
-    "HEADING": "Get Access With",
-    "ACTION": "同意し、OpenPassを利用してアクセスする。",
-    "OPEN_PASS_PROS": {
-      "CONTROL": "お客様のメールアドレスは許可無しに共有されることはありません。"
-    }
+    "HEADING": "Get Personalized Advertising with",
+    "ACTION": "同意し、OpenPassを利用してアクセスする。"
   }
 }

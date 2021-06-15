@@ -8,14 +8,6 @@ import { AuthState } from '@store/otp-widget/auth.state';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@services/auth.service';
 import { DialogWindowService } from '@services/dialog-window.service';
-import { Component } from '@angular/core';
-import { NgxsDispatchPluginModule } from '@ngxs-labs/dispatch-decorator';
-
-@Component({
-  selector: 'usrf-copyright',
-  template: '',
-})
-class StubCopyrightComponent {}
 
 describe('AuthViewComponent', () => {
   let component: AuthViewComponent;
@@ -28,7 +20,6 @@ describe('AuthViewComponent', () => {
         HttpClientTestingModule,
         NgxsModule.forRoot([AuthState]),
         TranslateModule.forRoot(),
-        NgxsDispatchPluginModule,
       ],
       providers: [
         {
@@ -40,7 +31,7 @@ describe('AuthViewComponent', () => {
           useFactory: () => {},
         },
       ],
-      declarations: [AuthViewComponent, StubCopyrightComponent],
+      declarations: [AuthViewComponent],
     }).compileComponents();
   });
 

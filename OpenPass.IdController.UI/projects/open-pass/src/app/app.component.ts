@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { PostMessagesService } from '@services/post-messages.service';
 import { Dispatch } from '@ngxs-labs/dispatch-decorator';
-import { SetConfig } from '@store/otp-widget/opener.actions';
+import { SaveOpener } from '@store/otp-widget/opener.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { WINDOW } from '@utils/injection-tokens';
 
@@ -20,17 +20,8 @@ export class AppComponent implements OnInit {
   @Dispatch()
   private recognizeOrigin() {
     const searchParams = new URLSearchParams(this.window.location.search);
-    const config = {
-      ifa: searchParams.get('ifa'),
-      uid2: searchParams.get('uid2'),
-      view: searchParams.get('view'),
-      origin: searchParams.get('origin'),
-      variant: searchParams.get('variant'),
-      session: searchParams.get('session'),
-      provider: searchParams.get('provider'),
-      ctoBundle: searchParams.get('ctoBundle'),
-    };
-    return new SetConfig(config);
+    const origin = searchParams.get('origin');
+    return new SaveOpener(origin);
   }
 
   ngOnInit() {

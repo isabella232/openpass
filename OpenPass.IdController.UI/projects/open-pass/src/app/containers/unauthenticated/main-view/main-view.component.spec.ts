@@ -8,16 +8,6 @@ import { AuthService } from '@services/auth.service';
 import { DialogWindowService } from '@services/dialog-window.service';
 import { stub } from '@utils/stub-factory';
 import { EventsTrackingService } from '@services/events-tracking.service';
-import { Component, Input } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-
-@Component({
-  selector: 'usrf-open-pass-details',
-  template: '',
-})
-class StubOpenPassDetailsComponent {
-  @Input() name: string;
-}
 
 describe('MainViewComponent', () => {
   let component: MainViewComponent;
@@ -25,9 +15,9 @@ describe('MainViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, NgxsModule.forRoot(), TranslateModule.forRoot(), FormsModule],
+      imports: [RouterTestingModule, NgxsModule.forRoot(), TranslateModule.forRoot()],
       providers: [stub(AuthService), stub(DialogWindowService), stub(EventsTrackingService, { trackEvent: () => {} })],
-      declarations: [MainViewComponent, StubOpenPassDetailsComponent],
+      declarations: [MainViewComponent],
     }).compileComponents();
   });
 

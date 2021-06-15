@@ -3,11 +3,11 @@ import { Store } from '@ngxs/store';
 import { GapiService } from '@services/gapi.service';
 
 @Component({
-  selector: 'usrf-google-auth',
-  templateUrl: './google-auth.component.html',
-  styleUrls: ['./google-auth.component.scss'],
+  selector: 'usrf-google-auth-small',
+  templateUrl: './google-auth-small.component.html',
+  styleUrls: ['./google-auth-small.component.scss'],
 })
-export class GoogleAuthComponent implements AfterViewInit {
+export class GoogleAuthSmallComponent implements AfterViewInit {
   @Output()
   proceed = new EventEmitter<string>();
 

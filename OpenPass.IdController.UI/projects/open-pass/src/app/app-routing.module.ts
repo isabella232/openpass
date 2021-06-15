@@ -20,14 +20,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./containers/under-construction/under-construction.module').then((m) => m.UnderConstructionModule),
   },
-  {
-    path: 'settings',
-    loadChildren: () => import('./containers/settings/settings.module').then((m) => m.SettingsModule),
-  },
-  {
-    path: '**',
-    loadChildren: () => import('./containers/not-found/not-found.module').then((m) => m.NotFoundModule),
-  },
 ];
 
 @NgModule({

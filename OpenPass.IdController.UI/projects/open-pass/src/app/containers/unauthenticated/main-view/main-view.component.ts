@@ -6,7 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Dispatch } from '@ngxs-labs/dispatch-decorator';
 import { AuthService } from '@services/auth.service';
 import { DialogWindowService } from '@services/dialog-window.service';
-import { EventTypes } from '@shared/enums/event-types.enum';
+import { EventTypes } from '@enums/event-types.enum';
 import { EventsTrackingService } from '@services/events-tracking.service';
 import { GetAnonymousTokens, GetAnonymousTokensSuccess } from '@store/otp-widget/auth.actions';
 import { AuthState } from '@store/otp-widget/auth.state';
