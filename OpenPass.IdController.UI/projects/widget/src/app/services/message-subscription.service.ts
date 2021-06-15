@@ -13,7 +13,6 @@ import { WINDOW } from '../utils/injection-tokens';
   providedIn: 'root',
 })
 export class MessageSubscriptionService {
-  private optOutSubscription: Subscription;
   private messageSubscription: Subscription;
 
   constructor(
@@ -24,14 +23,12 @@ export class MessageSubscriptionService {
   ) {}
 
   initTokenListener(openPassWindow: Window) {
-    this.waitForOptOut();
     this.waitForPostMessage();
     this.postMessageService.startListening(openPassWindow);
   }
 
   destroyTokenListener() {
     this.postMessageService.stopListing();
-    this.optOutSubscription?.unsubscribe?.();
     this.messageSubscription?.unsubscribe?.();
   }
 
@@ -42,22 +39,10 @@ export class MessageSubscriptionService {
       .subscribe((payload) => this.setCookie(payload));
   }
 
-  private waitForOptOut() {
-    this.optOutSubscription = this.postMessageService
-      .getSubscription()
-      .pipe(filter(({ action }) => action === PostMessageActions.optOut))
-      .subscribe(() => {
-        this.cookiesService.setCookie(environment.cookieUid2Token, '', -1);
-        this.cookiesService.setCookie(environment.cookieIfaToken, '', -1);
-        this.cookiesService.setCookie(environment.cookieOptoutFlag, '1', environment.cookieLifetimeDays);
-      });
-  }
-
   private setCookie(payload: PostMessagePayload) {
     const { ifaToken, uid2Token, isDeclined } = payload;
     this.cookiesService.setCookie(environment.cookieUid2Token, uid2Token, environment.cookieLifetimeDays);
     this.cookiesService.setCookie(environment.cookieIfaToken, ifaToken, environment.cookieLifetimeDays);
-    this.cookiesService.setCookie(environment.cookieOptoutFlag, '', -1);
     this.publicApiService.setUserData({ ifaToken, uid2Token, isDeclined });
   }
 }

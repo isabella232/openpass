@@ -5,7 +5,6 @@ import { DEPLOY_URL, WINDOW } from '../../utils/injection-tokens';
 import { windowFactory } from '../../utils/window-factory';
 import { PipesModule } from '../../pipes/pipes.module';
 import { TranslateModule } from '@ngx-translate/core';
-import { EventTrackingService } from '../../rest/event-tracking/event-tracking.service';
 
 describe('UnloggedComponent', () => {
   let component: UnloggedComponent;
@@ -18,7 +17,6 @@ describe('UnloggedComponent', () => {
       providers: [
         { provide: WINDOW, useFactory: windowFactory },
         { provide: DEPLOY_URL, useFactory: () => {} },
-        { provide: EventTrackingService, useFactory: () => ({ track: () => ({ subscribe: () => {} }) }) },
       ],
     }).compileComponents();
   });

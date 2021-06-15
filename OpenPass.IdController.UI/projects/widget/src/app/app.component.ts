@@ -21,9 +21,6 @@ import { Sessions } from './enums/sessions.enum';
 import { ViewContainerDirective } from './directives/view-container.directive';
 import { TranslateService } from '@ngx-translate/core';
 import { Providers } from './enums/providers.enum';
-import { WidgetConfiguration } from './types/widget-configuration';
-import { WidgetConfigurationService } from './services/widget-configuration.service';
-import { CookiesService } from './services/cookies.service';
 
 @Component({
   selector: 'wdgt-identification',
@@ -62,13 +59,11 @@ export class AppComponent implements OnInit, OnDestroy {
   private widgetMode = WidgetModes.native;
 
   constructor(
-    private injector: Injector,
     private elementRef: ElementRef,
-    private cookiesService: CookiesService,
     private publicApiService: PublicApiService,
-    private translateService: TranslateService,
+    private injector: Injector,
     private componentFactoryResolver: ComponentFactoryResolver,
-    private widgetConfigurationService: WidgetConfigurationService
+    private translateService: TranslateService
   ) {
     if (!environment.production) {
       // in webcomponent mode we can read prop assigned to app component.
@@ -82,7 +77,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.applyLanguage();
-    this.saveConfiguration();
     this.loadComponent();
     const isDev = !environment.production;
     this.userDataSubscription = this.publicApiService.getSubscription().subscribe((userData) => {
@@ -110,7 +104,11 @@ export class AppComponent implements OnInit, OnDestroy {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(
       (await this.getComponentClass()) as any
     );
-    this.viewElement.viewContainerRef.createComponent(componentFactory);
+    const componentRef = this.viewElement.viewContainerRef.createComponent<any>(componentFactory);
+
+    componentRef.instance.view = this.view;
+    componentRef.instance.session = this.session;
+    componentRef.instance.provider = this.provider;
   }
 
   private async getComponentClass() {
@@ -139,18 +137,5 @@ export class AppComponent implements OnInit, OnDestroy {
     if (supportedLanguages.includes(userLanguage) && userLanguage !== this.translateService.getDefaultLang()) {
       this.translateService.use(userLanguage);
     }
-  }
-
-  private saveConfiguration() {
-    const config: WidgetConfiguration = {
-      view: this.view,
-      variant: this.variant,
-      session: this.session,
-      provider: this.provider,
-      ifa: this.cookiesService.getCookie(environment.cookieIfaToken) ?? '',
-      uid2: this.cookiesService.getCookie(environment.cookieUid2Token) ?? '',
-      ctoBundle: this.cookiesService.getCookie('cto_bundle') ?? '',
-    };
-    this.widgetConfigurationService.setConfiguration(config);
   }
 }

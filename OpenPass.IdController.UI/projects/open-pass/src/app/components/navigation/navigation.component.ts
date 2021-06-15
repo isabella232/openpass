@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Route, Router } from '@angular/router';
 import { DialogWindowService } from '../../services/dialog-window.service';
-import { EventTypes } from '@shared/enums/event-types.enum';
+import { EventTypes } from '../../enums/event-types.enum';
 import { EventsTrackingService } from '../../services/events-tracking.service';
 
 @Component({

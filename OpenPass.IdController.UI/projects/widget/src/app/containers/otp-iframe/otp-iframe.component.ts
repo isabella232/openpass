@@ -1,16 +1,26 @@
-import { AfterViewInit, Component, HostBinding, Inject, NgModule, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  HostBinding,
+  Inject,
+  Input,
+  NgModule,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Observable, Subscription } from 'rxjs';
 import { PostMessagesService } from '../../services/post-messages.service';
 import { filter, map, startWith } from 'rxjs/operators';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
+import { WidgetModes } from '../../enums/widget-modes.enum';
 import { MessageSubscriptionService } from '../../services/message-subscription.service';
 import { CookiesService } from '../../services/cookies.service';
 import { PublicApiService } from '../../services/public-api.service';
 import { CommonModule } from '@angular/common';
 import { WINDOW } from '../../utils/injection-tokens';
-import { WidgetConfigurationService } from '../../services/widget-configuration.service';
 
 @Component({
   selector: 'wdgt-otp-iframe',
@@ -19,30 +29,32 @@ import { WidgetConfigurationService } from '../../services/widget-configuration.
 })
 export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('iframe') iframeElement: HTMLIFrameElement;
+  @Input() view: WidgetModes;
 
   @HostBinding('class.modal')
   get isModal(): boolean {
-    return this.widgetConfigurationService.isModal && this.isOpen;
+    return this.view === WidgetModes.modal && this.isOpen;
   }
 
   isOpen = true;
-  iframeSrc$: Observable<SafeResourceUrl>;
+  iframeSrc: SafeResourceUrl;
 
   dynamicHeight$ = new Observable<number | undefined>();
   postSubscription: Subscription;
 
   constructor(
-    @Inject(WINDOW) private window: Window,
-    private sanitizer: DomSanitizer,
+    @Inject(WINDOW) window: Window,
+    sanitizer: DomSanitizer,
     private cookiesService: CookiesService,
     private publicApiService: PublicApiService,
     private postMessagesService: PostMessagesService,
-    private messageSubscriptionService: MessageSubscriptionService,
-    private widgetConfigurationService: WidgetConfigurationService
-  ) {}
+    private messageSubscriptionService: MessageSubscriptionService
+  ) {
+    const iframeUrl = environment.idControllerAppUrl + '?origin=' + window.location.origin;
+    this.iframeSrc = sanitizer.bypassSecurityTrustResourceUrl(iframeUrl);
+  }
 
   ngOnInit() {
-    this.iframeSrc$ = this.getIframeUrl();
     const { isDeclined } = this.publicApiService.getUserData();
     const hasCookie =
       this.cookiesService.getCookie(environment.cookieUid2Token) ||
@@ -88,16 +100,6 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.publicApiService.setUserData({ isDeclined });
         this.isOpen = false;
       });
-  }
-
-  private getIframeUrl(): Observable<SafeResourceUrl> {
-    return this.widgetConfigurationService.getConfiguration().pipe(
-      map((configs) => {
-        const query = new URLSearchParams({ origin: this.window.location.origin, ...configs });
-        const iframeUrl = `${environment.idControllerAppUrl}?${query.toString()}`;
-        return this.sanitizer.bypassSecurityTrustResourceUrl(iframeUrl);
-      })
-    );
   }
 }
 

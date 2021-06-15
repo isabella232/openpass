@@ -13,10 +13,10 @@ context('SSO page', () => {
   });
 
   it('should render the google SSO button', () => {
-    page.googleButtonComponent.getButton().should('contain.text', 'Login with Google');
+    page.googleButtonComponent.getButton().should('contain.text', 'Sign in');
   });
 
   it('should render the facebook button', () => {
-    page.facebookButtonComponent.getButton().should('contain.text', 'Login with Facebook');
+    page.facebookButtonComponent.getButton().find('iframe').should('exist');
   });
 });

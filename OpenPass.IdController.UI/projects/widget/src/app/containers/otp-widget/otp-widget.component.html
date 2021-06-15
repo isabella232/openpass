@@ -1,6 +1,6 @@
 <div *ngIf="isOpen" class="container">
-  <div *ngIf="widgetConfigurationService.isModal" class="backdrop" (click)="backdropClick()"></div>
-  <div class="widget-body" [class.shadow]="widgetConfigurationService.isModal">
+  <div *ngIf="view === widgetMods.modal" class="backdrop" (click)="backdropClick()"></div>
+  <div class="widget-body" [class.shadow]="view === widgetMods.modal">
     <h3 class="mb-1" translate>WELCOME.HEADING</h3>
     <div class="op-logo-container">
       <img [src]="'/assets/images/open-pass-logo.png' | useDeployUrl" alt="OpenPass logo" />

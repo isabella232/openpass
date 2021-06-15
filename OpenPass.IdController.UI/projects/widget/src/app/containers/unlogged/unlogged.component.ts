@@ -1,4 +1,5 @@
-import { Component, HostBinding, Inject, NgModule, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, Inject, Input, NgModule, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { WidgetModes } from '../../enums/widget-modes.enum';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
@@ -8,13 +9,10 @@ import { PublicApiService } from '../../services/public-api.service';
 import { PostMessagesService } from '../../services/post-messages.service';
 import { MessageSubscriptionService } from '../../services/message-subscription.service';
 import { environment } from '../../../environments/environment';
-import { filter, take } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
 import { PipesModule } from '../../pipes/pipes.module';
 import { OpenPassDetailsModule } from '../../components/open-pass-details/open-pass-details.module';
-import { EventTrackingService } from '../../rest/event-tracking/event-tracking.service';
-import { EventTypes } from '@shared/enums/event-types.enum';
-import { WidgetConfigurationService } from '../../services/widget-configuration.service';
 
 @Component({
   selector: 'wdgt-unlogged',
@@ -22,18 +20,21 @@ import { WidgetConfigurationService } from '../../services/widget-configuration.
   styleUrls: ['./unlogged.component.scss'],
 })
 export class UnloggedComponent implements OnInit, OnDestroy {
+  @Input() view: WidgetModes;
+
   get websiteName() {
     return this.window.location.host;
   }
 
   isOpen = true;
+  widgetMods = WidgetModes;
   hasCookie = false;
   openPassWindow: Window;
   postSubscription: Subscription;
 
   @HostBinding('class.modal')
-  get isModal() {
-    return this.widgetConfigurationService.isModal;
+  get isModal(): boolean {
+    return this.view === WidgetModes.modal;
   }
 
   @HostBinding('attr.hidden')
@@ -63,16 +64,13 @@ export class UnloggedComponent implements OnInit, OnDestroy {
     private cookiesService: CookiesService,
     private publicApiService: PublicApiService,
     private postMessagesService: PostMessagesService,
-    private eventTrackingService: EventTrackingService,
-    private messageSubscriptionService: MessageSubscriptionService,
-    public widgetConfigurationService: WidgetConfigurationService
+    private messageSubscriptionService: MessageSubscriptionService
   ) {}
 
   ngOnInit() {
-    this.hasCookie = !!this.cookiesService.getCookie(environment.cookieIfaToken);
-    if (!this.hasCookie) {
-      this.eventTrackingService.track(EventTypes.bannerRequest).subscribe();
-    }
+    this.hasCookie =
+      !!this.cookiesService.getCookie(environment.cookieUid2Token) ||
+      !!this.cookiesService.getCookie(environment.cookieIfaToken);
   }
 
   ngOnDestroy() {
@@ -83,24 +81,17 @@ export class UnloggedComponent implements OnInit, OnDestroy {
   backdropClick() {
     this.isOpen = false;
     this.publicApiService.setUserData({ ifaToken: null, uid2Token: null, isDeclined: true });
-    this.eventTrackingService.track(EventTypes.bannerIgnored).subscribe();
   }
 
   launchOpenPassApp() {
-    this.widgetConfigurationService
-      .getConfiguration()
-      .pipe(take(1))
-      .subscribe((config) => {
-        const appPath = new URL(environment.idControllerAppUrl);
-        appPath.pathname += environment.unloggedPath;
-        const searchParams = new URLSearchParams({ origin: this.window.location.origin, ...config });
-        const appUrl = `${appPath.toString()}?${searchParams.toString()}`;
-        this.openPassWindow = this.window.open(appUrl, '_blank', this.openerConfigs);
-        if (this.openPassWindow) {
-          this.messageSubscriptionService.initTokenListener(this.openPassWindow);
-          this.listenForClosingRequest();
-        }
-      });
+    const appPath = new URL(environment.idControllerAppUrl);
+    appPath.pathname += environment.unloggedPath;
+    appPath.searchParams.set('origin', this.window.location.origin);
+    this.openPassWindow = this.window.open(appPath.toString(), '_blank', this.openerConfigs);
+    if (this.openPassWindow) {
+      this.messageSubscriptionService.initTokenListener(this.openPassWindow);
+      this.listenForClosingRequest();
+    }
   }
 
   private listenForClosingRequest() {

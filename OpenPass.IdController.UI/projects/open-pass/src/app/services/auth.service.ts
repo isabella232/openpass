@@ -15,6 +15,10 @@ export class AuthService {
   @localStorage('openpass.email')
   private storageUserEmail: string;
 
+  get isAuthenticated(): boolean {
+    return !!this.storageUid2Token || !!this.storageIfaToken;
+  }
+
   get uid2Token(): string {
     return this.storageUid2Token;
   }

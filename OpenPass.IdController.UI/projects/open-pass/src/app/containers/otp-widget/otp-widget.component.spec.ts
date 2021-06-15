@@ -5,13 +5,6 @@ import { windowFactory } from '../../../../../widget/src/app/utils/window-factor
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxsModule } from '@ngxs/store';
 import { WINDOW } from '@utils/injection-tokens';
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'usrf-navigation',
-  template: '',
-})
-class StubNavComponent {}
 
 describe('OtpWidgetComponent', () => {
   let component: OtpWidgetComponent;
@@ -21,7 +14,7 @@ describe('OtpWidgetComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, NgxsModule.forRoot([])],
       providers: [{ provide: WINDOW, useFactory: windowFactory }],
-      declarations: [OtpWidgetComponent, StubNavComponent],
+      declarations: [OtpWidgetComponent],
     }).compileComponents();
   });
 
