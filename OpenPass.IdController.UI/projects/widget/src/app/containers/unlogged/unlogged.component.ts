@@ -26,6 +26,8 @@ export class UnloggedComponent implements OnInit, OnDestroy {
     return this.window.location.host;
   }
 
+  appHost = environment.appHost;
+
   isOpen = true;
   hasCookie = false;
   openPassWindow: Window;

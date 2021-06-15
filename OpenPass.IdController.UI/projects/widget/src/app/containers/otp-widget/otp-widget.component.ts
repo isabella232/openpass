@@ -31,6 +31,7 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
     return this.window.location.host;
   }
 
+  appHost = environment.appHost;
   isOpen = true;
   openPassWindow: Window;
   postSubscription: Subscription;

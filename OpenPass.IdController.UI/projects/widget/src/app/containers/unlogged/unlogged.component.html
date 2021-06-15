@@ -18,7 +18,7 @@
         <div class="spec-list-icon">
           <img [src]="'/assets/images/ntwrk.png' | useDeployUrl" alt="lock" data-test="non-auth-img-lock" />
         </div>
-        <div [innerHTML]="'WELCOME.OPEN_PASS_PROS.ACCESS' | translate"></div>
+        <div [innerHTML]="'WELCOME.OPEN_PASS_PROS.ACCESS' | translate: { appHost: appHost }"></div>
       </div>
       <div class="spec-list-option" data-test="non-auth-pros-item">
         <div class="spec-list-icon">
@@ -31,7 +31,7 @@
       UNLOGGED.ACTION
     </button>
     <wdgt-open-pass-details class="pt-3 d-block" [name]="'WELCOME.SUMMARY.TITLE' | translate">
-      <p [innerHTML]="'WELCOME.SUMMARY.DESCRIPTION' | translate"></p>
+      <p [innerHTML]="'WELCOME.SUMMARY.DESCRIPTION' | translate: { appHost: appHost }"></p>
     </wdgt-open-pass-details>
   </div>
 </div>

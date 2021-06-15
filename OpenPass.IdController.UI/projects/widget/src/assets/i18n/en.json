@@ -5,12 +5,12 @@
     "WITH": "With OpenPass:",
     "OPEN_PASS_PROS": {
       "INFORMATION": "You will support online businesses that provide you with tailored content.",
-      "ACCESS": "You have full control of your privacy, anytime at <a class=\"styled-a\" href=\"https://openpass.criteo.com/open-pass/under-construction\" target=\"_blank\">transparentadvertising.com</a>",
+      "ACCESS": "You have full control of your privacy, anytime at <a class=\"styled-a\" href=\"{{appHost}}/open-pass/under-construction\" target=\"_blank\">transparentadvertising.com</a>",
       "CONTROL": "Your email address is never shared without your permission"
     },
     "SUMMARY": {
       "TITLE": "How does OpenPass work?",
-      "DESCRIPTION": "With your permission, OpenPass converts your email address into a pseudonymous identifier. This identifier is shared with <b>trusted advertising partners</b> who use it to show you advertisements that they think are relevant to you. <a class=\"styled-a\" target=\"_blank\" href=\"https://openpass.criteo.com/open-pass/under-construction\">Learn more</a>"
+      "DESCRIPTION": "With your permission, OpenPass converts your email address into a pseudonymous identifier. This identifier is shared with <b>trusted advertising partners</b> who use it to show you advertisements that they think are relevant to you. <a class=\"styled-a\" target=\"_blank\" href=\"{{appHost}}/open-pass/under-construction\">Learn more</a>"
     },
     "ACTION": "Sign in with OpenPass"
   },
