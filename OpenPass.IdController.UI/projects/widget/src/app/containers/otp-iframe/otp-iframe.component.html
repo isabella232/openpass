@@ -1,6 +1,6 @@
 <ng-container *ngIf="isOpen">
   <div [class.container]="isModal">
     <div *ngIf="isModal" class="backdrop" (click)="backdropClick()"></div>
-    <iframe #iframe [src]="iframeSrc" [height]="dynamicHeight$ | async"></iframe>
+    <iframe #iframe [src]="iframeSrc$ | async" [height]="dynamicHeight$ | async"></iframe>
   </div>
 </ng-container>

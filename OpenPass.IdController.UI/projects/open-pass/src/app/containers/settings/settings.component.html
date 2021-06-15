@@ -1,0 +1,11 @@
+<div class="container">
+  <h1>Hello there!</h1>
+  <h2>You are about to opt out.</h2>
+  <p *ngIf="secureEmail">You are signed in as {{ secureEmail }}</p>
+  <p class="my-5">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium asperiores corporis cum dolorem doloremque
+    doloribus ducimus eveniet illum impedit incidunt, laborum maiores molestias obcaecati officiis quidem quod
+    repellendus ut, vel!
+  </p>
+  <button type="button" class="btn btn-primary btn-wide" (click)="optOut()">Opt out</button>
+</div>

@@ -1,10 +1,9 @@
-import { Component, HostBinding, Inject, Input, NgModule, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, Inject, NgModule, OnDestroy, OnInit } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { WidgetModes } from '../../enums/widget-modes.enum';
 import { environment } from '../../../environments/environment';
 import { CookiesService } from '../../services/cookies.service';
 import { MessageSubscriptionService } from '../../services/message-subscription.service';
-import { filter } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
 import { Subscription } from 'rxjs';
 import { PostMessagesService } from '../../services/post-messages.service';
@@ -13,6 +12,9 @@ import { CommonModule } from '@angular/common';
 import { PipesModule } from '../../pipes/pipes.module';
 import { WINDOW } from '../../utils/injection-tokens';
 import { OpenPassDetailsModule } from '../../components/open-pass-details/open-pass-details.module';
+import { EventTrackingService } from '../../rest/event-tracking/event-tracking.service';
+import { EventTypes } from '@shared/enums/event-types.enum';
+import { WidgetConfigurationService } from '../../services/widget-configuration.service';
 
 @Component({
   selector: 'wdgt-otp-widget',
@@ -20,11 +22,9 @@ import { OpenPassDetailsModule } from '../../components/open-pass-details/open-p
   styleUrls: ['./otp-widget.component.scss'],
 })
 export class OtpWidgetComponent implements OnInit, OnDestroy {
-  @Input() view: WidgetModes;
-
   @HostBinding('class.modal')
   get isModal(): boolean {
-    return this.view === WidgetModes.modal && this.isOpen;
+    return this.widgetConfigurationService.isModal && this.isOpen;
   }
 
   get websiteName() {
@@ -32,7 +32,6 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
   }
 
   isOpen = true;
-  widgetMods = WidgetModes;
   openPassWindow: Window;
   postSubscription: Subscription;
 
@@ -58,15 +57,18 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
     private cookiesService: CookiesService,
     private publicApiService: PublicApiService,
     private postMessagesService: PostMessagesService,
-    private messageSubscriptionService: MessageSubscriptionService
+    private eventTrackingService: EventTrackingService,
+    private messageSubscriptionService: MessageSubscriptionService,
+    public widgetConfigurationService: WidgetConfigurationService
   ) {}
 
   ngOnInit() {
-    const hasCookie =
-      !!this.cookiesService.getCookie(environment.cookieUid2Token) ||
-      !!this.cookiesService.getCookie(environment.cookieIfaToken);
+    const hasCookie = !!this.cookiesService.getCookie(environment.cookieUid2Token);
     const { isDeclined } = this.publicApiService.getUserData();
     this.isOpen = !hasCookie && !isDeclined;
+    if (this.isOpen) {
+      this.eventTrackingService.track(EventTypes.bannerRequest).subscribe();
+    }
   }
 
   ngOnDestroy() {
@@ -75,18 +77,24 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
   }
 
   launchIdController(path = '') {
-    const queryParams = new URLSearchParams({ origin: this.window.location.origin });
-    const url = `${environment.idControllerAppUrl}${path}?${queryParams}`;
-    this.openPassWindow = this.window.open(url, '_blank', this.openerConfigs);
-    if (this.openPassWindow) {
-      this.messageSubscriptionService.initTokenListener(this.openPassWindow);
-      this.listenForClosingRequest();
-    }
+    this.widgetConfigurationService
+      .getConfiguration()
+      .pipe(take(1))
+      .subscribe((config) => {
+        const queryParams = new URLSearchParams({ origin: this.window.location.origin, ...config });
+        const url = `${environment.idControllerAppUrl}${path}?${queryParams}`;
+        this.openPassWindow = this.window.open(url, '_blank', this.openerConfigs);
+        if (this.openPassWindow) {
+          this.messageSubscriptionService.initTokenListener(this.openPassWindow);
+          this.listenForClosingRequest();
+        }
+      });
   }
 
   backdropClick() {
     this.isOpen = false;
     this.publicApiService.setUserData({ ifaToken: null, uid2Token: null, isDeclined: true });
+    this.eventTrackingService.track(EventTypes.bannerIgnored).subscribe();
   }
 
   private listenForClosingRequest() {

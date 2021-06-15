@@ -79,7 +79,11 @@
     "DESCRIPTION": "Login or create your account in one click with",
     "GOOGLE": {
       "CONTINUE_AS": "Continue as {{email}}",
-      "SIGN_OUT": "Sign Out"
+      "SIGN_OUT": "Sign Out",
+      "SIGN_WITH": "Login with Google"
+    },
+    "FACEBOOK": {
+      "SIGN_WITH": "Login with Facebook"
     }
   }
 }
