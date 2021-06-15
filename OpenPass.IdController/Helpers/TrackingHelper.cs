@@ -65,16 +65,16 @@ namespace OpenPass.IdController.Helpers
 
         public async Task<TrackingContext> BuildTrackingContextAsync(string trackedData)
         {
-            var widjetParameters = TryGetWidgetParameters(trackedData);
+            var widgetParameters = TryGetWidgetParameters(trackedData);
 
             var context = new TrackingContext
             {
-                LocalWebId = await TryGetInternalLocalWebIdAsync(widjetParameters.CtoBundle),
-                Ifa = widjetParameters.Ifa,
-                Uid2 = widjetParameters.Uid2
+                LocalWebId = await TryGetInternalLocalWebIdAsync(widgetParameters.CtoBundle),
+                Ifa = widgetParameters.Ifa,
+                Uid2 = widgetParameters.Uid2
             };
 
-            SetWidgetParameters(widjetParameters, context);
+            SetWidgetParameters(widgetParameters, context);
 
             return context;
         }

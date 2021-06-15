@@ -29,7 +29,7 @@ namespace OpenPass.IdController.UTest.Controllers
             _metricHelperMock = new Mock<IMetricHelper>();
             _trackingHelperMock = new Mock<ITrackingHelper>();
             _metricHelperMock.Setup(mr => mr.SendCounterMetric(It.IsAny<string>()));
-            
+
             _eventController = new EventController(
                 _configurationHelperMock.Object,
                 _metricHelperMock.Object,

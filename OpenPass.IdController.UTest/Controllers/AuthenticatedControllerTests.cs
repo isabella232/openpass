@@ -211,7 +211,7 @@ namespace OpenPass.IdController.UTest.Controllers
 
             // Assert
             _trackingHelperMock.Verify(x => x.BuildTrackingContextAsync(It.Is<EventType>(e => e == EventType.EmailEntered), It.IsAny<string>()), Times.Once);
-                
+
             _glupHelperMock.Verify(g => g.EmitGlup(
                     It.Is<string>(h => h == originHost),
                     It.IsAny<string>(),
@@ -267,7 +267,7 @@ namespace OpenPass.IdController.UTest.Controllers
                 email,
                 It.IsAny<string>()))
                 .ReturnsAsync(expectedUid2Token);
-            _identifierHelperMock.Setup(x=>x.GetOrCreateIfaToken(It.IsAny<IRequestCookieCollection>(),
+            _identifierHelperMock.Setup(x => x.GetOrCreateIfaToken(It.IsAny<IRequestCookieCollection>(),
                 It.IsAny<TrackingContext>(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),
