@@ -11,6 +11,7 @@ import { Providers } from '../enums/providers.enum';
 })
 export class WidgetConfigurationService {
   isModal = false;
+  isRequired = false;
 
   private configuration = new BehaviorSubject<WidgetConfiguration>({
     ifa: '',
@@ -27,7 +28,8 @@ export class WidgetConfigurationService {
   }
 
   setConfiguration(config: WidgetConfiguration) {
-    this.isModal = config.view === WidgetModes.modal;
+    this.isModal = config.view === WidgetModes.modal || config.view === WidgetModes.nonSkippableModal;
+    this.isRequired = config.view === WidgetModes.nonSkippableModal;
     this.configuration.next(config);
   }
 }

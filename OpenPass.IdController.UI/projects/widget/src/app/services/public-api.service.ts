@@ -7,9 +7,9 @@ import { Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class PublicApiService {
-  @localStorage('widget.ifaToken') ifaToken: string;
-  @localStorage('widget.uid2Token') uid2Token: string;
-  @localStorage('widget.isDeclined') isDeclined: boolean;
+  @localStorage('widget.ifaToken') private ifaToken: string;
+  @localStorage('widget.uid2Token') private uid2Token: string;
+  @localStorage('widget.isDeclined') private isDeclined: boolean;
 
   private userData = new Subject<UserData>();
 

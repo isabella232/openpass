@@ -92,7 +92,10 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
       });
   }
 
-  backdropClick() {
+  closeModal(force = false) {
+    if (!force && this.widgetConfigurationService.isRequired) {
+      return;
+    }
     this.isOpen = false;
     this.publicApiService.setUserData({ ifaToken: null, uid2Token: null, isDeclined: true });
     this.eventTrackingService.track(EventTypes.bannerIgnored).subscribe();

@@ -49,12 +49,13 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   set view(val) {
-    if (val === WidgetModes.native || val === WidgetModes.modal) {
+    const definedValues = Object.values(WidgetModes);
+    if (definedValues.includes(val)) {
       this.widgetMode = val;
     } else {
       this.widgetMode = WidgetModes.native;
       // eslint-disable-next-line no-console
-      console.info('usrf-identification mode can only be "native" or "modal". Using "native" by default.');
+      console.info(`usrf-identification view can only have one of these values: ${definedValues.join(', ')}`);
     }
   }
 

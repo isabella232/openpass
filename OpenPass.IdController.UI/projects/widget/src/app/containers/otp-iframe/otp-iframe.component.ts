@@ -68,6 +68,9 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   backdropClick() {
+    if (this.widgetConfigurationService.isRequired) {
+      return;
+    }
     this.isOpen = false;
     this.publicApiService.setUserData({ ifaToken: null, uid2Token: null, isDeclined: true });
   }

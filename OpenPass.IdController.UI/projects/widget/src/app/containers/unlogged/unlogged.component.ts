@@ -72,7 +72,9 @@ export class UnloggedComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.hasCookie = !!this.cookiesService.getCookie(environment.cookieIfaToken);
-    if (!this.hasCookie) {
+    const { isDeclined } = this.publicApiService.getUserData();
+    this.isOpen = !isDeclined;
+    if (!this.hasCookie && this.isOpen) {
       this.eventTrackingService.track(EventTypes.bannerOpened).subscribe();
     }
   }
@@ -82,7 +84,10 @@ export class UnloggedComponent implements OnInit, OnDestroy {
     this.postSubscription?.unsubscribe?.();
   }
 
-  backdropClick() {
+  closeModal(force = false) {
+    if (!force && this.widgetConfigurationService.isRequired) {
+      return;
+    }
     this.isOpen = false;
     this.publicApiService.setUserData({ ifaToken: null, uid2Token: null, isDeclined: true });
     this.eventTrackingService.track(EventTypes.bannerIgnored).subscribe();
