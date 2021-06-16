@@ -68,7 +68,7 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
     const { isDeclined } = this.publicApiService.getUserData();
     this.isOpen = !hasCookie && !isDeclined;
     if (this.isOpen) {
-      this.eventTrackingService.track(EventTypes.bannerRequest).subscribe();
+      this.eventTrackingService.track(EventTypes.bannerOpened).subscribe();
     }
   }
 
