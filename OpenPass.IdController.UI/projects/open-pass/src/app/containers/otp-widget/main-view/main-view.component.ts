@@ -3,7 +3,7 @@ import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { OpenerState } from '@store/otp-widget/opener.state';
 import { EventsTrackingService } from '@services/events-tracking.service';
-import { EventTypes } from '@enums/event-types.enum';
+import { EventTypes } from '@shared/enums/event-types.enum';
 import { DialogWindowService } from '@services/dialog-window.service';
 
 @Component({

@@ -11,11 +11,12 @@ import { NgxsDispatchPluginModule } from '@ngxs-labs/dispatch-decorator';
 import { SsoState } from '@store/otp-widget/sso.state';
 import { AuthState } from '@store/otp-widget/auth.state';
 import { OpenerState } from '@store/otp-widget/opener.state';
+import { ControlsState } from '@store/controls.state';
 import { OtpWidgetState } from '@store/otp-widget/otp-widget.state';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { WINDOW } from '@utils/injection-tokens';
-import { OriginInterceptor } from './interceptors/origin.interceptor';
+import { TrackingDataInterceptor } from './interceptors/tracking-data.interceptor';
 
 export const createTranslateLoader = (http: HttpClient): TranslateHttpLoader =>
   new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -27,7 +28,7 @@ export const createTranslateLoader = (http: HttpClient): TranslateHttpLoader =>
     RouterModule,
     AppRoutingModule,
     HttpClientModule,
-    NgxsModule.forRoot([OpenerState, OtpWidgetState, AuthState, SsoState], {
+    NgxsModule.forRoot([OpenerState, OtpWidgetState, AuthState, SsoState, ControlsState], {
       developmentMode: !environment.production,
     }),
     NgxsDispatchPluginModule.forRoot(),
@@ -42,7 +43,7 @@ export const createTranslateLoader = (http: HttpClient): TranslateHttpLoader =>
   ],
   providers: [
     { provide: WINDOW, useFactory: windowFactory },
-    { provide: HTTP_INTERCEPTORS, useClass: OriginInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: TrackingDataInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })

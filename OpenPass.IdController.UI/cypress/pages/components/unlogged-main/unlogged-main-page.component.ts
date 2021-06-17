@@ -9,11 +9,7 @@ export class UnloggedMainPageComponent extends BaseComponent {
     return this.getElement('action-btn');
   }
 
-  getProsItem() {
-    return this.getElement('pros-item');
-  }
-
-  getImage(name: string) {
-    return this.getElement('img-' + name);
+  getTermsCheckbox() {
+    return this.getElement('terms-checkbox');
   }
 }

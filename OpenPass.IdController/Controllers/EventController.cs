@@ -20,17 +20,20 @@ namespace OpenPass.IdController.Controllers
         /// Track events from UI
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="originHost"></param>
         /// <returns>true if event is tracked</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult SaveEvent([FromBody] EventRequest request)
+        public IActionResult SaveEvent(
+            [FromBody] EventRequest request,
+            [FromHeader(Name = "x-origin-host")] string originHost)
         {
             var saveEventPrefix = $"{_metricPrefix}.save_event";
 
             // the controller tries to parse the EventType from the integer received
             // EventType.Unknown is either unsuccessful or indeed a evenType = 0, invalid in both cases
-            if (request.EventType == EventType.Unknown || string.IsNullOrEmpty(request.OriginHost))
+            if (request == null || request.EventType == EventType.Unknown || string.IsNullOrEmpty(originHost))
             {
                 _metricHelper.SendCounterMetric($"{saveEventPrefix}.bad_request");
                 return BadRequest();

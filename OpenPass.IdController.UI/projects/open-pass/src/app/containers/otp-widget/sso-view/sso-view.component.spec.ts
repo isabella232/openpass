@@ -6,6 +6,25 @@ import { EventsTrackingService } from '@services/events-tracking.service';
 import { stub } from '@utils/stub-factory';
 import { PostMessagesService } from '@services/post-messages.service';
 import { DialogWindowService } from '@services/dialog-window.service';
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'usrf-facebook-auth-button',
+  template: '',
+})
+class StubFacebookButtonComponent {}
+
+@Component({
+  selector: 'usrf-google-auth-button',
+  template: '',
+})
+class StubGoogleButtonComponent {}
+
+@Component({
+  selector: 'usrf-or-hr',
+  template: '',
+})
+class StubOrComponent {}
 
 describe('SsoViewComponent', () => {
   let component: SsoViewComponent;
@@ -20,7 +39,7 @@ describe('SsoViewComponent', () => {
         stub(AuthenticatedService),
         stub(EventsTrackingService),
       ],
-      declarations: [SsoViewComponent],
+      declarations: [SsoViewComponent, StubGoogleButtonComponent, StubFacebookButtonComponent, StubOrComponent],
     }).compileComponents();
   });
 

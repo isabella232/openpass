@@ -3,11 +3,11 @@ import { environment } from '@env';
 import { WINDOW } from '@utils/injection-tokens';
 
 @Component({
-  selector: 'usrf-facebook-auth-small',
-  templateUrl: './facebook-auth-small.component.html',
-  styleUrls: ['./facebook-auth-small.component.scss'],
+  selector: 'usrf-facebook-auth',
+  templateUrl: './facebook-auth.component.html',
+  styleUrls: ['./facebook-auth.component.scss'],
 })
-export class FacebookAuthSmallComponent implements OnInit {
+export class FacebookAuthComponent implements OnInit {
   @Output()
   proceed = new EventEmitter<string>();
 

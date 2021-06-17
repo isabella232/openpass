@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { OtpDto } from '../otp/otp.dto';
 import { Observable } from 'rxjs';
 import { TokenDto } from '../otp/token.dto';
-import { EventTypes } from '@enums/event-types.enum';
+import { EventTypes } from '@shared/enums/event-types.enum';
 
 @Injectable({
   providedIn: 'root',
