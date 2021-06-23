@@ -1,7 +1,9 @@
-<h1 data-test="sso-page-title" translate>SSO.HEADING</h1>
-<p class="mt-2" translate>SSO.DESCRIPTION</p>
-
-<usrf-google-auth-button (proceed)="getToken($event, eventTypes.openPassGoogle)"></usrf-google-auth-button>
-<usrf-or-hr></usrf-or-hr>
-<usrf-facebook-auth-button (proceed)="getToken($event, eventTypes.openPassFacebook)"></usrf-facebook-auth-button>
+<h1 data-test="sso-page-title" class="text-center" translate>SSO.HEADING</h1>
+<p class="mt-2 text-center" translate>SSO.DESCRIPTION</p>
+<div class="form-group">
+  <usrf-facebook-auth (proceed)="getToken($event, eventTypes.openPassFacebook)"></usrf-facebook-auth>
+</div>
+<div class="form-group">
+  <usrf-google-auth (proceed)="getToken($event, eventTypes.openPassGoogle)"></usrf-google-auth>
+</div>
 <div *ngIf="(isFetching$ | async) || (authState$ | async)?.isFetching" class="loader"></div>

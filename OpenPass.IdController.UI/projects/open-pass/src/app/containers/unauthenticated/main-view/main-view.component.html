@@ -1,33 +1,16 @@
 <h3 class="mb-2" translate>NON_AUTH.HEADING</h3>
-<div class="op-logo-container">
-  <img src="./assets/images/open-pass-logo.png" alt="OpenPass" data-test="non-auth-img-logo" />
-</div>
-<p [innerHTML]="'NON_AUTH.DESCRIPTION' | translate: { websiteName: (websiteName$ | async) || '' }"></p>
-<p translate>NON_AUTH.WITH</p>
-<div class="mt-3 pb-4">
-  <div class="spec-list-option" data-test="main-pros-item">
-    <div class="spec-list-icon">
-      <img src="assets/images/support.png" alt="info" data-test="main-img-info" />
-    </div>
-    <div translate>NON_AUTH.OPEN_PASS_PROS.INFORMATION</div>
-  </div>
-  <div class="spec-list-option" data-test="main-pros-item">
-    <div class="spec-list-icon">
-      <img src="assets/images/ntwrk.png" alt="lock" data-test="main-img-lock" />
-    </div>
-    <div [innerHTML]="'WELCOME.OPEN_PASS_PROS.ACCESS' | translate"></div>
-  </div>
-  <div class="spec-list-option" data-test="main-pros-item">
-    <div class="spec-list-icon">
-      <img src="assets/images/icon-email.png" alt="safe" data-test="main-img-safe" />
-    </div>
-    <div [innerHTML]="'WELCOME.OPEN_PASS_PROS.CONTROL' | translate"></div>
-  </div>
-</div>
-<p>
+<p [innerHTML]="'NON_AUTH.SUB_HEADING' | translate"></p>
+<p class="my-4">
   <label class="d-flex align-center form-control">
-    <input type="checkbox" class="form-control mr-2" [(ngModel)]="acceptTerms" name="terms" required />
-    I agree to the OpenPass terms and conditions
+    <input
+      type="checkbox"
+      class="form-control mr-2"
+      name="terms"
+      data-test="non-auth-terms-checkbox"
+      required
+      [(ngModel)]="acceptTerms"
+    />
+    {{ 'NON_AUTH.CONDITION' | translate }}
   </label>
 </p>
 <p class="text-small text-muted" [innerHTML]="'NON_AUTH.HINT' | translate"></p>
@@ -44,8 +27,6 @@
 <div class="text-center pt-2 pb-3">
   <button class="btn btn-link" (click)="closeWindow()" translate>SHARED.CONTINUE_WITHOUT</button>
 </div>
-<usrf-open-pass-details [name]="'NON_AUTH.SUMMARY.TITLE' | translate">
-  <p [innerHTML]="'NON_AUTH.SUMMARY.DESCRIPTION' | translate"></p>
-</usrf-open-pass-details>
+<usrf-copyright></usrf-copyright>
 
 <div *ngIf="isFetching$ | async" class="loader"></div>

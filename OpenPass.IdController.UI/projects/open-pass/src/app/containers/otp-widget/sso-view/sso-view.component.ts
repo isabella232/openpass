@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Actions, ofActionDispatched, Select } from '@ngxs/store';
 import { SsoState } from '@store/otp-widget/sso.state';
 import { Observable, Subscription } from 'rxjs';
-import { EventTypes } from '@enums/event-types.enum';
+import { EventTypes } from '@shared/enums/event-types.enum';
 import { AuthService } from '@services/auth.service';
 import { DialogWindowService } from '@services/dialog-window.service';
 import { EventsTrackingService } from '@services/events-tracking.service';

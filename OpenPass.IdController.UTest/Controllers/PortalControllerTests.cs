@@ -7,7 +7,7 @@ using OpenPass.IdController.Helpers;
 
 namespace OpenPass.IdController.UTest.Controllers
 {
-    class PortalControllerTests
+    internal class PortalControllerTests
     {
         private Mock<IMetricHelper> _metricHelperMock;
         private Mock<ICookieHelper> _cookieHelperMock;

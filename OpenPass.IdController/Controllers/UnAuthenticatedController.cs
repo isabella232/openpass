@@ -13,7 +13,10 @@ namespace OpenPass.IdController.Controllers
         private readonly IMetricHelper _metricHelper;
         private readonly IIdentifierHelper _identifierHelper;
 
-        public UnAuthenticatedController(IMetricHelper metricHelper, ICookieHelper cookieHelper, IIdentifierHelper identifierHelper)
+        public UnAuthenticatedController(
+            IMetricHelper metricHelper,
+            ICookieHelper cookieHelper,
+            IIdentifierHelper identifierHelper)
         {
             _metricHelper = metricHelper;
             _cookieHelper = cookieHelper;
