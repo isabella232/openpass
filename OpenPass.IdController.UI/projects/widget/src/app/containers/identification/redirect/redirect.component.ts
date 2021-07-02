@@ -1,10 +1,10 @@
 import { Component, Inject, NgModule, OnInit } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { Sessions } from '../../enums/sessions.enum';
-import { WINDOW } from '../../utils/injection-tokens';
-import { CookiesService } from '../../services/cookies.service';
-import { PublicApiService } from '../../services/public-api.service';
-import { WidgetConfigurationService } from '../../services/widget-configuration.service';
+import { environment } from '../../../../environments/environment';
+import { Sessions } from '../../../enums/sessions.enum';
+import { WINDOW } from '../../../utils/injection-tokens';
+import { CookiesService } from '../../../services/cookies.service';
+import { PublicApiService } from '../../../services/public-api.service';
+import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 
 @Component({ template: '' })
 export class RedirectComponent implements OnInit {

@@ -1,16 +1,16 @@
 import { AfterViewInit, Component, HostBinding, Inject, NgModule, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Observable, Subscription } from 'rxjs';
-import { PostMessagesService } from '../../services/post-messages.service';
+import { PostMessagesService } from '../../../services/post-messages.service';
 import { filter, map, startWith } from 'rxjs/operators';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
-import { MessageSubscriptionService } from '../../services/message-subscription.service';
-import { CookiesService } from '../../services/cookies.service';
-import { PublicApiService } from '../../services/public-api.service';
+import { MessageSubscriptionService } from '../../../services/message-subscription.service';
+import { CookiesService } from '../../../services/cookies.service';
+import { PublicApiService } from '../../../services/public-api.service';
 import { CommonModule } from '@angular/common';
-import { WINDOW } from '../../utils/injection-tokens';
-import { WidgetConfigurationService } from '../../services/widget-configuration.service';
+import { WINDOW } from '../../../utils/injection-tokens';
+import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 
 @Component({
   selector: 'wdgt-otp-iframe',
