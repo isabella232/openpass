@@ -23,5 +23,17 @@
     "OPEN_PASS_PROS": {
       "CONTROL": "Your information will never be shared with anyone without your permission"
     }
+  },
+  "LANDING": {
+    "TITLE": "Get more out of your online shopping",
+    "SLIDER": {
+      "SLIDE_1": "Access to exclusive deals and discounts for brands and products you love",
+      "SLIDE_2": "Get a full control <br>of your privacy settings",
+      "SLIDE_3": "No spam, ever – your email address is never shared, sold, or even revealed to advertisers"
+    },
+    "SIGNIN_ACTION": "Access content and deals",
+    "SIGNUP_ACTION": "Not a member? Sign up",
+    "PROVIDED_BY": "Provided by",
+    "LEARN_MORE_LINK": "Learn more"
   }
 }

@@ -10,10 +10,12 @@ import { DEPLOY_URL, WINDOW } from './utils/injection-tokens';
 import { IdentificationComponent } from './containers/identification/identification.component';
 import { IdentificationModule } from './containers/identification/identification.module';
 import { TranslationModule } from './containers/shared/translation.module';
+import { LandingModule } from './containers/landing/landing.module';
+import { LandingComponent } from './containers/landing/landing.component';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IdentificationModule, HttpClientModule, TranslationModule],
+  imports: [BrowserModule, IdentificationModule, LandingModule, HttpClientModule, TranslationModule],
   providers: [
     { provide: WINDOW, useFactory: windowFactory },
     { provide: DEPLOY_URL, useFactory: deployUrl },
@@ -26,6 +28,7 @@ export class AppModule implements DoBootstrap {
     const componentsMap = {
       'wdgt-app': AppComponent,
       'wdgt-identification': IdentificationComponent,
+      'wdgt-landing': LandingComponent,
     };
 
     Object.entries(componentsMap).forEach(([tagName, component]) => {

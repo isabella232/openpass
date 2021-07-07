@@ -1,0 +1,59 @@
+<div *ngIf="isOpen" class="wrapper">
+  <div class="widget">
+    <button class="nav-item btn" (click)="close()">&times;</button>
+    <div class="brand-logo d-flex justify-center">
+      <img [src]="safeBrandImage" alt="Website Logo" />
+    </div>
+    <h2 translate>LANDING.TITLE</h2>
+
+    <wdgt-slider>
+      <ng-template>
+        <div class="slide-image">
+          <img [src]="'/assets/images/exclusive-content.png' | useDeployUrl" alt="exclusive content" />
+        </div>
+        <div [innerHTML]="'LANDING.SLIDER.SLIDE_1' | translate"></div>
+      </ng-template>
+
+      <ng-template>
+        <div class="slide-image">
+          <img [src]="'/assets/images/full-control.png' | useDeployUrl" alt="full control" />
+        </div>
+        <div [innerHTML]="'LANDING.SLIDER.SLIDE_2' | translate"></div>
+      </ng-template>
+
+      <ng-template>
+        <div class="slide-image">
+          <img [src]="'/assets/images/clean-email.png' | useDeployUrl" alt="No spam" />
+        </div>
+        <div [innerHTML]="'LANDING.SLIDER.SLIDE_3' | translate"></div>
+      </ng-template>
+    </wdgt-slider>
+
+    <div class="d-flex flex-wrap">
+      <button
+        class="btn btn-wide brand-button"
+        type="button"
+        translate
+        [class.light]="!isBrandColorDark"
+        [style.background]="safeBrandColor"
+        (click)="signin()"
+      >
+        LANDING.SIGNIN_ACTION
+      </button>
+
+      <button type="button" class="btn btn-wide" translate [style.color]="safeBrandColor" (click)="signup()">
+        LANDING.SIGNUP_ACTION
+      </button>
+    </div>
+
+    <div class="provided-by">
+      <h4 translate>LANDING.PROVIDED_BY</h4>
+      <img [src]="'/assets/images/open-pass-logo.png' | useDeployUrl" alt="OpenPass Logo" />
+      <div>
+        <a class="link-more" href="{{ appHost }}/under-construction" target="_blank" translate>
+          LANDING.LEARN_MORE_LINK
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
