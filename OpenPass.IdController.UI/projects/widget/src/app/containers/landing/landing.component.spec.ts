@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LandingComponent } from './landing.component';
-import { UseDeployUrlPipe } from '../../pipes/use-deploy-url.pipe';
-import { DEPLOY_URL } from '../../utils/injection-tokens';
-import { PipesModule } from '../../pipes/pipes.module';
+import { UseDeployUrlPipe } from '@pipes/use-deploy-url.pipe';
+import { DEPLOY_URL } from '@utils/injection-tokens';
+import { PipesModule } from '@pipes/pipes.module';
 
 describe('LandingComponent', () => {
   let component: LandingComponent;

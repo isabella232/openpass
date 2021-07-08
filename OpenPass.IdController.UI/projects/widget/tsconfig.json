@@ -3,7 +3,19 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/app",
-    "types": []
+    "types": [],
+    "paths": {
+      "@env": ["projects/widget/src/environments/environment"],
+      "@enums/*": ["projects/widget/src/app/enums/*"],
+      "@components/*": ["projects/widget/src/app/components/*"],
+      "@directives/*": ["projects/widget/src/app/directives/*"],
+      "@services/*": ["projects/widget/src/app/services/*"],
+      "@pipes/*": ["projects/widget/src/app/pipes/*"],
+      "@utils/*": ["projects/widget/src/app/utils/*"],
+      "@rest/*": ["projects/widget/src/app/rest/*"],
+      "@app-types/*": ["projects/widget/src/app/types/*"],
+      "@shared/*": ["projects/shared/*"]
+    }
   },
   "files": ["src/main.ts", "src/polyfills.ts"],
   "include": ["src/**/*.d.ts"]

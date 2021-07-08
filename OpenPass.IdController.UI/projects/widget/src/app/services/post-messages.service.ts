@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '@env';
 import { PostMessageData } from '@shared/types/post-message-data';
 import { PostMessagePayload } from '@shared/types/post-message-payload';
-import { WINDOW } from '../utils/injection-tokens';
+import { WINDOW } from '@utils/injection-tokens';
 
 @Injectable({
   providedIn: 'root',

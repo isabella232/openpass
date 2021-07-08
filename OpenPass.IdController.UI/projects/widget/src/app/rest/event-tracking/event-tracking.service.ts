@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { EventTypes } from '@shared/enums/event-types.enum';
-import { environment } from '../../../environments/environment';
+import { environment } from '@env';
 import { Observable } from 'rxjs';
-import { WINDOW } from '../../utils/injection-tokens';
-import { WidgetConfigurationService } from '../../services/widget-configuration.service';
+import { WINDOW } from '@utils/injection-tokens';
+import { WidgetConfigurationService } from '@services/widget-configuration.service';
 import { mergeMap } from 'rxjs/operators';
 
 @Injectable({

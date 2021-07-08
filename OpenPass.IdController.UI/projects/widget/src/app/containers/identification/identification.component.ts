@@ -11,18 +11,18 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ViewContainerDirective } from '../../directives/view-container.directive';
+import { ViewContainerDirective } from '@directives/view-container.directive';
 import { UserData } from '@shared/types/public-api/user-data';
-import { Variants } from '../../enums/variants.enum';
-import { Sessions } from '../../enums/sessions.enum';
-import { Providers } from '../../enums/providers.enum';
-import { WidgetModes } from '../../enums/widget-modes.enum';
+import { Variants } from '@enums/variants.enum';
+import { Sessions } from '@enums/sessions.enum';
+import { Providers } from '@enums/providers.enum';
+import { WidgetModes } from '@enums/widget-modes.enum';
 import { Subscription } from 'rxjs';
-import { CookiesService } from '../../services/cookies.service';
-import { PublicApiService } from '../../services/public-api.service';
-import { WidgetConfigurationService } from '../../services/widget-configuration.service';
-import { environment } from '../../../environments/environment';
-import { WidgetConfiguration } from '../../types/widget-configuration';
+import { CookiesService } from '@services/cookies.service';
+import { PublicApiService } from '@services/public-api.service';
+import { WidgetConfigurationService } from '@services/widget-configuration.service';
+import { environment } from '@env';
+import { WidgetConfiguration } from '@app-types/widget-configuration';
 
 @Component({
   selector: 'wdgt-identification',

@@ -9,11 +9,11 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl, SafeStyle } from '@angular/platform-browser';
-import { UseDeployUrlPipe } from '../../pipes/use-deploy-url.pipe';
-import { detectDarkColor } from '../../utils/ui-tools';
-import { CookiesService } from '../../services/cookies.service';
-import { PublicApiService } from '../../services/public-api.service';
-import { environment } from '../../../environments/environment';
+import { UseDeployUrlPipe } from '@pipes/use-deploy-url.pipe';
+import { detectDarkColor } from '@utils/ui-tools';
+import { CookiesService } from '@services/cookies.service';
+import { PublicApiService } from '@services/public-api.service';
+import { environment } from '@env';
 
 @Component({
   selector: 'wdgt-landing',

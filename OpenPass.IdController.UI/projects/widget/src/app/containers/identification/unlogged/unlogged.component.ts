@@ -2,19 +2,19 @@ import { Component, HostBinding, Inject, NgModule, OnDestroy, OnInit } from '@an
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
-import { WINDOW } from '../../../utils/injection-tokens';
-import { CookiesService } from '../../../services/cookies.service';
-import { PublicApiService } from '../../../services/public-api.service';
-import { PostMessagesService } from '../../../services/post-messages.service';
-import { MessageSubscriptionService } from '../../../services/message-subscription.service';
-import { environment } from '../../../../environments/environment';
+import { WINDOW } from '@utils/injection-tokens';
+import { CookiesService } from '@services/cookies.service';
+import { PublicApiService } from '@services/public-api.service';
+import { PostMessagesService } from '@services/post-messages.service';
+import { MessageSubscriptionService } from '@services/message-subscription.service';
+import { environment } from '@env';
 import { filter, take } from 'rxjs/operators';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
-import { PipesModule } from '../../../pipes/pipes.module';
-import { OpenPassDetailsModule } from '../../../components/open-pass-details/open-pass-details.module';
-import { EventTrackingService } from '../../../rest/event-tracking/event-tracking.service';
+import { PipesModule } from '@pipes/pipes.module';
+import { OpenPassDetailsModule } from '@components/open-pass-details/open-pass-details.module';
+import { EventTrackingService } from '@rest/event-tracking/event-tracking.service';
 import { EventTypes } from '@shared/enums/event-types.enum';
-import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
+import { WidgetConfigurationService } from '@services/widget-configuration.service';
 
 @Component({
   selector: 'wdgt-unlogged',

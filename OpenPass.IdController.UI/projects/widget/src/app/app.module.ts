@@ -4,9 +4,9 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { createCustomElement } from '@angular/elements';
-import { windowFactory } from './utils/window-factory';
-import { deployUrl } from './utils/deploy-url-factory';
-import { DEPLOY_URL, WINDOW } from './utils/injection-tokens';
+import { windowFactory } from '@utils/window-factory';
+import { deployUrl } from '@utils/deploy-url-factory';
+import { DEPLOY_URL, WINDOW } from '@utils/injection-tokens';
 import { IdentificationComponent } from './containers/identification/identification.component';
 import { IdentificationModule } from './containers/identification/identification.module';
 import { TranslationModule } from './containers/shared/translation.module';
