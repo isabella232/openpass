@@ -41,6 +41,7 @@ namespace OpenPass.IdController
                 var metricsRegistry = registrar.AddMetricsRegistry();
                 // Registers an IConsulServiceLocator implementation. Current service is read from the configuration/command line arguments automatically.
                 var serviceLocator = registrar.AddServiceLocator(metricsRegistry);
+                var secretsResolver = registrar.AddSecretsResolver(metricsRegistry, serviceLocator);
 
                 // Registers an IConfigAsCodeService that will read its configuration data from the SQL databases, with dependencies
                 var keyValueStore = registrar.AddConsulKeyValueStore(metricsRegistry);
@@ -48,7 +49,7 @@ namespace OpenPass.IdController
 
                 var sqlConnections = registrar.AddSqlConnections(serviceLocator, metricsRegistry, sdkConfigurationService);
                 var kafkaConsumer = registrar.AddKafkaConsumer(metricsRegistry, serviceLocator, sdkConfigurationService);
-                var storageManager = registrar.AddStorageManager(metricsRegistry, serviceLocator, keyValueStore, sdkConfigurationService);
+                var storageManager = registrar.AddStorageManager(metricsRegistry, serviceLocator, keyValueStore, sdkConfigurationService, secretsResolver);
                 var configAsCode = registrar.AddConfigAsCode(metricsRegistry, serviceLocator, storageManager, kafkaConsumer, sqlConnections);
 
                 // Enables tracing & request correlation
