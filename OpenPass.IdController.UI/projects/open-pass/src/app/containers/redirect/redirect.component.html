@@ -1,0 +1,19 @@
+<div class="wrapper">
+  <main class="container">
+    <div class="progress">
+      <div class="bar" [style.width.%]="progress$ | async" [class.slow]="(progress$ | async) <= 90"></div>
+    </div>
+
+    <div class="content">
+      <h1 translate>REDIRECT.HEADING</h1>
+      <p>
+        {{ 'REDIRECT.MESSAGE' | translate: { redirectDomain: redirectDomain } }}
+      </p>
+    </div>
+
+    <div class="copyright">
+      <p translate>REDIRECT.COPY</p>
+      <img src="assets/images/open-pass-logo.png" alt="OpenPass logo" />
+    </div>
+  </main>
+</div>

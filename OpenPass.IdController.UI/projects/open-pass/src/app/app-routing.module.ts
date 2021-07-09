@@ -25,6 +25,10 @@ const routes: Routes = [
     loadChildren: () => import('./containers/settings/settings.module').then((m) => m.SettingsModule),
   },
   {
+    path: 'redirect',
+    loadChildren: () => import('./containers/redirect/redirect.module').then((m) => m.RedirectModule),
+  },
+  {
     path: '**',
     loadChildren: () => import('./containers/not-found/not-found.module').then((m) => m.NotFoundModule),
   },
