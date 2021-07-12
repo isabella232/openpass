@@ -1,0 +1,9 @@
+<div class="snack-bar" [class.closing]="isClosing">
+  <div class="logo">
+    <img [src]="'/assets/images/lock.png' | useDeployUrl" alt="OpenPass logo" />
+  </div>
+  <div class="content">
+    <ng-content></ng-content>
+  </div>
+  <button class="btn close-btn" type="button" (click)="close()">&times;</button>
+</div>

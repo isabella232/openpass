@@ -12,10 +12,12 @@ import { IdentificationModule } from './containers/identification/identification
 import { TranslationModule } from './containers/shared/translation.module';
 import { LandingModule } from './containers/landing/landing.module';
 import { LandingComponent } from './containers/landing/landing.component';
+import { SnackBarModule } from '@components/snack-bar/snack-bar.module';
+import { SnackBarComponent } from '@components/snack-bar/snack-bar.component';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IdentificationModule, LandingModule, HttpClientModule, TranslationModule],
+  imports: [BrowserModule, IdentificationModule, LandingModule, HttpClientModule, TranslationModule, SnackBarModule],
   providers: [
     { provide: WINDOW, useFactory: windowFactory },
     { provide: DEPLOY_URL, useFactory: deployUrl },
@@ -29,6 +31,7 @@ export class AppModule implements DoBootstrap {
       'wdgt-app': AppComponent,
       'wdgt-identification': IdentificationComponent,
       'wdgt-landing': LandingComponent,
+      'wdgt-snack-bar': SnackBarComponent,
     };
 
     Object.entries(componentsMap).forEach(([tagName, component]) => {
