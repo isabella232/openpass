@@ -64,7 +64,6 @@ export class RedirectComponent implements OnInit, OnDestroy {
   private saveTokenAndClose() {
     this.eventsTrackingService.trackEvent(EventTypes.consentGranted);
 
-    console.log(this.redirectUrl);
     const originPath = new URL(this.redirectUrl);
     originPath.searchParams.set('email', this.userEmail ?? '');
     originPath.searchParams.set('ifaToken', this.authService.ifaToken ?? '');
