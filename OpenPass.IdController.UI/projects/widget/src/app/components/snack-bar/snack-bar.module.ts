@@ -6,5 +6,6 @@ import { PipesModule } from '@pipes/pipes.module';
 @NgModule({
   declarations: [SnackBarComponent],
   imports: [CommonModule, PipesModule],
+  exports: [SnackBarComponent],
 })
 export class SnackBarModule {}

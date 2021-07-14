@@ -3,7 +3,6 @@ import {
   ComponentFactoryResolver,
   ElementRef,
   EventEmitter,
-  Injector,
   Input,
   OnDestroy,
   OnInit,
@@ -62,38 +61,22 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   private widgetMode = WidgetModes.native;
 
   constructor(
-    private injector: Injector,
     private elementRef: ElementRef,
     private cookiesService: CookiesService,
     private publicApiService: PublicApiService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private widgetConfigurationService: WidgetConfigurationService
   ) {
-    if (!environment.production) {
-      // in webcomponent mode we can read prop assigned to app component.
-      this.view = this.elementRef.nativeElement.getAttribute('view') ?? this.view;
-      this.variant = this.elementRef.nativeElement.getAttribute('variant') ?? this.variant;
-      this.session = this.elementRef.nativeElement.getAttribute('session') ?? this.session;
-      this.provider = this.elementRef.nativeElement.getAttribute('provider') ?? this.provider;
-    }
     this.elementRef.nativeElement.getUserData = this.getUserData.bind(this);
   }
 
   ngOnInit() {
     this.saveConfiguration();
     this.loadComponent();
-    const isDev = !environment.production;
-    this.userDataSubscription = this.publicApiService.getSubscription().subscribe((userData) => {
-      this.signUp.emit(userData);
-      if (isDev) {
-        const event = new CustomEvent('signUp', { detail: userData });
-        this.elementRef.nativeElement.dispatchEvent(event);
-      }
-    });
+    this.userDataSubscription = this.publicApiService
+      .getSubscription()
+      .subscribe((userData) => this.signUp.emit(userData));
     this.loaded.emit();
-    if (isDev) {
-      this.elementRef.nativeElement.dispatchEvent(new Event('loaded'));
-    }
   }
 
   ngOnDestroy() {

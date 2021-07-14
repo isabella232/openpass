@@ -8,16 +8,14 @@ import { windowFactory } from '@utils/window-factory';
 import { deployUrl } from '@utils/deploy-url-factory';
 import { DEPLOY_URL, WINDOW } from '@utils/injection-tokens';
 import { IdentificationComponent } from './containers/identification/identification.component';
-import { IdentificationModule } from './containers/identification/identification.module';
 import { TranslationModule } from './containers/shared/translation.module';
-import { LandingModule } from './containers/landing/landing.module';
 import { LandingComponent } from './containers/landing/landing.component';
-import { SnackBarModule } from '@components/snack-bar/snack-bar.module';
 import { SnackBarComponent } from '@components/snack-bar/snack-bar.component';
+import { ViewContainerModule } from '@directives/view-container.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IdentificationModule, LandingModule, HttpClientModule, TranslationModule, SnackBarModule],
+  imports: [BrowserModule, HttpClientModule, TranslationModule, ViewContainerModule],
   providers: [
     { provide: WINDOW, useFactory: windowFactory },
     { provide: DEPLOY_URL, useFactory: deployUrl },
