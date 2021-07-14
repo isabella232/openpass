@@ -14,10 +14,12 @@ export class SnackBarComponent implements OnInit {
   delay: number;
 
   isClosing = false;
+  isAppearing = false;
 
   constructor(private elementRef: ElementRef) {}
 
   ngOnInit() {
+    timer(100).subscribe(() => (this.isAppearing = true));
     if (this.delay) {
       timer(this.delay).subscribe(() => this.close());
     }
