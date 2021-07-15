@@ -3,10 +3,8 @@
     "rootDir": "src",
     "module": "ES2020",
     "target": "es5",
-    "lib": ["es2020", "dom"],
+    "lib": ["es2020", "dom"]
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": ["./src/**/*.ts"],
+  "exclude": ["node_modules"],
+  "include": ["./src/**/*.ts"]
 }

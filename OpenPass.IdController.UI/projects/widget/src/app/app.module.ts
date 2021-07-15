@@ -12,10 +12,11 @@ import { TranslationModule } from './containers/shared/translation.module';
 import { LandingComponent } from './containers/landing/landing.component';
 import { SnackBarComponent } from '@components/snack-bar/snack-bar.component';
 import { ViewContainerModule } from '@directives/view-container.module';
+import { TokensCatcherModule } from './containers/tokens-catcher/tokens-catcher.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, HttpClientModule, TranslationModule, ViewContainerModule],
+  imports: [BrowserModule, HttpClientModule, TranslationModule, ViewContainerModule, TokensCatcherModule],
   providers: [
     { provide: WINDOW, useFactory: windowFactory },
     { provide: DEPLOY_URL, useFactory: deployUrl },
