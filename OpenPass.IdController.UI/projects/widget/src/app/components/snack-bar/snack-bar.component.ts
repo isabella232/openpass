@@ -1,4 +1,13 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
 import { timer } from 'rxjs';
 
 @Component({
@@ -13,13 +22,15 @@ export class SnackBarComponent implements OnInit {
   @Input()
   delay: number;
 
-  isClosing = false;
   isAppearing = false;
 
-  constructor(private elementRef: ElementRef) {}
+  constructor(private elementRef: ElementRef, private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
-    timer(100).subscribe(() => (this.isAppearing = true));
+    timer(100).subscribe(() => {
+      this.isAppearing = true;
+      this.cd.detectChanges();
+    });
     if (this.delay) {
       timer(this.delay).subscribe(() => this.close());
     }
@@ -27,7 +38,8 @@ export class SnackBarComponent implements OnInit {
 
   close() {
     this.closeClick.emit();
-    this.isClosing = true;
+    this.isAppearing = false;
+    this.cd.detectChanges();
     timer(500).subscribe(() => this.elementRef.nativeElement.remove());
   }
 }

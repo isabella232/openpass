@@ -24,7 +24,7 @@
   border: 2px solid $primary-dark;
   border-radius: 4px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
-  transition: opacity 0.5s, bottom 0.5s;
+  transition: bottom 0.5s;
   opacity: 1;
 
   @media screen and (max-width: 760px) {
@@ -32,10 +32,6 @@
       width: 90%;
       padding: 0.5rem;
     }
-  }
-
-  &.closing {
-    opacity: 0;
   }
 
   &.appearing {
