@@ -1,6 +1,14 @@
 <div *ngIf="isOpen" class="container">
-  <div *ngIf="widgetConfigurationService.isModal" class="backdrop" (click)="backdropClick()"></div>
+  <div *ngIf="widgetConfigurationService.isModal" class="backdrop" (click)="closeModal()"></div>
   <div class="widget-body" [class.shadow]="widgetConfigurationService.isModal">
+    <button
+      *ngIf="widgetConfigurationService.isRequired"
+      class="btn btn-close"
+      type="button"
+      (click)="closeModal(true)"
+    >
+      &#9587;
+    </button>
     <h3 class="mb-1" translate>WELCOME.HEADING</h3>
     <div class="op-logo-container">
       <img [src]="'/assets/images/open-pass-logo.png' | useDeployUrl" alt="OpenPass logo" />

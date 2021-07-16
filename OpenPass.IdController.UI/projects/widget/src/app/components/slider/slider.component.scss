@@ -1,0 +1,48 @@
+.inner {
+  width: 100%;
+  overflow: hidden;
+}
+
+.slide {
+  width: 100%;
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+
+  &.active {
+    position: relative;
+    opacity: 1;
+    transition: opacity 0.5s;
+    z-index: 0;
+  }
+}
+
+.points {
+  display: flex;
+  justify-content: center;
+  padding: 5px 0;
+
+  span {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 4px;
+
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 3px;
+      background-color: #c4c4c4;
+      transition: background-color 0.5s;
+    }
+
+    &.active {
+      &::after {
+        background-color: #d942ff;
+      }
+    }
+  }
+}

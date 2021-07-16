@@ -75,5 +75,10 @@
     "FACEBOOK": {
       "SIGN_WITH": "Login with Facebook"
     }
+  },
+  "REDIRECT": {
+    "HEADING": "Hang tight!",
+    "MESSAGE": "OpenPass is processing, you will be automatically redirected to {{redirectDomain}}",
+    "COPY": "Better advertising experience by"
   }
 }

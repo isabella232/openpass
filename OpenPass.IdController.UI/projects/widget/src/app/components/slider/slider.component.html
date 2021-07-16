@@ -1,0 +1,14 @@
+<div class="inner">
+  <div *ngFor="let slide of slides; index as i" [class.active]="i === activeIndex" class="slide">
+    <ng-template [ngTemplateOutlet]="slide"></ng-template>
+  </div>
+</div>
+
+<div class="points">
+  <span
+    *ngFor="let slide of slides; index as i"
+    [class.active]="i === activeIndex"
+    [tabindex]="i"
+    (click)="setActiveSlide(i)"
+  ></span>
+</div>

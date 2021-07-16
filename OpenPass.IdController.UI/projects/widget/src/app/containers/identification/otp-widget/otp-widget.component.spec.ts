@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UnloggedComponent } from './unlogged.component';
-import { DEPLOY_URL, WINDOW } from '../../utils/injection-tokens';
-import { windowFactory } from '../../utils/window-factory';
-import { PipesModule } from '../../pipes/pipes.module';
+import { OtpWidgetComponent } from './otp-widget.component';
+import { windowFactory } from '@utils/window-factory';
+import { DEPLOY_URL, WINDOW } from '@utils/injection-tokens';
+import { PipesModule } from '@pipes/pipes.module';
 import { TranslateModule } from '@ngx-translate/core';
-import { EventTrackingService } from '../../rest/event-tracking/event-tracking.service';
+import { EventTrackingService } from '@rest/event-tracking/event-tracking.service';
 
-describe('UnloggedComponent', () => {
-  let component: UnloggedComponent;
-  let fixture: ComponentFixture<UnloggedComponent>;
+describe('OtpWidgetComponent', () => {
+  let component: OtpWidgetComponent;
+  let fixture: ComponentFixture<OtpWidgetComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [UnloggedComponent],
+      declarations: [OtpWidgetComponent],
       imports: [PipesModule, TranslateModule.forRoot()],
       providers: [
         { provide: WINDOW, useFactory: windowFactory },
@@ -24,7 +24,7 @@ describe('UnloggedComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UnloggedComponent);
+    fixture = TestBed.createComponent(OtpWidgetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

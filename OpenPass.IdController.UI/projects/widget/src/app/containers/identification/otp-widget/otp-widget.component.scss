@@ -6,7 +6,7 @@
 @import '~projects/open-pass/src/styles/typography';
 @import '~projects/open-pass/src/styles/grid';
 
-:host:not([hidden='true']) {
+:host {
   width: 100%;
   height: 100%;
   display: block;
@@ -15,13 +15,12 @@
   font-size: 0.75rem;
   line-height: 1rem;
   letter-spacing: 0.01em;
-  padding-bottom: 1rem;
 
   &.modal {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 2147483647;
+    z-index: $max-z-index;
 
     .container {
       overflow: auto;
@@ -48,13 +47,21 @@
   width: 100%;
   max-width: 400px;
   min-width: 200px;
+  padding: 1rem 2rem 0;
   background: #fff;
   z-index: 1;
+  position: relative;
 
   &.shadow {
     box-shadow: 1px 0 7px 3px rgb(0 0 0 / 4%), 0 -1px 7px 3px rgb(0 0 0 / 4%), -1px 0 7px 3px rgb(0 0 0 / 4%);
-    padding: 1rem 2rem;
   }
+}
+
+.btn-close {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+  background: #fff;
 }
 
 .backdrop {
@@ -91,9 +98,4 @@ h3 {
   img {
     width: 100%;
   }
-}
-
-wdgt-open-pass-details {
-  margin-bottom: -1rem;
-  display: block;
 }

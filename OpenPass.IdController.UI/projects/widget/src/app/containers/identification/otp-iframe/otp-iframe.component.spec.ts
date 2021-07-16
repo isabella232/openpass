@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OtpIframeComponent } from './otp-iframe.component';
-import { windowFactory } from '../../utils/window-factory';
-import { WINDOW } from '../../utils/injection-tokens';
+import { windowFactory } from '@utils/window-factory';
+import { WINDOW } from '@utils/injection-tokens';
 
 describe('OtpIframeComponent', () => {
   let component: OtpIframeComponent;

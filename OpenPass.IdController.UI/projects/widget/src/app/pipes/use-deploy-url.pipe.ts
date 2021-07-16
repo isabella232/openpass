@@ -1,5 +1,5 @@
 import { Inject, Pipe, PipeTransform } from '@angular/core';
-import { DEPLOY_URL } from '../utils/injection-tokens';
+import { DEPLOY_URL } from '@utils/injection-tokens';
 
 @Pipe({
   name: 'useDeployUrl',

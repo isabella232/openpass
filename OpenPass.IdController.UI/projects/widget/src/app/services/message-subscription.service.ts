@@ -5,9 +5,9 @@ import { PublicApiService } from './public-api.service';
 import { PostMessagesService } from './post-messages.service';
 import { PostMessagePayload } from '@shared/types/post-message-payload';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
-import { environment } from '../../environments/environment';
+import { environment } from '@env';
 import { filter } from 'rxjs/operators';
-import { WINDOW } from '../utils/injection-tokens';
+import { WINDOW } from '@utils/injection-tokens';
 
 @Injectable({
   providedIn: 'root',

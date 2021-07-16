@@ -7,6 +7,8 @@ namespace OpenPass.IdController.Models.Tracking
         [EnumMember(Value = "native")]
         Native = 1,
         [EnumMember(Value = "modal")]
-        Modal
+        Modal,
+        [EnumMember(Value = "non-skippable-modal")]
+        NonSkippableModal
     }
 }
