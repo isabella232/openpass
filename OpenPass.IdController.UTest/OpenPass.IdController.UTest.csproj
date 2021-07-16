@@ -1,36 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="$(CBS_DIR)\MSBuild\targets\Sdk.props" Condition="Exists('$(CBS_DIR)\MSBuild\targets\Sdk.props')" />
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <DefineConstants>$(DefineConstants);NET_CORE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Criteo.ConfigAsCode.netcore" />
-    <Reference Include="Criteo.Configuration.Repository.netcore" />
-    <Reference Include="Criteo.Configuration.Description.netcore" />
-    <Reference Include="Criteo.Glup.netcore" />
-    <Reference Include="Criteo.Identification.Schemas.netcore" />
-    <Reference Include="Criteo.Services.netcore" />
-    <Reference Include="Criteo.UserAgent.netcore" />
-    <Reference Include="Criteo.UserIdentification.netcore" />
-    <Reference Include="Criteo.UserIdentification.Services.netcore" />
-    <Reference Include="Criteo.Testing.Isolation.netcore" />
-    <Reference Include="Criteo.Testing.Utils.netcore" />
-    <Reference Include="Glup.Schemas.netcore" />
-    <Reference Include="Metrics.Core.netcore" />
-    <Reference Include="Sdk.ProductionResources.netcore" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="NUnit" Version="[default]" />
-    <PackageReference Include="NUnit3TestAdapter" Version="[default]" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="[default]" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="[default]" />
-    <PackageReference Include="Moq" Version="[default]" />
-    <PackageReference Include="FluentAssertions" Version="[default]" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\OpenPass.IdController\OpenPass.IdController.csproj" />
   </ItemGroup>
-  <Import Project="$(CBS_DIR)\MSBuild\targets\Sdk.targets" Condition="Exists('$(CBS_DIR)\MSBuild\targets\Sdk.targets')" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+  </ItemGroup>
 </Project>

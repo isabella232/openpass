@@ -1,7 +1,5 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OpenPass.IdController.Helpers;
-using static Criteo.Glup.IdController.Types;
 
 namespace OpenPass.IdController.Controllers
 {
@@ -12,50 +10,39 @@ namespace OpenPass.IdController.Controllers
 
         private readonly IMetricHelper _metricHelper;
         private readonly ICookieHelper _cookieHelper;
-        private readonly IGlupHelper _glupHelper;
-        private readonly ITrackingHelper _trackingHelper;
 
-        public PortalController(
-            IMetricHelper metricHelper,
-            ICookieHelper cookieHelper,
-            IGlupHelper glupHelper,
-            ITrackingHelper trackingHelper)
+        public PortalController(IMetricHelper metricHelper, ICookieHelper cookieHelper)
         {
             _metricHelper = metricHelper;
             _cookieHelper = cookieHelper;
-            _glupHelper = glupHelper;
-            _trackingHelper = trackingHelper;
         }
 
+        /// <summary>
+        /// Perfrom Optout.
+        /// Remove Ifa and Uid2 cookies and set Optout cookie
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("controls/optout")]
-        public async Task<IActionResult> OptOut(
-            [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromHeader(Name = "x-origin-host")] string originHost,
-            [FromHeader(Name = "x-tracked-data")] string trackedData)
+        public IActionResult OptOut()
         {
             // Apply internal opt-out
             _cookieHelper.RemoveUid2AdvertisingCookie(Response.Cookies);
             _cookieHelper.RemoveIdentifierForAdvertisingCookie(Response.Cookies);
             _cookieHelper.SetOptoutCookie(Response.Cookies, "1");
 
-            // TODO/OPT: call partners to apply opt-out on their side. This needs to be designed.
-
             // Emit metric and glup
             var optoutMetricPrefix = $"{_metricPrefix}.optout";
             _metricHelper.SendCounterMetric($"{optoutMetricPrefix}");
 
-            var trackingContext = await _trackingHelper.BuildTrackingContextAsync(EventType.OptOut, trackedData);
-
-            _glupHelper.EmitGlup(originHost, userAgent, trackingContext);
-
             return Ok();
         }
 
+        /// <summary>
+        /// Perfrom OptIn and remove Optout cookie
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("controls/optin")]
-        public async Task<IActionResult> OptIn(
-            [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromHeader(Name = "x-origin-host")] string originHost,
-            [FromHeader(Name = "x-tracked-data")] string trackedData)
+        public IActionResult OptIn()
         {
             // Apply opt-in
             _cookieHelper.RemoveOptoutCookie(Response.Cookies);
@@ -63,10 +50,6 @@ namespace OpenPass.IdController.Controllers
             // Emit metric and glup
             var optoutMetricPrefix = $"{_metricPrefix}.optin";
             _metricHelper.SendCounterMetric($"{optoutMetricPrefix}");
-
-            var trackingContext = await _trackingHelper.BuildTrackingContextAsync(EventType.OptIn, trackedData);
-
-            _glupHelper.EmitGlup(originHost, userAgent, trackingContext);
 
             return Ok();
         }

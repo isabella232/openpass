@@ -1,12 +1,11 @@
-using static Criteo.Glup.IdController.Types;
-
 namespace OpenPass.IdController.Models
 {
+    /// <summary>
+    /// Model for sending events
+    /// </summary>
     public class EventRequest
     {
         public EventType EventType { get; set; }
-        public string LocalWebId { get; set; }
-        public string Uid { get; set; }
-        public string Ifa { get; set; }
+        public string OriginHost { get; set; }
     }
 }

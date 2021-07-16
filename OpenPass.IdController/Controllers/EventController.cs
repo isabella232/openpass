@@ -1,7 +1,5 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using static Criteo.Glup.IdController.Types;
+using Microsoft.AspNetCore.Http;
 using OpenPass.IdController.Models;
 using OpenPass.IdController.Helpers;
 
@@ -11,33 +9,25 @@ namespace OpenPass.IdController.Controllers
     public class EventController : Controller
     {
         private static readonly string _metricPrefix = "event";
-        private readonly IConfigurationHelper _configurationHelper;
         private readonly IMetricHelper _metricHelper;
 
-        private readonly IGlupHelper _glupHelper;
-        private readonly Random _randomGenerator;
-        private readonly ITrackingHelper _trackingHelper;
-
-        public EventController(
-            IConfigurationHelper configurationHelper,
-            IMetricHelper metricHelper,
-            IGlupHelper glupHelper,
-            ITrackingHelper trackingHelper)
+        public EventController(IMetricHelper metricHelper)
         {
-            _configurationHelper = configurationHelper;
             _metricHelper = metricHelper;
-            _glupHelper = glupHelper;
-            _randomGenerator = new Random();
-            _trackingHelper = trackingHelper;
-
         }
 
+        /// <summary>
+        /// Track events from UI
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="originHost"></param>
+        /// <returns>true if event is tracked</returns>
         [HttpPost]
-        public async Task<IActionResult> SaveEvent(
-            [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromHeader(Name = "x-origin-host")] string originHost,
-            [FromHeader(Name = "x-tracked-data")] string trackedData,
-            [FromBody] EventRequest request)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult SaveEvent(
+            [FromBody] EventRequest request,
+            [FromHeader(Name = "x-origin-host")] string originHost)
         {
             var saveEventPrefix = $"{_metricPrefix}.save_event";
 
@@ -47,19 +37,6 @@ namespace OpenPass.IdController.Controllers
             {
                 _metricHelper.SendCounterMetric($"{saveEventPrefix}.bad_request");
                 return BadRequest();
-            }
-
-            // Using sampling ratio for an endpoint generating glups directly
-            var samplingRatio = _configurationHelper.EmitGlupsRatio(originHost);
-            if (_randomGenerator.NextDouble() > samplingRatio)
-            {
-                _metricHelper.SendCounterMetric($"{saveEventPrefix}.over_sampling_ratio");
-            }
-            else
-            {
-                var trackingContext = await _trackingHelper.BuildTrackingContextAsync(request.EventType, trackedData);
-                _metricHelper.SendCounterMetric($"{saveEventPrefix}.emit_glup.${request.EventType}");
-                _glupHelper.EmitGlup(originHost, userAgent, trackingContext);
             }
 
             return Ok(new { result = true }); // 200 OK with dummy content

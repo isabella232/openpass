@@ -1,76 +1,15 @@
-using Criteo.ConfigAsCode;
-using Criteo.Services.Glup;
-using Criteo.UserAgent.Provider;
-using Criteo.UserIdentification.Services;
-using Criteo.UserIdentification.Services.IdentityMapping;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenPass.IdController.Helpers;
 using OpenPass.IdController.Helpers.Adapters;
-using Sdk.Interfaces.Hosting;
-using Sdk.Interfaces.KeyValueStore;
-using Sdk.Monitoring;
-using Sdk.ProductionResources.ConnectionStrings;
-using Sdk.Secrets;
+using OpenPass.IdController.Helpers.Configuration;
 
 namespace OpenPass.IdController
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddConfigurationHelper(this IServiceCollection services)
+        public static IServiceCollection AddConfigurationManager(this IServiceCollection services)
         {
-            services.AddSingleton<IConfigurationHelper>(r =>
-            {
-                var cacService = r.GetService<IConfigAsCodeService>();
-                return new ConfigurationHelper(cacService);
-            });
-
-            return services;
-        }
-
-        public static IServiceCollection AddInternalMappingHelper(this IServiceCollection services)
-        {
-            services.AddSingleton<IInternalMappingHelper>(r =>
-            {
-                var storageManager = r.GetService<IStorageManager>();
-                var glupService = r.GetService<IGlupService>();
-                var cacService = r.GetService<IConfigAsCodeService>();
-                var graphiteHelper = r.GetService<IGraphiteHelper>();
-                var secretsResolver = r.GetService<ISecretsResolver>();
-
-                var identityMapper = new IdentityMapper(storageManager, glupService, cacService, graphiteHelper, UserIdentificationContext.UserCentricAdId, secretsResolver);
-
-                return new InternalMappingHelper(cacService, identityMapper);
-            });
-
-            return services;
-        }
-
-        public static IServiceCollection AddGlupHelper(this IServiceCollection services)
-        {
-            services.AddSingleton<IGlupHelper>(r =>
-            {
-                // Instantiate User Agent parsing library
-                var glupService = r.GetService<IGlupService>();
-                var serviceLifecycleManager = r.GetService<IServiceLifecycleManager>();
-                var sqlDbConnectionService = r.GetService<ISqlDbConnectionService>();
-                var graphiteHelper = r.GetService<IGraphiteHelper>();
-                var cacService = r.GetService<IConfigAsCodeService>();
-                var storageManager = r.GetService<IStorageManager>();
-                var agentSource = UserAgentProviderProvider.CreateAgentSource(
-                    serviceLifecycleManager,
-                    sqlDbConnectionService,
-                    graphiteHelper,
-                    glupService,
-                    cacService,
-                    storageManager);
-
-                // Force preload to have the offline db and avoid having runtime errors
-                agentSource.Preload();
-
-                return new GlupHelper(glupService, agentSource);
-            });
-
+            services.AddSingleton<IConfigurationManager, ConfigurationManager>();
             return services;
         }
 
@@ -80,16 +19,9 @@ namespace OpenPass.IdController
             return services;
         }
 
-        public static IServiceCollection AddEmailHelper(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddEmailHelper(this IServiceCollection services)
         {
-            services.AddSingleton<IEmailHelper>(r =>
-            {
-                var metricHelper = r.GetService<IMetricHelper>();
-                var viewRender = r.GetService<IViewRenderHelper>();
-                var emailConfiguration = new EmailConfiguration(configuration);
-
-                return new EmailHelper(metricHelper, viewRender, emailConfiguration);
-            });
+            services.AddSingleton<IEmailHelper, EmailHelper>();
 
             return services;
         }
@@ -125,19 +57,6 @@ namespace OpenPass.IdController
         public static IServiceCollection AddIdentifierHelper(this IServiceCollection services)
         {
             services.AddSingleton<IIdentifierHelper, IdentifierHelper>();
-
-            return services;
-        }
-
-        public static IServiceCollection AddTrackingHelper(this IServiceCollection services)
-        {
-            services.AddSingleton<ITrackingHelper>(r =>
-            {
-                var graphiteHelper = r.GetService<IGraphiteHelper>();
-                var internalMappingHelper = r.GetService<IInternalMappingHelper>();
-                var identificationBundleHelper = new IdentificationBundleHelper(graphiteHelper);
-                return new TrackingHelper(identificationBundleHelper, internalMappingHelper);
-            });
 
             return services;
         }

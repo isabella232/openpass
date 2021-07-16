@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -8,15 +7,11 @@ using OpenPass.IdController.Helpers;
 
 namespace OpenPass.IdController.UTest.Controllers
 {
-    class PortalControllerTests
+    internal class PortalControllerTests
     {
-        private const string _testUserAgent = "TestUserAgent";
-
         private Mock<IMetricHelper> _metricHelperMock;
         private Mock<ICookieHelper> _cookieHelperMock;
-        private Mock<IGlupHelper> _glupHelperMock;
         private PortalController _portalController;
-        private Mock<ITrackingHelper> _trackingHelperMock;
 
         [SetUp]
         public void Setup()
@@ -24,21 +19,19 @@ namespace OpenPass.IdController.UTest.Controllers
             _metricHelperMock = new Mock<IMetricHelper>();
             _metricHelperMock.Setup(mr => mr.SendCounterMetric(It.IsAny<string>()));
             _cookieHelperMock = new Mock<ICookieHelper>();
-            _glupHelperMock = new Mock<IGlupHelper>();
-            _trackingHelperMock = new Mock<ITrackingHelper>();
 
             _portalController =
-                new PortalController(_metricHelperMock.Object, _cookieHelperMock.Object, _glupHelperMock.Object, _trackingHelperMock.Object)
+                new PortalController(_metricHelperMock.Object, _cookieHelperMock.Object)
                 {
                     ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
                 };
         }
 
         [Test]
-        public async Task TestOptout()
+        public void TestOptout()
         {
             // Act
-            var response = await _portalController.OptOut(_testUserAgent, It.IsAny<string>(), It.IsAny<string>());
+            var response = _portalController.OptOut();
 
             // Assert
             Assert.IsAssignableFrom<OkResult>(response);
@@ -53,10 +46,10 @@ namespace OpenPass.IdController.UTest.Controllers
         }
 
         [Test]
-        public async Task TestOptin()
+        public void TestOptin()
         {
             // Act
-            var response = await _portalController.OptIn(_testUserAgent, It.IsAny<string>(), It.IsAny<string>());
+            var response = _portalController.OptIn();
 
             // Assert
             Assert.IsAssignableFrom<OkResult>(response);

@@ -10,7 +10,7 @@ const mockedRoutes = new Map([
 module.exports = [
   {
     context: ['/api'],
-    target: 'https://openpass.preprod.criteo.com',
+    target: '', // specify your API URI
     changeOrigin: true,
     secure: true,
     bypass: (req, res) => {

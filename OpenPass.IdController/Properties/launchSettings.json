@@ -1,8 +1,13 @@
 {
   "profiles": {
-    "OpenPass.IdController.netcore": {
+    "OpenPass.IdController": {
       "commandName": "Project",
-      "launchBrowser": true
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:1234/",
+      "launchUrl": "swagger/index.html"
     }
   }
 }

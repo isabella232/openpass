@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using OpenPass.IdController.Helpers;
 
 namespace OpenPass.IdController.Controllers
@@ -12,25 +12,25 @@ namespace OpenPass.IdController.Controllers
         private readonly ICookieHelper _cookieHelper;
         private readonly IMetricHelper _metricHelper;
         private readonly IIdentifierHelper _identifierHelper;
-        private readonly ITrackingHelper _trackingHelper;
 
         public UnAuthenticatedController(
             IMetricHelper metricHelper,
             ICookieHelper cookieHelper,
-            IIdentifierHelper identifierHelper,
-            ITrackingHelper trackingHelper)
+            IIdentifierHelper identifierHelper)
         {
             _metricHelper = metricHelper;
             _cookieHelper = cookieHelper;
             _identifierHelper = identifierHelper;
-            _trackingHelper = trackingHelper;
         }
 
+        /// <summary>
+        /// Get or create unique identifier
+        /// </summary>
+        /// <returns>generated token</returns>
         [HttpPost]
-        public async Task<IActionResult> CreateIfa(
-            [FromHeader(Name = "User-Agent")] string userAgent,
-            [FromHeader(Name = "x-tracked-data")] string trackedData,
-            [FromHeader(Name = "x-origin-host")] string originHost)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult CreateIfa()
         {
             var prefix = $"{_metricPrefix}.create";
 
@@ -39,22 +39,12 @@ namespace OpenPass.IdController.Controllers
                 _metricHelper.SendCounterMetric($"{prefix}.uid2");
             }
 
-            var trackingContext = await _trackingHelper.BuildTrackingContextAsync(trackedData);
-            var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, trackingContext, prefix, originHost, userAgent);
+            var ifaToken = _identifierHelper.GetOrCreateIfaToken(Request.Cookies, prefix);
 
             // Set cookie
             _cookieHelper.SetIdentifierForAdvertisingCookie(Response.Cookies, ifaToken);
 
             return Ok(new { ifaToken, uid2Token });
-        }
-
-        [HttpGet("delete")]
-        public IActionResult DeleteIfa()
-        {
-            _metricHelper.SendCounterMetric($"{_metricPrefix}.delete");
-            _cookieHelper.RemoveUid2AdvertisingCookie(Response.Cookies);
-
-            return Ok();
         }
     }
 }

@@ -11,11 +11,7 @@ export class EnvironmentService {
     return this.window.location.host.match(/.criteo\.com$/);
   }
 
-  get isPreprod() {
-    return this.window.location.host.match(/\.preprod/);
-  }
-
   get isLocal() {
-    return !(this.isPreprod || this.isProd);
+    return !this.isProd;
   }
 }

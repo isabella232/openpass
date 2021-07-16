@@ -1,5 +1,4 @@
 using System.IO;
-using Criteo.DevKit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -13,7 +12,6 @@ namespace OpenPass.IdController.Controllers
         private static readonly string _metricPrefix = "open-pass";
         private static readonly string _distFolderName = "dist";
         private static readonly string _widgetJsPath = "widget/assets/widget.min.js";
-        private static readonly string _widgetIndexHtmlPath = "dist/widget/index.html";
         private static readonly string _distIndexHtmlPath = "dist/index.html";
         private static readonly string _mediaTypeHeaderValue = "text/html";
 
@@ -26,6 +24,10 @@ namespace OpenPass.IdController.Controllers
             _metricHelper = metricHelper;
         }
 
+        /// <summary>
+        /// Get path where files located
+        /// </summary>
+        /// <returns>Physical path to widget.js files</returns>
         [HttpGet("widget-app")]
         public IActionResult Widget()
         {
@@ -33,20 +35,16 @@ namespace OpenPass.IdController.Controllers
             var scriptPath = Path.Combine(
                 _hostingEnvironment.ContentRootPath,
                 _distFolderName,
-                 HostingEnvironmentHelper.GetEnvironment() == HostingEnvironment.PreProd ? "preprod" : string.Empty,
                  _widgetJsPath
              );
 
             return new PhysicalFileResult(scriptPath, new MediaTypeHeaderValue("application/javascript"));
         }
 
-        [HttpGet("iframe-app")]
-        public IActionResult Iframe()
-        {
-            _metricHelper.SendCounterMetric($"{_metricPrefix}.widget-iframe");
-            return new PhysicalFileResult(Path.Combine(_hostingEnvironment.ContentRootPath, _widgetIndexHtmlPath), new MediaTypeHeaderValue(_mediaTypeHeaderValue));
-        }
-
+        /// <summary>
+        /// Get path to files located
+        /// </summary>
+        /// <returns>Path to index.html file</returns>
         [HttpGet("{*anything}")]
         public IActionResult Index()
         {
