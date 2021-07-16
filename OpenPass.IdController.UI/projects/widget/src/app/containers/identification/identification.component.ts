@@ -33,7 +33,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   @ViewChild(ViewContainerDirective, { static: true })
   viewElement: ViewContainerDirective;
   @Output()
-  signUp = new EventEmitter<UserData>();
+  updated = new EventEmitter<UserData>();
   @Output()
   loaded = new EventEmitter<void>();
 
@@ -75,7 +75,7 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     this.loadComponent();
     this.userDataSubscription = this.publicApiService
       .getSubscription()
-      .subscribe((userData) => this.signUp.emit(userData));
+      .subscribe((userData) => this.updated.emit(userData));
     this.loaded.emit();
   }
 
