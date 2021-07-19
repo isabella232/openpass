@@ -1,176 +1,197 @@
 ﻿<!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="width=device-width" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>OpenPass Code Example</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap"
-      rel="stylesheet"
-      type="text/css"
+            href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap"
+            rel="stylesheet"
+            type="text/css"
     />
     <style>
-      code {
-        color: crimson;
-        background-color: #f1f1f1;
-        padding: 2px;
-      }
+        body {
+            font-family: Raleway, sans-serif;
+        }
+        code {
+            color: crimson;
+            background-color: #f1f1f1;
+            padding: .25rem;
+            white-space: pre-wrap;
+            display: inline-block;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        .subhead {
+            text-decoration: underline;
+            text-align: center;
+        }
     </style>
-  </head>
-  <body>
-    <h1 style="text-align: center">Open Pass code examples</h1>
-    <p style="text-align: center">
-      <span style="text-decoration: underline"
-        ><strong>Add the widget script</strong></span
-      >
-    </p>
-
-    <p style="text-align: left">
-      The widget script will be downloaded with all the resources and will be
-      available to be instantiated on the page.
-    </p>
-    <code>
-      &lt;script src="//openpass.criteo.com/open-pass/widget-app"
-      type="text/javascript" async&gt;&lt;/script&gt;
-    </code>
-    <p style="text-align: center">
-      <span style="text-decoration: underline"
-        ><strong>Add HTML component</strong></span
-      >
-    </p>
+</head>
+<body>
+<h1>Open Pass code examples</h1>
+<section>
+    <h2>Identification widget</h2>
+    <h3 class="subhead">Add the widget script</h3>
 
     <p>
-      To add the widget tag to the HTML code and the widget will be
-      automatically displayed based on their configuration:
-      <strong>native</strong> or <strong>modal</strong>.
+        The widget script will be downloaded with all the resources and will be
+        available to be instantiated on the page.
     </p>
-    <code>
-      &lt;wdgt-identification session="authenticated" variant="dialog"
-      view="modal" provider= "publisher"&gt;&lt;/wdgt-identification&gt;
-    </code>
-    <p style="text-align: center">
-      <span style="text-decoration: underline"
-        ><strong>Interacting with the widget</strong></span
-      >
+    <code>&lt;script src="//openpass.criteo.com/open-pass/widget-app" type="text/javascript" async&gt;&lt;/script&gt;</code>
+    <h3 class="subhead">
+        Add HTML component
+    </h3>
+    <p>
+        Add the widget tag to the HTML code and the widget will be
+        automatically displayed based on their configuration:
+        <strong>native</strong> or <strong>modal</strong>.
+    </p>
+    <code>&lt;wdgt-identification session="authenticated" variant="dialog" view="modal" provider="publisher"&gt;&lt;/wdgt-identification&gt;</code>
+    <h3 class="subhead">
+        Interacting with the widget
+    </h3>
+    <p>
+        It is possible to retrieve data available on
+        <strong>OpenPass</strong> through the public API. We also provide a set of
+        events that can be listened to by other scripts and trigger certain logic
+        upon a change of state in the widget or user data.
     </p>
     <p>
-      It is possible to retrieve data available on
-      <strong>OpenPass</strong> through the public API. We also provide a set of
-      events that can be listened to by other scripts and trigger certain logic
-      upon a change of state in the widget or user data.
+        The user data returned by the <strong>OpenPass</strong> widget component
+        will be of type <strong>UserData</strong>, defined by this model:
     </p>
-    <p>
-      The user data returned by the <strong>OpenPass</strong> widget component
-      will be of type <strong>UserData</strong>, defined by this model:
-    </p>
-    <code
-      >type UserData = {<br />&nbsp; &nbsp; token: string,<br />&nbsp; &nbsp;
-      isDeclined: boolean<br />}</code
-    >
+    <code>type UserData = {
+    ifaToken: string,
+    uid2Token: string,
+    isDeclined: boolean
+}</code>
     <p>Properties:</p>
     <ul>
-      <li>
-        The token attribute is used to store the UID2 token retrieved for the
-        email provided by the user.
-      </li>
-      <li>
-        The isDeclined flag indicates whether the user has declined to join
-        OpenPass. In case isDeclined = true, the token field will be empty or
-        undefined and must be ignored.
-      </li>
+        <li>
+            The token attribute is used to store the UID2 token retrieved for the
+            email provided by the user.
+        </li>
+        <li>
+            The isDeclined flag indicates whether the user has declined to join
+            OpenPass. In case isDeclined = true, the token field will be empty or
+            undefined and must be ignored.
+        </li>
     </ul>
 
     <p>In practice, there are two ways of interacting with the widget:</p>
     <ul>
-      <li>
-        Retrieve user data calling a function provided by the widget component
-      </li>
-      <li>Subscribe to widget events</li>
+        <li>
+            Retrieve user data calling a function provided by the widget component
+        </li>
+        <li>Subscribe to widget events</li>
     </ul>
-    <p style="text-align: center">
-      <span style="text-decoration: underline"
-        ><strong>Retrieve user data</strong></span
-      >
+    <h3 class="subhead">Retrieve user data</h3>
+    <p>
+        The widget component provides a function called
+        <strong>getUserData</strong> which can be called directly on the
+        component. It will return an object of type
+        <strong>UserData</strong> previously defined.
     </p>
     <p>
-      The widget component provides a function called
-      <strong>getUserData</strong> which can be called directly on the
-      component. It will return an object of type
-      <strong>UserData</strong> previously defined.
+        Note that this function will return undefined if no user data is currently
+        available on OpenPass, meaning that the user has neither joined OpenPass
+        on the current site nor answered yet.
     </p>
-    <p>
-      Note that this function will return undefined if no user data is currently
-      available on OpenPass, meaning that the user has neither joined OpenPass
-      on the current site nor answered yet.
-    </p>
-    <code>
-      const userData =
-      document.querySelector('wdgt-identification').getUserData();
+    <code>const userData = document.querySelector('wdgt-identification').getUserData();
     </code>
-    <p style="text-align: center">
-      <span style="text-decoration: underline"
-        ><strong>Subscribe to widget events</strong></span
-      >
-    </p>
+    <h3 class="subhead">Subscribe to widget events</h3>
     <p>Our widget emits events in two different situations:</p>
     <ul>
-      <li>Widget component loaded</li>
-      <li>User data updated</li>
+        <li>Widget component loaded</li>
+        <li>User data updated</li>
     </ul>
-    <p style="text-align: center"><strong>Widget component loaded</strong></p>
+    <h3 class="subhead">Widget component loaded</h3>
     <p>
-      At this point, the component has been instantiated and it's possible to
-      call its public API.
+        At this point, the component has been instantiated and it's possible to
+        call its public API.
     </p>
     <ul>
-      <li><strong>Event name</strong>: loaded</li>
-      <li><strong>Event data</strong>: none</li>
+        <li><strong>Event name</strong>: loaded</li>
+        <li><strong>Event data</strong>: none</li>
     </ul>
-    <code>
-      function eventHandler(event) {<br />&nbsp; const userData =
-      document.querySelector('wdgt-identification').getUserData();
-      <br />
-      &nbsp; // ...<br />
-      }<br />
-      document.querySelector('wdgt-identification').addEventListener('loaded',
-      eventHandler);
-    </code>
-    <p style="text-align: center"><strong>User data updated</strong></p>
-    <p>
-      This event is triggered upon interaction from the user and will contain an
-      updated version of the UserData object.
-    </p>
-    <ul>
-      <li><strong>Event name</strong>: updated</li>
-      <li><strong>Event data</strong>: a <strong>UserData</strong> object</li>
-    </ul>
-    <code>
-      function eventHandler(event) {<br />
-      &nbsp; const userData = event.data;<br />
-      &nbsp; // ...<br />
-      }<br />
+    <code>function eventHandler(event) {
+    const userData = document.querySelector('wdgt-identification').getUserData();
+    // ...
+}
 
-      document.querySelector('wdgt-identification').addEventListener('updated',
-      eventHandler);
+document.querySelector('wdgt-identification').addEventListener('loaded', eventHandler);</code>
+    <h3 class="subhead">User data updated</h3>
+    <p>
+        This event is triggered upon interaction from the user and will contain an
+        updated version of the UserData object.
+    </p>
+    <ul>
+        <li><strong>Event name</strong>: updated</li>
+        <li><strong>Event data</strong>: a <strong>UserData</strong> object</li>
+    </ul>
+    <code>function eventHandler(event) {
+    const userData = event.data;
+    // ...
+}
+
+document.querySelector('wdgt-identification').addEventListener('updated', eventHandler);</code>
+    <h3 class="subhead">Recommended strategy</h3>
+    <p>
+        The recommended strategy is to try to retrieve the current data available
+        once the widget has been loaded. If it is undefined, then listen to new
+        widget events in order to be notified when the user interacts with
+        OpenPass.
+    </p>
+    <p>
+        Depending on how the integration is done, the widget component may be
+        loaded before calling the code that interacts with it. In that case, it
+        would be better to call the <strong>getUserData</strong> function directly
+        instead of waiting for the loaded event to be fired &mdash; because it was
+        already missed. In case you are not sure, it is possible to do both.
+    </p>
+    <p>
+        Some integrations will always trigger the updated event as an interaction
+        from the user would be required &mdash; such as the modal view. However,
+        it is not the case for all configurations.
+    </p>
+</section>
+<section>
+    <h2>Landing widget</h2>
+    <h3 class="subhead">Add the widget script</h3>
+    <p>
+        As in case with Identification widget, you should add the widget script.
+    </p>
+    <code>&lt;script src="//openpass.criteo.com/open-pass/widget-app" type="text/javascript" async&gt;&lt;/script&gt;</code>
+    <h3 class="subhead">Add HTML component</h3>
+    <p>Add the widget tag to the HTML code and the widget will be automatically displayed</p>
+    <code>&lt;wdgt-landing&gt;&lt;/wdgt-landing&gt;</code>
+    <h3 class="subhead">Provide a configuration to display widget in your website style</h3>
+    <ul>
+        <li><strong>brand-image-url</strong> – the URL of your site logo</li>
+        <li><strong>brand-color</strong> - the website theme primary color in HEX</li>
+    </ul>
+    <code>&lt;wdgt-landing brand-image-url="https://website.com/logo.png" brand-color="#006cd6"&gt;&lt;/wdgt-landing&gt;</code>
+    <h3 class="subhead">Subscribe to widget events</h3>
+    <p>Our widget emits next events</p>
+    <ul>
+        <li><strong>requestSignin</strong> - User clicked the button “Access content and deals” </li>
+        <li><strong>requestSignup</strong> - User clicked the button “Not a member? Sign up” </li>
+    </ul>
+    <code>function onSigninHandler() {
+    // ...
+}
+function onSignUpHandler() {
+    // ...
+}
+
+const widgetLandingComponent = document.querySelector('wdgt-landing');
+widgetLandingComponent.addEventListener('requestSignin', onSigninHandler);
+widgetLandingComponent.addEventListener('requestSignup', onSignUpHandler);
     </code>
-    <p style="text-align: center"><strong>Recommended strategy</strong></p>
-    <p>
-      The recommended strategy is to try to retrieve the current data available
-      once the widget has been loaded. If it is undefined, then listen to new
-      widget events in order to be notified when the user interacts with
-      OpenPass.
-    </p>
-    <p>
-      Depending on how the integration is done, the widget component may be
-      loaded before calling the code that interacts with it. In that case, it
-      would be better to call the <strong>getUserData</strong> function directly
-      instead of waiting for the loaded event to be fired &mdash; because it was
-      already missed. In case you are not sure, it is possible to do both.
-    </p>
-    <p>
-      Some integrations will always trigger the updated event as an interaction
-      from the user would be required &mdash; such as the modal view. However,
-      it is not the case for all configurations.
-    </p>
-  </body>
+</section>
+</body>
 </html>
