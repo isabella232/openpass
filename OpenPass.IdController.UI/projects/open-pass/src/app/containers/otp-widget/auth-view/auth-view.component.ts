@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Actions, ofActionDispatched, Select, Store } from '@ngxs/store';
 import { OpenerState } from '@store/otp-widget/opener.state';
 import { Dispatch } from '@ngxs-labs/dispatch-decorator';
@@ -13,7 +13,9 @@ import {
   ReceiveToken,
   SetAuthDefault,
 } from '@store/otp-widget/auth.actions';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'usrf-auth-view',
   templateUrl: './auth-view.component.html',
@@ -24,7 +26,6 @@ export class AuthViewComponent implements OnInit, OnDestroy {
   @Select(AuthState.fullState) authState$: Observable<IAuthState>;
 
   isAcceptAgreement = false;
-  private authSubscriptions: Subscription;
 
   constructor(private store: Store, private router: Router, private actions$: Actions) {}
 
@@ -50,13 +51,12 @@ export class AuthViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.authSubscriptions = this.actions$
-      .pipe(ofActionDispatched(ReceiveToken))
+    this.actions$
+      .pipe(ofActionDispatched(ReceiveToken), untilDestroyed(this))
       .subscribe(() => this.router.navigate(['agreement']));
   }
 
   ngOnDestroy() {
-    this.authSubscriptions?.unsubscribe?.();
     this.setDefaultState();
   }
 }

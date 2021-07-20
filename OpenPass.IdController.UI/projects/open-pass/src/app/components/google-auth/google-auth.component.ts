@@ -1,7 +1,9 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { GapiService } from '@services/gapi.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'usrf-google-auth',
   templateUrl: './google-auth.component.html',
@@ -18,7 +20,10 @@ export class GoogleAuthComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.gapiService.load().then(() => {
-      this.gapiService.attachCustomButton(this.googleButton.nativeElement).subscribe(() => this.onSignIn());
+      this.gapiService
+        .attachCustomButton(this.googleButton.nativeElement)
+        .pipe(untilDestroyed(this))
+        .subscribe(() => this.onSignIn());
     });
   }
 

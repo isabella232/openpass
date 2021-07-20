@@ -5,7 +5,7 @@ import { stub } from '@utils/stub-factory';
 import { WINDOW } from '@utils/injection-tokens';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxsModule } from '@ngxs/store';
-import { EventsTrackingService } from '@services/events-tracking.service';
+import { EventsService } from '@rest/events/events.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 describe('RedirectComponent', () => {
@@ -16,7 +16,7 @@ describe('RedirectComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, NgxsModule.forRoot(), TranslateModule.forRoot()],
       declarations: [RedirectComponent],
-      providers: [stub(WINDOW), stub(EventsTrackingService)],
+      providers: [stub(WINDOW), stub(EventsService)],
     }).compileComponents();
   });
 

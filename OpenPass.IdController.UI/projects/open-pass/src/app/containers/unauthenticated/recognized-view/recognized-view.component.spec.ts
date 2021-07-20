@@ -5,7 +5,7 @@ import { PostMessagesService } from '@services/post-messages.service';
 import { AuthService } from '@services/auth.service';
 import { Component } from '@angular/core';
 import { stub } from '@utils/stub-factory';
-import { EventsTrackingService } from '@services/events-tracking.service';
+import { EventsService } from '@rest/events/events.service';
 
 @Component({
   selector: 'usrf-copyright',
@@ -28,7 +28,7 @@ describe('RecognizedViewComponent', () => {
           provide: AuthService,
           useFactory: () => {},
         },
-        stub(EventsTrackingService),
+        stub(EventsService),
       ],
       declarations: [RecognizedViewComponent, StubCopyrightComponent],
     }).compileComponents();

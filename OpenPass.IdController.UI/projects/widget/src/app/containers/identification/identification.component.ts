@@ -4,7 +4,6 @@ import {
   ElementRef,
   EventEmitter,
   Input,
-  OnDestroy,
   OnInit,
   Output,
   ViewChild,
@@ -16,20 +15,23 @@ import { Variants } from '@enums/variants.enum';
 import { Sessions } from '@enums/sessions.enum';
 import { Providers } from '@enums/providers.enum';
 import { WidgetModes } from '@enums/widget-modes.enum';
-import { Subscription } from 'rxjs';
 import { CookiesService } from '@services/cookies.service';
 import { PublicApiService } from '@services/public-api.service';
 import { WidgetConfigurationService } from '@services/widget-configuration.service';
 import { environment } from '@env';
 import { WidgetConfiguration } from '@app-types/widget-configuration';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { MessageSubscriptionService } from '@services/message-subscription.service';
 
+@UntilDestroy()
 @Component({
   selector: 'wdgt-identification',
   templateUrl: './identification.component.html',
   styleUrls: ['./identification.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom,
+  providers: [MessageSubscriptionService],
 })
-export class IdentificationComponent implements OnInit, OnDestroy {
+export class IdentificationComponent implements OnInit {
   @ViewChild(ViewContainerDirective, { static: true })
   viewElement: ViewContainerDirective;
   @Output()
@@ -57,7 +59,6 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     }
   }
 
-  userDataSubscription: Subscription;
   private widgetMode = WidgetModes.native;
 
   constructor(
@@ -73,14 +74,11 @@ export class IdentificationComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.saveConfiguration();
     this.loadComponent();
-    this.userDataSubscription = this.publicApiService
+    this.publicApiService
       .getSubscription()
+      .pipe(untilDestroyed(this))
       .subscribe((userData) => this.updated.emit(userData));
     this.loaded.emit();
-  }
-
-  ngOnDestroy() {
-    this.userDataSubscription?.unsubscribe?.();
   }
 
   private getUserData(): UserData {

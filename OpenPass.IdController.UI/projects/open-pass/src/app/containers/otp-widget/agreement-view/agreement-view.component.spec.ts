@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgxsModule } from '@ngxs/store';
 import { stub } from '@utils/stub-factory';
 import { AuthService } from '@services/auth.service';
-import { EventsTrackingService } from '@services/events-tracking.service';
+import { EventsService } from '@rest/events/events.service';
 import { DialogWindowService } from '@services/dialog-window.service';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -23,7 +23,7 @@ describe('AgreementViewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot(), NgxsModule.forRoot(), FormsModule],
-      providers: [stub(AuthService), stub(DialogWindowService), stub(EventsTrackingService)],
+      providers: [stub(AuthService), stub(DialogWindowService), stub(EventsService)],
       declarations: [AgreementViewComponent, StubCopyrightComponent],
     }).compileComponents();
   });

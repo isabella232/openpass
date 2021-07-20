@@ -9,7 +9,9 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { timer } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'wdgt-snack-bar',
   templateUrl: './snack-bar.component.html',
@@ -27,12 +29,16 @@ export class SnackBarComponent implements OnInit {
   constructor(private elementRef: ElementRef, private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
-    timer(100).subscribe(() => {
-      this.isAppearing = true;
-      this.cd.detectChanges();
-    });
+    timer(100)
+      .pipe(untilDestroyed(this))
+      .subscribe(() => {
+        this.isAppearing = true;
+        this.cd.detectChanges();
+      });
     if (this.delay) {
-      timer(this.delay).subscribe(() => this.close());
+      timer(this.delay)
+        .pipe(untilDestroyed(this))
+        .subscribe(() => this.close());
     }
   }
 
@@ -40,6 +46,8 @@ export class SnackBarComponent implements OnInit {
     this.closeClick.emit();
     this.isAppearing = false;
     this.cd.detectChanges();
-    timer(500).subscribe(() => this.elementRef.nativeElement.remove());
+    timer(500)
+      .pipe(untilDestroyed(this))
+      .subscribe(() => this.elementRef.nativeElement.remove());
   }
 }

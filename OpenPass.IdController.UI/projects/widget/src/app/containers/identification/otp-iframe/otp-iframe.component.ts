@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, HostBinding, Inject, NgModule, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { environment } from '@env';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { PostMessagesService } from '@services/post-messages.service';
 import { filter, map, startWith } from 'rxjs/operators';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
@@ -11,7 +11,9 @@ import { PublicApiService } from '@services/public-api.service';
 import { CommonModule } from '@angular/common';
 import { WINDOW } from '@utils/injection-tokens';
 import { WidgetConfigurationService } from '@services/widget-configuration.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'wdgt-otp-iframe',
   templateUrl: './otp-iframe.component.html',
@@ -29,7 +31,6 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
   iframeSrc$: Observable<SafeResourceUrl>;
 
   dynamicHeight$ = new Observable<number | undefined>();
-  postSubscription: Subscription;
 
   constructor(
     @Inject(WINDOW) private window: Window,
@@ -56,7 +57,6 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.messageSubscriptionService.destroyTokenListener();
-    this.postSubscription?.unsubscribe?.();
   }
 
   ngAfterViewInit() {
@@ -84,9 +84,12 @@ export class OtpIframeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private listenForClosingRequest() {
-    this.postSubscription = this.postMessagesService
+    this.postMessagesService
       .getSubscription()
-      .pipe(filter(({ action }) => action === PostMessageActions.closeChild))
+      .pipe(
+        filter(({ action }) => action === PostMessageActions.closeChild),
+        untilDestroyed(this)
+      )
       .subscribe(({ isDeclined }) => {
         this.publicApiService.setUserData({ isDeclined });
         this.isOpen = false;

@@ -6,6 +6,8 @@ import { DEPLOY_URL, WINDOW } from '@utils/injection-tokens';
 import { PipesModule } from '@pipes/pipes.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { EventTrackingService } from '@rest/event-tracking/event-tracking.service';
+import { MessageSubscriptionService } from '@services/message-subscription.service';
+import { Observable } from 'rxjs';
 
 describe('OtpWidgetComponent', () => {
   let component: OtpWidgetComponent;
@@ -18,7 +20,8 @@ describe('OtpWidgetComponent', () => {
       providers: [
         { provide: WINDOW, useFactory: windowFactory },
         { provide: DEPLOY_URL, useFactory: () => {} },
-        { provide: EventTrackingService, useFactory: () => ({ track: () => ({ subscribe: () => {} }) }) },
+        { provide: EventTrackingService, useFactory: () => ({ track: () => new Observable() }) },
+        { provide: MessageSubscriptionService, useValue: { destroyTokenListener: () => {} } },
       ],
     }).compileComponents();
   });
