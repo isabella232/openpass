@@ -192,15 +192,6 @@ const widgetLandingComponent = document.querySelector('wdgt-landing');
 widgetLandingComponent.addEventListener('requestSignin', onSigninHandler);
 widgetLandingComponent.addEventListener('requestSignup', onSignUpHandler);
     </code>
-    <h3 class="subhead">Recommended strategy</h3>
-    <p>
-        Partners should handle the display of their login form by subscribing to one of the Widget Landing events. A few changes are required to the partner's login form:
-    </p>
-    <ul>
-        <li>Add a checkbox to allow OpenPass to manage and store users data. This checkbox should have the mention "Access exclusive content and deals with OpenPass"</li>
-        <li>Once the user has checked the box and logged in through the partner's system (or any SSO), the partner should provide the returned user PII (email) and call <code>window.__OpenPass.signUserIn(userEmail)</code>.</li>
-        <li>This redirects the user to the OpenPass website and stores his preferences on the OpenPass system. The user is then redirected back to the partner's website.</li>
-    </ul>
 </section>
 </body>
 </html>
