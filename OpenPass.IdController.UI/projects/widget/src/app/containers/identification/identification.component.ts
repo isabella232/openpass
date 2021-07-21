@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  NgModule,
   OnInit,
   Output,
   ViewChild,
@@ -22,6 +23,8 @@ import { environment } from '@env';
 import { WidgetConfiguration } from '@app-types/widget-configuration';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MessageSubscriptionService } from '@services/message-subscription.service';
+import { CommonModule } from '@angular/common';
+import { ViewContainerModule } from '@directives/view-container.module';
 
 @UntilDestroy()
 @Component({
@@ -125,3 +128,10 @@ export class IdentificationComponent implements OnInit {
     this.widgetConfigurationService.setConfiguration(config);
   }
 }
+
+@NgModule({
+  declarations: [IdentificationComponent],
+  imports: [CommonModule, ViewContainerModule],
+  exports: [IdentificationComponent],
+})
+class IdentificationModule {}

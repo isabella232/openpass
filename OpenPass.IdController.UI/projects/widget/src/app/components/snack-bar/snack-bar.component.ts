@@ -4,12 +4,15 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  NgModule,
   OnInit,
   Output,
   ViewEncapsulation,
 } from '@angular/core';
 import { timer } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { CommonModule } from '@angular/common';
+import { PipesModule } from '@pipes/pipes.module';
 
 @UntilDestroy()
 @Component({
@@ -51,3 +54,10 @@ export class SnackBarComponent implements OnInit {
       .subscribe(() => this.elementRef.nativeElement.remove());
   }
 }
+
+@NgModule({
+  declarations: [SnackBarComponent],
+  imports: [CommonModule, PipesModule],
+  exports: [SnackBarComponent],
+})
+class SnackBarModule {}

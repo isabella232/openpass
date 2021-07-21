@@ -1,6 +1,8 @@
 @import '~projects/open-pass/src/styles/variables';
 
 :host {
+  display: contents;
+  all: initial;
   color: $text-color;
   font-family: 'Raleway', sans-serif;
   font-size: 0.85rem;

@@ -1,4 +1,4 @@
-import { Component, Input, NgModule, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, NgModule, OnInit } from '@angular/core';
 import { localStorage } from '@shared/utils/storage-decorator';
 import { WidgetModes } from '@enums/widget-modes.enum';
 import { Variants } from '@enums/variants.enum';
@@ -7,9 +7,6 @@ import { Providers } from '@enums/providers.enum';
 import { CommonModule } from '@angular/common';
 import { ViewContainerModule } from '@directives/view-container.module';
 import { FormsModule } from '@angular/forms';
-import { SnackBarModule } from '@components/snack-bar/snack-bar.module';
-import { LandingModule } from '../../containers/landing/landing.module';
-import { IdentificationModule } from '../../containers/identification/identification.module';
 
 @Component({
   selector: 'wdgt-dev-components',
@@ -50,6 +47,7 @@ export class DevComponentsComponent implements OnInit {
 @NgModule({
   declarations: [DevComponentsComponent],
   exports: [DevComponentsComponent],
-  imports: [CommonModule, ViewContainerModule, FormsModule, SnackBarModule, LandingModule, IdentificationModule],
+  imports: [CommonModule, ViewContainerModule, FormsModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 class DevComponentsModule {}
