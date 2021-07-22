@@ -5,3 +5,9 @@ OpenPass.IdController/wwwroot/js
 
 # Gradle
 .build/
+
+# Generic Mac OS meta files
+.DS_Store
+
+# Logs
+*.log

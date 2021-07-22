@@ -73,7 +73,7 @@ namespace OpenPass.IdController
             services.AddInternalMappingHelper();
 
             // [Custom] Add glup helper
-            services.AddGlupHelper();
+            services.AddGlupHelper(_env);
 
             // [Custom] Add view render helper
             services.AddViewRenderHelper();

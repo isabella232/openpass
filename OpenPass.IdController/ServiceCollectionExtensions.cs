@@ -1,8 +1,11 @@
+using System.Runtime.InteropServices;
 using Criteo.ConfigAsCode;
+using Criteo.DevKit;
 using Criteo.Services.Glup;
 using Criteo.UserAgent.Provider;
 using Criteo.UserIdentification.Services;
 using Criteo.UserIdentification.Services.IdentityMapping;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenPass.IdController.DataAccess;
@@ -47,7 +50,7 @@ namespace OpenPass.IdController
             return services;
         }
 
-        public static IServiceCollection AddGlupHelper(this IServiceCollection services)
+        public static IServiceCollection AddGlupHelper(this IServiceCollection services, IHostingEnvironment env)
         {
             services.AddSingleton<IGlupHelper>(r =>
             {
@@ -58,13 +61,19 @@ namespace OpenPass.IdController
                 var graphiteHelper = r.GetService<IGraphiteHelper>();
                 var cacService = r.GetService<IConfigAsCodeService>();
                 var storageManager = r.GetService<IStorageManager>();
-                var agentSource = UserAgentProviderProvider.CreateAgentSource(
-                    serviceLifecycleManager,
-                    sqlDbConnectionService,
-                    graphiteHelper,
-                    glupService,
-                    cacService,
-                    storageManager);
+
+                // The version of WURFL we are using doesn't include the MacOS library
+                // As a workaround to avoid exceptions, we use a stub when running locally on MacOS
+                // /!\ this means the user agent detection won't work on this platform
+                var agentSource = env.IsDevelopment() && RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                    ? new AgentSourceStub()
+                    : UserAgentProviderProvider.CreateAgentSource(
+                        serviceLifecycleManager,
+                        sqlDbConnectionService,
+                        graphiteHelper,
+                        glupService,
+                        cacService,
+                        storageManager);
 
                 // Force preload to have the offline db and avoid having runtime errors
                 agentSource.Preload();
