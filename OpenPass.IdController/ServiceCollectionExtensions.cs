@@ -5,6 +5,7 @@ using Criteo.UserIdentification.Services;
 using Criteo.UserIdentification.Services.IdentityMapping;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenPass.IdController.DataAccess;
 using OpenPass.IdController.Helpers;
 using OpenPass.IdController.Helpers.Adapters;
 using Sdk.Interfaces.Hosting;
@@ -139,6 +140,12 @@ namespace OpenPass.IdController
                 return new TrackingHelper(identificationBundleHelper, internalMappingHelper);
             });
 
+            return services;
+        }
+
+        public static IServiceCollection AddUserPreferencesRepository(this IServiceCollection services)
+        {
+            services.AddSingleton<IUserPreferencesRepository>(p => new StaticUserPreferencesRepository());
             return services;
         }
     }
