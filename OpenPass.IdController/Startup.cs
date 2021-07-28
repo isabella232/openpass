@@ -33,6 +33,8 @@ namespace OpenPass.IdController
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddConfigurationHelper();
+
             // Add Configuration Manager
             services.AddConfigurationManager();
 
@@ -61,6 +63,8 @@ namespace OpenPass.IdController
             services.AddUid2Adapter();
 
             services.AddIdentifierHelper();
+
+            services.AddUserPreferencesRepository();
 
             // Configure MVC
             services.AddMvc().AddMetrics();

@@ -1,0 +1,59 @@
+<ng-container [ngSwitch]="selectedComponent">
+  <div *ngSwitchCase="'SnackBarComponent'">
+    <wdgt-snack-bar>
+      <div [innerHTML]="projectedNode"></div>
+    </wdgt-snack-bar>
+  </div>
+
+  <div *ngSwitchCase="'LandingComponent'">
+    <wdgt-landing [brandImageUrl]="brandImageUrl" [brandColor]="brandColor"></wdgt-landing>
+  </div>
+
+  <div *ngSwitchCase="'IdentificationComponent'">
+    <wdgt-identification
+      [provider]="provider"
+      [session]="session"
+      [variant]="variant"
+      [view]="view"
+    ></wdgt-identification>
+  </div>
+</ng-container>
+
+<div class="manage-container">
+  <div class="inner">
+    <select [(ngModel)]="selectedComponent" class="form-control">
+      <option *ngFor="let comp of items" [value]="comp">{{ comp }}</option>
+    </select>
+
+    <ng-container [ngSwitch]="selectedComponent">
+      <div *ngSwitchCase="'SnackBarComponent'" class="p-2 d-flex justify-center align-center">
+        <input type="text" placeholder="innerHTML" [(ngModel)]="projectedNode" />
+      </div>
+
+      <div *ngSwitchCase="'LandingComponent'">
+        <input class="form-control mx-2" type="color" [(ngModel)]="brandColor" />
+        <input class="form-control mx-2" type="url" placeholder="Brand logo url" [(ngModel)]="brandImageUrl" />
+      </div>
+
+      <div *ngSwitchCase="'IdentificationComponent'">
+        <select class="mx-1" name="provider" [(ngModel)]="provider">
+          <option *ngFor="let item of providerOptions" [value]="item">{{ item }}</option>
+        </select>
+
+        <select class="mx-1" name="session" [(ngModel)]="session">
+          <option *ngFor="let item of sessionOptions" [value]="item">{{ item }}</option>
+        </select>
+
+        <select class="mx-1" name="variant" [(ngModel)]="variant">
+          <option *ngFor="let item of variantOptions" [value]="item">{{ item }}</option>
+        </select>
+
+        <select class="mx-1" name="view" [(ngModel)]="view">
+          <option *ngFor="let item of viewOptions" [value]="item">{{ item }}</option>
+        </select>
+
+        <small class="mx-1">(to apply changes reload the page)</small>
+      </div>
+    </ng-container>
+  </div>
+</div>

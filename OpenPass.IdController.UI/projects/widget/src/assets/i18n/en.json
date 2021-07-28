@@ -35,5 +35,8 @@
     "SIGNUP_ACTION": "Not a member? Sign up",
     "PROVIDED_BY": "Provided by",
     "LEARN_MORE_LINK": "Learn more"
+  },
+  "MESSAGES": {
+    "SIGNED_IN": "<h3>Your are now managing your data with Openpass on {{brandDomain}}</h3><p>You are signed in as {{email}}. Update your <a href=\"{{appHost}}/open-pass/under-construction\" target=\"_blank\">privacy settings</a> now or any time you wish.</p>"
   }
 }

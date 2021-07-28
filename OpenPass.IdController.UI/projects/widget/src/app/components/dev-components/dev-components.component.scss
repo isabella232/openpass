@@ -1,0 +1,31 @@
+@import '~projects/open-pass/src/styles/variables';
+@import '~projects/open-pass/src/styles/flex';
+@import '~projects/open-pass/src/styles/base';
+@import '~projects/open-pass/src/styles/grid';
+@import '~projects/open-pass/src/styles/forms';
+@import '~projects/open-pass/src/styles/buttons';
+
+:host {
+  display: block;
+  padding-top: 80px;
+}
+
+.manage-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: $max-z-index;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgb(0, 0, 0, 0.5);
+
+  .inner {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+  }
+
+  input[type='text'] {
+    width: 300px;
+  }
+}

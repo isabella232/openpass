@@ -6,6 +6,8 @@ import { windowFactory } from '@utils/window-factory';
 import { PipesModule } from '@pipes/pipes.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { EventTrackingService } from '@rest/event-tracking/event-tracking.service';
+import { MessageSubscriptionService } from '@services/message-subscription.service';
+import { Observable } from 'rxjs';
 
 describe('UnloggedComponent', () => {
   let component: UnloggedComponent;
@@ -18,7 +20,8 @@ describe('UnloggedComponent', () => {
       providers: [
         { provide: WINDOW, useFactory: windowFactory },
         { provide: DEPLOY_URL, useFactory: () => {} },
-        { provide: EventTrackingService, useFactory: () => ({ track: () => ({ subscribe: () => {} }) }) },
+        { provide: MessageSubscriptionService, useValue: { destroyTokenListener: () => {} } },
+        { provide: EventTrackingService, useFactory: () => ({ track: () => new Observable() }) },
       ],
     }).compileComponents();
   });

@@ -5,8 +5,10 @@ import { Router } from '@angular/router';
 import { WINDOW } from '@utils/injection-tokens';
 import { DialogWindowService } from '@services/dialog-window.service';
 import { EventTypes } from '@shared/enums/event-types.enum';
-import { EventsTrackingService } from '@services/events-tracking.service';
+import { EventsService } from '@rest/events/events.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'usrf-already-signed-view',
   templateUrl: './already-signed-view.component.html',
@@ -23,7 +25,7 @@ export class AlreadySignedViewComponent implements OnInit {
     @Inject(WINDOW) private window: Window,
     private router: Router,
     private dialogWindowService: DialogWindowService,
-    private eventsTrackingService: EventsTrackingService
+    private eventsTrackingService: EventsService
   ) {}
 
   ngOnInit() {
@@ -35,8 +37,10 @@ export class AlreadySignedViewComponent implements OnInit {
       this.storageUserEmail = this.userEmail;
     }
     this.authService.setTokenToOpener();
-    this.eventsTrackingService.trackEvent(EventTypes.consentGranted);
-    this.dialogWindowService.closeDialogWindow();
+    this.eventsTrackingService
+      .trackEvent(EventTypes.consentGranted)
+      .pipe(untilDestroyed(this))
+      .subscribe(() => this.dialogWindowService.closeDialogWindow());
   }
 
   resetState() {

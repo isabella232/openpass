@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { Route, Router } from '@angular/router';
-import { DialogWindowService } from '../../services/dialog-window.service';
+import { DialogWindowService } from '@services/dialog-window.service';
 import { EventTypes } from '@shared/enums/event-types.enum';
-import { EventsTrackingService } from '../../services/events-tracking.service';
+import { EventsService } from '@rest/events/events.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'usrf-navigation',
   templateUrl: './navigation.component.html',
@@ -17,12 +19,14 @@ export class NavigationComponent {
   constructor(
     private router: Router,
     private dialogWindowService: DialogWindowService,
-    private eventsTrackingService: EventsTrackingService
+    private eventsTrackingService: EventsService
   ) {}
 
   close() {
-    this.eventsTrackingService.trackEvent(EventTypes.bannerIgnored);
-    this.dialogWindowService.closeDialogWindow();
+    this.eventsTrackingService
+      .trackEvent(EventTypes.bannerIgnored)
+      .pipe(untilDestroyed(this))
+      .subscribe(() => this.dialogWindowService.closeDialogWindow());
   }
 
   back() {

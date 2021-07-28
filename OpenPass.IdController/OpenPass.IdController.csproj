@@ -29,5 +29,15 @@
     <Content Update="appsettings*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Remove="log\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="log\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="log\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="log\**" />
   </ItemGroup>
 </Project>

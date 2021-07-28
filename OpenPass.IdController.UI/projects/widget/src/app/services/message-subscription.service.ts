@@ -9,9 +9,7 @@ import { environment } from '@env';
 import { filter } from 'rxjs/operators';
 import { WINDOW } from '@utils/injection-tokens';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class MessageSubscriptionService {
   private optOutSubscription: Subscription;
   private messageSubscription: Subscription;

@@ -1,0 +1,80 @@
+@import '~projects/open-pass/src/styles/variables';
+
+:host {
+  display: contents;
+  all: initial;
+  color: $text-color;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem;
+}
+
+.snack-bar {
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  position: fixed;
+  background: #fff;
+  width: 70%;
+  max-width: 722px;
+  bottom: -100%;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: $max-z-index;
+  padding: 1.5rem;
+  border: 2px solid $primary-dark;
+  border-radius: 4px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  transition: bottom 0.5s;
+  opacity: 1;
+
+  @media screen and (max-width: 760px) {
+    & {
+      width: 90%;
+      padding: 0.5rem;
+    }
+  }
+
+  &.appearing {
+    bottom: 2rem;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0.5rem 0;
+}
+
+p {
+  margin: 0;
+}
+
+.logo {
+  width: 56px;
+  height: 56px;
+  margin: 0.5rem;
+}
+
+.close-btn {
+  float: right;
+  border: none;
+  background-color: #f5f5f5;
+  font-size: 14px;
+  padding: 0.75rem;
+  line-height: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+
+  &:active {
+    background-color: #c5c5c5;
+  }
+}
+
+.content {
+  flex: 0 1 100%;
+  padding: 0 1rem;
+}

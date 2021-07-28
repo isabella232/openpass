@@ -15,7 +15,9 @@ import { OpenPassDetailsModule } from '@components/open-pass-details/open-pass-d
 import { EventTrackingService } from '@rest/event-tracking/event-tracking.service';
 import { EventTypes } from '@shared/enums/event-types.enum';
 import { WidgetConfigurationService } from '@services/widget-configuration.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'wdgt-unlogged',
   templateUrl: './unlogged.component.html',
@@ -75,7 +77,7 @@ export class UnloggedComponent implements OnInit, OnDestroy {
     const { isDeclined } = this.publicApiService.getUserData();
     this.isOpen = !isDeclined;
     if (!this.hasCookie && this.isOpen) {
-      this.eventTrackingService.track(EventTypes.bannerOpened).subscribe();
+      this.eventTrackingService.track(EventTypes.bannerOpened).pipe(untilDestroyed(this)).subscribe();
     }
   }
 
@@ -90,7 +92,7 @@ export class UnloggedComponent implements OnInit, OnDestroy {
     }
     this.isOpen = false;
     this.publicApiService.setUserData({ ifaToken: null, uid2Token: null, isDeclined: true });
-    this.eventTrackingService.track(EventTypes.bannerIgnored).subscribe();
+    this.eventTrackingService.track(EventTypes.bannerIgnored).pipe(untilDestroyed(this)).subscribe();
   }
 
   launchOpenPassApp() {
@@ -113,7 +115,10 @@ export class UnloggedComponent implements OnInit, OnDestroy {
   private listenForClosingRequest() {
     this.postSubscription = this.postMessagesService
       .getSubscription()
-      .pipe(filter(({ action }) => action === PostMessageActions.closeChild))
+      .pipe(
+        filter(({ action }) => action === PostMessageActions.closeChild),
+        untilDestroyed(this)
+      )
       .subscribe(() => {
         this.isOpen = false;
         this.openPassWindow?.close();

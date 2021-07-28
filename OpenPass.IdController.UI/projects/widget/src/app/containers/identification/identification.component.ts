@@ -3,9 +3,8 @@ import {
   ComponentFactoryResolver,
   ElementRef,
   EventEmitter,
-  Injector,
   Input,
-  OnDestroy,
+  NgModule,
   OnInit,
   Output,
   ViewChild,
@@ -17,24 +16,29 @@ import { Variants } from '@enums/variants.enum';
 import { Sessions } from '@enums/sessions.enum';
 import { Providers } from '@enums/providers.enum';
 import { WidgetModes } from '@enums/widget-modes.enum';
-import { Subscription } from 'rxjs';
 import { CookiesService } from '@services/cookies.service';
 import { PublicApiService } from '@services/public-api.service';
 import { WidgetConfigurationService } from '@services/widget-configuration.service';
 import { environment } from '@env';
 import { WidgetConfiguration } from '@app-types/widget-configuration';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { MessageSubscriptionService } from '@services/message-subscription.service';
+import { CommonModule } from '@angular/common';
+import { ViewContainerModule } from '@directives/view-container.module';
 
+@UntilDestroy()
 @Component({
   selector: 'wdgt-identification',
   templateUrl: './identification.component.html',
   styleUrls: ['./identification.component.scss'],
   encapsulation: ViewEncapsulation.ShadowDom,
+  providers: [MessageSubscriptionService],
 })
-export class IdentificationComponent implements OnInit, OnDestroy {
+export class IdentificationComponent implements OnInit {
   @ViewChild(ViewContainerDirective, { static: true })
   viewElement: ViewContainerDirective;
   @Output()
-  signUp = new EventEmitter<UserData>();
+  updated = new EventEmitter<UserData>();
   @Output()
   loaded = new EventEmitter<void>();
 
@@ -58,46 +62,26 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     }
   }
 
-  userDataSubscription: Subscription;
   private widgetMode = WidgetModes.native;
 
   constructor(
-    private injector: Injector,
     private elementRef: ElementRef,
     private cookiesService: CookiesService,
     private publicApiService: PublicApiService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private widgetConfigurationService: WidgetConfigurationService
   ) {
-    if (!environment.production) {
-      // in webcomponent mode we can read prop assigned to app component.
-      this.view = this.elementRef.nativeElement.getAttribute('view') ?? this.view;
-      this.variant = this.elementRef.nativeElement.getAttribute('variant') ?? this.variant;
-      this.session = this.elementRef.nativeElement.getAttribute('session') ?? this.session;
-      this.provider = this.elementRef.nativeElement.getAttribute('provider') ?? this.provider;
-    }
     this.elementRef.nativeElement.getUserData = this.getUserData.bind(this);
   }
 
   ngOnInit() {
     this.saveConfiguration();
     this.loadComponent();
-    const isDev = !environment.production;
-    this.userDataSubscription = this.publicApiService.getSubscription().subscribe((userData) => {
-      this.signUp.emit(userData);
-      if (isDev) {
-        const event = new CustomEvent('signUp', { detail: userData });
-        this.elementRef.nativeElement.dispatchEvent(event);
-      }
-    });
+    this.publicApiService
+      .getSubscription()
+      .pipe(untilDestroyed(this))
+      .subscribe((userData) => this.updated.emit(userData));
     this.loaded.emit();
-    if (isDev) {
-      this.elementRef.nativeElement.dispatchEvent(new Event('loaded'));
-    }
-  }
-
-  ngOnDestroy() {
-    this.userDataSubscription?.unsubscribe?.();
   }
 
   private getUserData(): UserData {
@@ -144,3 +128,10 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     this.widgetConfigurationService.setConfiguration(config);
   }
 }
+
+@NgModule({
+  declarations: [IdentificationComponent],
+  imports: [CommonModule, ViewContainerModule],
+  exports: [IdentificationComponent],
+})
+class IdentificationModule {}
