@@ -5,7 +5,9 @@ import { WINDOW } from '@utils/injection-tokens';
 import { CookiesService } from '@services/cookies.service';
 import { PublicApiService } from '@services/public-api.service';
 import { WidgetConfigurationService } from '@services/widget-configuration.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({ template: '' })
 export class RedirectComponent implements OnInit {
   constructor(
@@ -39,14 +41,17 @@ export class RedirectComponent implements OnInit {
   }
 
   private doRedirect() {
-    this.widgetConfigurationService.getConfiguration().subscribe((config) => {
-      const destUrl = new URL(environment.idControllerAppUrl);
-      const queryParams = new URLSearchParams({ origin: this.window.location.href, ...config });
-      if (config.session === Sessions.unauthenticated) {
-        destUrl.pathname += environment.unloggedPath;
-      }
-      this.window.location.replace(destUrl.toString() + '?' + queryParams.toString());
-    });
+    this.widgetConfigurationService
+      .getConfiguration()
+      .pipe(untilDestroyed(this))
+      .subscribe((config) => {
+        const destUrl = new URL(environment.idControllerAppUrl);
+        const queryParams = new URLSearchParams({ origin: this.window.location.href, ...config });
+        if (config.session === Sessions.unauthenticated) {
+          destUrl.pathname += environment.unloggedPath;
+        }
+        this.window.location.replace(destUrl.toString() + '?' + queryParams.toString());
+      });
   }
 
   private saveToken(ifaToken: string, uid2Token: string) {

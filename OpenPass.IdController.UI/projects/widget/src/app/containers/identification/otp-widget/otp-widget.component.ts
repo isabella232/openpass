@@ -5,7 +5,6 @@ import { CookiesService } from '@services/cookies.service';
 import { MessageSubscriptionService } from '@services/message-subscription.service';
 import { filter, take } from 'rxjs/operators';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
-import { Subscription } from 'rxjs';
 import { PostMessagesService } from '@services/post-messages.service';
 import { PublicApiService } from '@services/public-api.service';
 import { CommonModule } from '@angular/common';
@@ -15,7 +14,9 @@ import { OpenPassDetailsModule } from '@components/open-pass-details/open-pass-d
 import { EventTrackingService } from '@rest/event-tracking/event-tracking.service';
 import { EventTypes } from '@shared/enums/event-types.enum';
 import { WidgetConfigurationService } from '@services/widget-configuration.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'wdgt-otp-widget',
   templateUrl: './otp-widget.component.html',
@@ -34,7 +35,6 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
   appHost = environment.appHost;
   isOpen = true;
   openPassWindow: Window;
-  postSubscription: Subscription;
 
   get openerConfigs(): string {
     const { innerHeight, innerWidth, screenX, screenY } = this.window;
@@ -68,13 +68,12 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
     const { isDeclined } = this.publicApiService.getUserData();
     this.isOpen = !hasCookie && !isDeclined;
     if (this.isOpen) {
-      this.eventTrackingService.track(EventTypes.bannerOpened).subscribe();
+      this.eventTrackingService.track(EventTypes.bannerOpened).pipe(untilDestroyed(this)).subscribe();
     }
   }
 
   ngOnDestroy() {
     this.messageSubscriptionService.destroyTokenListener();
-    this.postSubscription?.unsubscribe?.();
   }
 
   launchIdController(path = '') {
@@ -98,13 +97,16 @@ export class OtpWidgetComponent implements OnInit, OnDestroy {
     }
     this.isOpen = false;
     this.publicApiService.setUserData({ ifaToken: null, uid2Token: null, isDeclined: true });
-    this.eventTrackingService.track(EventTypes.bannerIgnored).subscribe();
+    this.eventTrackingService.track(EventTypes.bannerIgnored).pipe(untilDestroyed(this)).subscribe();
   }
 
   private listenForClosingRequest() {
-    this.postSubscription = this.postMessagesService
+    this.postMessagesService
       .getSubscription()
-      .pipe(filter(({ action }) => action === PostMessageActions.closeChild))
+      .pipe(
+        filter(({ action }) => action === PostMessageActions.closeChild),
+        untilDestroyed(this)
+      )
       .subscribe(() => {
         this.openPassWindow?.close();
         this.isOpen = false;

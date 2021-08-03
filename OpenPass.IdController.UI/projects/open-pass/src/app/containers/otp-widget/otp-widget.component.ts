@@ -5,7 +5,9 @@ import { DOCUMENT } from '@angular/common';
 import { PostMessageActions } from '@shared/enums/post-message-actions.enum';
 import { delay, filter } from 'rxjs/operators';
 import { WINDOW } from '@utils/injection-tokens';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'usrf-otp-widget',
   templateUrl: './otp-widget.component.html',
@@ -28,7 +30,8 @@ export class OtpWidgetComponent {
     router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
-        delay(25) // waiting for render
+        delay(25), // waiting for render
+        untilDestroyed(this)
       )
       .subscribe(() => {
         postMessagesService.sendMessage({

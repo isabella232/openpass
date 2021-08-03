@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SsoViewComponent } from './sso-view.component';
 import { AuthenticatedService } from '@rest/authenticated/authenticated.service';
 import { NgxsModule } from '@ngxs/store';
-import { EventsTrackingService } from '@services/events-tracking.service';
+import { EventsService } from '@rest/events/events.service';
 import { stub } from '@utils/stub-factory';
 import { PostMessagesService } from '@services/post-messages.service';
 import { DialogWindowService } from '@services/dialog-window.service';
@@ -37,7 +37,7 @@ describe('SsoViewComponent', () => {
         stub(PostMessagesService),
         stub(DialogWindowService),
         stub(AuthenticatedService),
-        stub(EventsTrackingService),
+        stub(EventsService),
       ],
       declarations: [SsoViewComponent, StubGoogleButtonComponent, StubFacebookButtonComponent, StubOrComponent],
     }).compileComponents();

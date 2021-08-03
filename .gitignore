@@ -4,3 +4,11 @@ node_modules
 OpenPass.IdController/wwwroot/js
 .vs/
 
+# Gradle
+.build/
+
+# Generic Mac OS meta files
+.DS_Store
+
+# Logs
+*.log

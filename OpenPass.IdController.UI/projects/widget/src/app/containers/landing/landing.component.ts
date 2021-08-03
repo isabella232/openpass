@@ -7,6 +7,7 @@ import {
   SimpleChanges,
   ViewEncapsulation,
   EventEmitter,
+  NgModule,
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl, SafeStyle } from '@angular/platform-browser';
 import { UseDeployUrlPipe } from '@pipes/use-deploy-url.pipe';
@@ -14,6 +15,10 @@ import { detectDarkColor } from '@utils/ui-tools';
 import { CookiesService } from '@services/cookies.service';
 import { PublicApiService } from '@services/public-api.service';
 import { environment } from '@env';
+import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { SliderModule } from '@components/slider/slider.module';
+import { PipesModule } from '@pipes/pipes.module';
 
 @Component({
   selector: 'wdgt-landing',
@@ -91,3 +96,10 @@ export class LandingComponent implements OnInit, OnChanges {
     this.safeBrandImage = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }
+
+@NgModule({
+  imports: [CommonModule, PipesModule, SliderModule, TranslateModule],
+  declarations: [LandingComponent],
+  exports: [LandingComponent],
+})
+class LandingModule {}
